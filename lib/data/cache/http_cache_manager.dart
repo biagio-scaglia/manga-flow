@@ -66,6 +66,11 @@ class HttpCacheManager {
 
   Future<void> init() async {
     if (_isInitialized) return;
+    if (kIsWeb) {
+      _isInitialized = true;
+      return;
+    }
+
     try {
       final file = await _getCacheFile();
       if (await file.exists()) {
@@ -85,7 +90,7 @@ class HttpCacheManager {
       _isInitialized = true;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[HttpCacheManager] Inizializzazione cache fallita: $e');
+        debugPrint('[HttpCacheManager] Inizializzazione cache su disco non disponibile: $e');
       }
       _isInitialized = true;
     }
@@ -112,17 +117,18 @@ class HttpCacheManager {
     );
     _memoryCache[key] = entry;
 
-    // Salvataggio asincrono su disco senza bloccare l'interfaccia
-    _saveToDisk();
+    if (!kIsWeb) {
+      _saveToDisk();
+    }
   }
 
   Future<void> _saveToDisk() async {
+    if (kIsWeb) return;
     try {
       final file = await _getCacheFile();
       final Map<String, dynamic> exportMap = {};
       final now = DateTime.now();
 
-      // Rimuovi elementi molto vecchi (> 7 giorni) prima di salvare
       _memoryCache.removeWhere(
         (key, entry) => now.difference(entry.timestamp).inDays > 7,
       );
@@ -141,6 +147,7 @@ class HttpCacheManager {
 
   Future<void> clear() async {
     _memoryCache.clear();
+    if (kIsWeb) return;
     try {
       final file = await _getCacheFile();
       if (await file.exists()) {
@@ -150,6 +157,9 @@ class HttpCacheManager {
   }
 
   Future<int> getSizeBytes() async {
+    if (kIsWeb) {
+      return jsonEncode(_memoryCache).length;
+    }
     try {
       final file = await _getCacheFile();
       if (await file.exists()) {

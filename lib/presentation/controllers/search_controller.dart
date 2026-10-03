@@ -124,11 +124,16 @@ class MangaSearchController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _repository.getTopManga(page: 1, limit: 10, filter: 'bypopularity');
+      final result = await _repository.getTopManga(page: 1, limit: 12);
       _popularManga = result.items;
       _isLoadingPopular = false;
       notifyListeners();
     } catch (e) {
+      // Fallback a ricerca generica dei manga principali se l'endpoint top ha problemi temporanei di server
+      try {
+        final fallbackResult = await _repository.searchManga(query: 'a', page: 1, limit: 12);
+        _popularManga = fallbackResult.items;
+      } catch (_) {}
       _isLoadingPopular = false;
       notifyListeners();
     }

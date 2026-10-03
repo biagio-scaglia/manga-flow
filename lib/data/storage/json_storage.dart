@@ -13,6 +13,7 @@ class JsonStorage {
   final SchemaMigrationManager migrationManager;
   final Directory? customDirectory;
 
+  static final Map<String, String> _webStorage = {};
   Completer<void>? _writeLock;
 
   JsonStorage({
@@ -34,20 +35,21 @@ class JsonStorage {
 
   Future<Map<String, dynamic>> readData() async {
     try {
-      final file = await _getFile();
-      if (!await file.exists()) {
-        if (kDebugMode) {
-          debugPrint('[JsonStorage] File $fileName non trovato. Restituzione schema iniziale vuoto.');
+      String content = '';
+
+      if (kIsWeb) {
+        content = _webStorage[fileName] ?? '';
+      } else {
+        final file = await _getFile();
+        if (await file.exists()) {
+          content = await file.readAsString();
         }
-        return {
-          'version': schemaVersion,
-          'updatedAt': DateTime.now().toIso8601String(),
-          'entries': <Map<String, dynamic>>[],
-        };
       }
 
-      final content = await file.readAsString();
       if (content.trim().isEmpty) {
+        if (kDebugMode) {
+          debugPrint('[JsonStorage] File $fileName vuoto o non presente. Restituzione schema iniziale.');
+        }
         return {
           'version': schemaVersion,
           'updatedAt': DateTime.now().toIso8601String(),
@@ -59,7 +61,6 @@ class JsonStorage {
       Map<String, dynamic> rawMap;
 
       if (decoded is List) {
-        // Schema v0 grezzo (lista diretta di elementi)
         rawMap = {
           'version': 0,
           'entries': decoded,
@@ -81,7 +82,6 @@ class JsonStorage {
   }
 
   Future<void> writeData(Map<String, dynamic> data) async {
-    // Attendi l'eventuale lock di scrittura precedente
     while (_writeLock != null) {
       await _writeLock!.future;
     }
@@ -89,37 +89,42 @@ class JsonStorage {
     _writeLock = Completer<void>();
 
     try {
-      final file = await _getFile();
-      final tempFile = await _getTempFile();
-
-      // Assicurati che i metadati di versione e timestamp siano presenti
       final payload = Map<String, dynamic>.from(data);
       payload['version'] = schemaVersion;
       payload['updatedAt'] = DateTime.now().toIso8601String();
 
-      // 1. Serializzazione in memoria
       final jsonString = const JsonEncoder.withIndent('  ').convert(payload);
 
-      // 2. Scrittura su file temporaneo
-      await tempFile.writeAsString(jsonString, flush: true);
+      if (kIsWeb) {
+        _webStorage[fileName] = jsonString;
+        if (kDebugMode) {
+          debugPrint('[JsonStorage] Salvataggio web memory completato');
+        }
+      } else {
+        final file = await _getFile();
+        final tempFile = await _getTempFile();
 
-      // 3. Verifica del file temporaneo
-      if (!await tempFile.exists()) {
-        throw StorageException('Scrittura del file temporaneo fallita');
-      }
-      final verifiedContent = await tempFile.readAsString();
-      if (verifiedContent.length < jsonString.length * 0.9) {
-        throw StorageException('File temporaneo incompleto o corrotto');
-      }
+        // 1. Scrittura su file temporaneo
+        await tempFile.writeAsString(jsonString, flush: true);
 
-      // 4. Sostituzione atomica
-      if (await file.exists()) {
-        await file.delete();
-      }
-      await tempFile.rename(file.path);
+        // 2. Verifica del file temporaneo
+        if (!await tempFile.exists()) {
+          throw StorageException('Scrittura del file temporaneo fallita');
+        }
+        final verifiedContent = await tempFile.readAsString();
+        if (verifiedContent.length < jsonString.length * 0.9) {
+          throw StorageException('File temporaneo incompleto o corrotto');
+        }
 
-      if (kDebugMode) {
-        debugPrint('[JsonStorage] Salvataggio atomico completato con successo in ${file.path}');
+        // 3. Sostituzione atomica
+        if (await file.exists()) {
+          await file.delete();
+        }
+        await tempFile.rename(file.path);
+
+        if (kDebugMode) {
+          debugPrint('[JsonStorage] Salvataggio atomico completato con successo in ${file.path}');
+        }
       }
     } catch (e, stack) {
       if (kDebugMode) {
@@ -135,6 +140,9 @@ class JsonStorage {
 
   Future<int> getFileSizeInBytes() async {
     try {
+      if (kIsWeb) {
+        return _webStorage[fileName]?.length ?? 0;
+      }
       final file = await _getFile();
       if (await file.exists()) {
         return await file.length();
@@ -147,6 +155,10 @@ class JsonStorage {
 
   Future<void> deleteStorage() async {
     try {
+      if (kIsWeb) {
+        _webStorage.remove(fileName);
+        return;
+      }
       final file = await _getFile();
       if (await file.exists()) {
         await file.delete();
