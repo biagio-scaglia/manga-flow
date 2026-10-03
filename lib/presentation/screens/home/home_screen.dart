@@ -46,23 +46,21 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColors.editorialRed,
-                borderRadius: AppRadii.brXs,
-              ),
-              child: const Text(
-                'MF',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 11,
-                  letterSpacing: 0.5,
+            ClipRRect(
+              borderRadius: AppRadii.brXs,
+              child: Image.asset(
+                'assets/icons/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  color: AppColors.editorialRed,
+                  child: const Text('MF', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,

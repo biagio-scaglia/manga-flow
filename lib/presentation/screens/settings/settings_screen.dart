@@ -302,6 +302,15 @@ class SettingsScreen extends StatelessWidget {
             title: 'INFORMAZIONI EDITORIALI',
           ),
           ListTile(
+            leading: ClipRRect(
+              borderRadius: AppRadii.brXs,
+              child: Image.asset(
+                'assets/icons/app_logo.png',
+                width: 36,
+                height: 36,
+                fit: BoxFit.cover,
+              ),
+            ),
             title: const Text('Applicazione'),
             subtitle: const Text('${AppConstants.appName} • Versione ${AppConstants.appVersion}'),
           ),
