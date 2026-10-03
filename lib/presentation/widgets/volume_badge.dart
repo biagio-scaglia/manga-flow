@@ -7,11 +7,7 @@ class VolumeBadge extends StatelessWidget {
   final String label;
   final bool isHighlight;
 
-  const VolumeBadge({
-    super.key,
-    required this.label,
-    this.isHighlight = false,
-  });
+  const VolumeBadge({super.key, required this.label, this.isHighlight = false});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +18,9 @@ class VolumeBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: isHighlight
             ? AppColors.editorialRed
-            : (isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant),
+            : (isDark
+                  ? AppColors.nightSurfaceVariant
+                  : AppColors.paperSurfaceVariant),
         borderRadius: AppRadii.brXs,
         border: Border.all(
           color: isHighlight
@@ -37,7 +35,9 @@ class VolumeBadge extends StatelessWidget {
           isDark: isDark,
           fontSize: 9,
           fontWeight: FontWeight.w700,
-          color: isHighlight ? Colors.white : (isDark ? AppColors.nightInk : AppColors.inkBlack),
+          color: isHighlight
+              ? Colors.white
+              : (isDark ? AppColors.nightInk : AppColors.inkBlack),
         ),
       ),
     );

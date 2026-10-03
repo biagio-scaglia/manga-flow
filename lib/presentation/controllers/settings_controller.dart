@@ -16,8 +16,8 @@ class SettingsController extends ChangeNotifier {
   SettingsController({
     required LibraryRepository libraryRepository,
     required MangaRepository mangaRepository,
-  })  : _libraryRepository = libraryRepository,
-        _mangaRepository = mangaRepository {
+  }) : _libraryRepository = libraryRepository,
+       _mangaRepository = mangaRepository {
     _loadPreferences();
     refreshSizes();
   }
@@ -44,7 +44,9 @@ class SettingsController extends ChangeNotifier {
       _tutorialCompleted = prefs.getBool('tutorial_completed') ?? false;
       _reduceAnimations = prefs.getBool('reduce_animations') ?? false;
       final themeIndex = prefs.getInt('theme_mode');
-      if (themeIndex != null && themeIndex >= 0 && themeIndex < ThemeMode.values.length) {
+      if (themeIndex != null &&
+          themeIndex >= 0 &&
+          themeIndex < ThemeMode.values.length) {
         _themeMode = ThemeMode.values[themeIndex];
       }
       notifyListeners();

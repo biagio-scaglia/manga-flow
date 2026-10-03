@@ -11,7 +11,11 @@ import 'package:manga_library/presentation/widgets/editorial_section_header.dart
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  void _confirmClearData(BuildContext context, SettingsController settingsCtrl, LibraryController libraryCtrl) {
+  void _confirmClearData(
+    BuildContext context,
+    SettingsController settingsCtrl,
+    LibraryController libraryCtrl,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -26,7 +30,9 @@ class SettingsScreen extends StatelessWidget {
               child: const Text('Annulla'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.editorialRed),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.editorialRed,
+              ),
               onPressed: () async {
                 final messenger = ScaffoldMessenger.of(context);
                 final nav = Navigator.of(dialogContext);
@@ -34,7 +40,9 @@ class SettingsScreen extends StatelessWidget {
                 await settingsCtrl.clearAllData();
                 nav.pop();
                 messenger.showSnackBar(
-                  const SnackBar(content: Text('Tutti i dati locali sono stati eliminati')),
+                  const SnackBar(
+                    content: Text('Tutti i dati locali sono stati eliminati'),
+                  ),
                 );
               },
               child: const Text('ELIMINA TUTTO'),
@@ -45,7 +53,10 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _confirmClearCache(BuildContext context, SettingsController settingsCtrl) {
+  void _confirmClearCache(
+    BuildContext context,
+    SettingsController settingsCtrl,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -77,7 +88,10 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showExportDialog(BuildContext context, SettingsController settingsCtrl) async {
+  void _showExportDialog(
+    BuildContext context,
+    SettingsController settingsCtrl,
+  ) async {
     final jsonStr = await settingsCtrl.exportLibrary();
     if (!context.mounted) return;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -93,15 +107,21 @@ class SettingsScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Copia il testo JSON per conservare un backup manuale della tua collezione:'),
+                const Text(
+                  'Copia il testo JSON per conservare un backup manuale della tua collezione:',
+                ),
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                    color: isDark
+                        ? AppColors.nightSurfaceVariant
+                        : AppColors.paperSurfaceVariant,
                     borderRadius: AppRadii.brXs,
                     border: Border.all(
-                      color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                      color: isDark
+                          ? AppColors.nightBorder
+                          : AppColors.paperBorder,
                     ),
                   ),
                   height: 160,
@@ -129,7 +149,11 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showImportDialog(BuildContext context, SettingsController settingsCtrl, LibraryController libraryCtrl) {
+  void _showImportDialog(
+    BuildContext context,
+    SettingsController settingsCtrl,
+    LibraryController libraryCtrl,
+  ) {
     final textController = TextEditingController();
 
     showDialog(
@@ -158,7 +182,9 @@ class SettingsScreen extends StatelessWidget {
                   await libraryCtrl.loadLibrary();
                   nav.pop();
                   messenger.showSnackBar(
-                    const SnackBar(content: Text('Catalogo importato con successo')),
+                    const SnackBar(
+                      content: Text('Catalogo importato con successo'),
+                    ),
                   );
                 } catch (e) {
                   messenger.showSnackBar(
@@ -216,25 +242,43 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Night Bookstore (Scuro)'),
-            subtitle: const Text('Atmosfera libreria serale con accenti rosso inchiostro'),
+            subtitle: const Text(
+              'Atmosfera libreria serale con accenti rosso inchiostro',
+            ),
             trailing: settingsCtrl.themeMode == ThemeMode.dark
-                ? const Icon(Icons.check_rounded, color: AppColors.editorialRed, size: 20)
+                ? const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.editorialRed,
+                    size: 20,
+                  )
                 : null,
             onTap: () => settingsCtrl.setThemeMode(ThemeMode.dark),
           ),
           ListTile(
             title: const Text('Stampa su Carta (Chiaro)'),
-            subtitle: const Text('Toni caldi avorio/carta con inchiostro nero e vermiglio'),
+            subtitle: const Text(
+              'Toni caldi avorio/carta con inchiostro nero e vermiglio',
+            ),
             trailing: settingsCtrl.themeMode == ThemeMode.light
-                ? const Icon(Icons.check_rounded, color: AppColors.editorialRed, size: 20)
+                ? const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.editorialRed,
+                    size: 20,
+                  )
                 : null,
             onTap: () => settingsCtrl.setThemeMode(ThemeMode.light),
           ),
           ListTile(
             title: const Text('Segui Sistema Operativo'),
-            subtitle: const Text('Sincronizza automaticamente con il dispositivo'),
+            subtitle: const Text(
+              'Sincronizza automaticamente con il dispositivo',
+            ),
             trailing: settingsCtrl.themeMode == ThemeMode.system
-                ? const Icon(Icons.check_rounded, color: AppColors.editorialRed, size: 20)
+                ? const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.editorialRed,
+                    size: 20,
+                  )
                 : null,
             onTap: () => settingsCtrl.setThemeMode(ThemeMode.system),
           ),
@@ -249,7 +293,9 @@ class SettingsScreen extends StatelessWidget {
           SwitchListTile(
             activeTrackColor: AppColors.editorialRed,
             title: const Text('Riduci Animazioni'),
-            subtitle: const Text('Minimizza le transizioni e gli effetti di sfoglio'),
+            subtitle: const Text(
+              'Minimizza le transizioni e gli effetti di sfoglio',
+            ),
             value: settingsCtrl.reduceAnimations,
             onChanged: settingsCtrl.toggleReduceAnimations,
           ),
@@ -260,7 +306,11 @@ class SettingsScreen extends StatelessWidget {
               settingsCtrl.resetTutorial();
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Guida reimpostata. Sarà mostrata nella schermata principale.')),
+                const SnackBar(
+                  content: Text(
+                    'Guida reimpostata. Sarà mostrata nella schermata principale.',
+                  ),
+                ),
               );
             },
           ),
@@ -274,23 +324,34 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Svuota Cache Temporanea'),
-            subtitle: Text('Memoria occupata: ${settingsCtrl.cacheSizeFormatted}'),
+            subtitle: Text(
+              'Memoria occupata: ${settingsCtrl.cacheSizeFormatted}',
+            ),
             trailing: const Icon(Icons.chevron_right_rounded, size: 20),
             onTap: () => _confirmClearCache(context, settingsCtrl),
           ),
           ListTile(
             title: const Text('Esporta Backup JSON'),
-            subtitle: Text('Dimensioni collezione: ${settingsCtrl.storageSizeFormatted}'),
+            subtitle: Text(
+              'Dimensioni collezione: ${settingsCtrl.storageSizeFormatted}',
+            ),
             onTap: () => _showExportDialog(context, settingsCtrl),
           ),
           ListTile(
             title: const Text('Importa Backup JSON'),
-            subtitle: const Text('Ripristina una collezione salvata in precedenza'),
+            subtitle: const Text(
+              'Ripristina una collezione salvata in precedenza',
+            ),
             onTap: () => _showImportDialog(context, settingsCtrl, libraryCtrl),
           ),
           ListTile(
-            title: const Text('Cancella Tutti i Dati Locali', style: TextStyle(color: AppColors.editorialRed)),
-            subtitle: const Text('Elimina definitivamente la libreria dal dispositivo'),
+            title: const Text(
+              'Cancella Tutti i Dati Locali',
+              style: TextStyle(color: AppColors.editorialRed),
+            ),
+            subtitle: const Text(
+              'Elimina definitivamente la libreria dal dispositivo',
+            ),
             onTap: () => _confirmClearData(context, settingsCtrl, libraryCtrl),
           ),
 
@@ -312,11 +373,15 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             title: const Text('Applicazione'),
-            subtitle: const Text('${AppConstants.appName} • Versione ${AppConstants.appVersion}'),
+            subtitle: const Text(
+              '${AppConstants.appName} • Versione ${AppConstants.appVersion}',
+            ),
           ),
           ListTile(
             title: const Text('Catalogo Dati Remoto'),
-            subtitle: const Text('AniList GraphQL Open API • Dati ufficiali in tempo reale'),
+            subtitle: const Text(
+              'AniList GraphQL Open API • Dati ufficiali in tempo reale',
+            ),
           ),
 
           const SizedBox(height: 32),

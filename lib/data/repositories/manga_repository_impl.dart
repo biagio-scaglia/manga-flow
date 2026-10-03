@@ -10,10 +10,7 @@ class MangaRepositoryImpl implements MangaRepository {
   final JikanApiClient apiClient;
   final HttpCacheManager cacheManager;
 
-  MangaRepositoryImpl({
-    required this.apiClient,
-    required this.cacheManager,
-  });
+  MangaRepositoryImpl({required this.apiClient, required this.cacheManager});
 
   static const String _mangaFields = '''
     id
@@ -58,7 +55,8 @@ class MangaRepositoryImpl implements MangaRepository {
     String? status,
   }) async {
     try {
-      const graphQLQuery = '''
+      const graphQLQuery =
+          '''
         query (\$search: String, \$page: Int, \$perPage: Int) {
           Page(page: \$page, perPage: \$perPage) {
             pageInfo {
@@ -75,11 +73,7 @@ class MangaRepositoryImpl implements MangaRepository {
 
       final response = await apiClient.postGraphQL(
         query: graphQLQuery,
-        variables: {
-          'search': query,
-          'page': page,
-          'perPage': limit,
-        },
+        variables: {'search': query, 'page': page, 'perPage': limit},
       );
 
       final data = response.data['data'] as Map<String, dynamic>?;
@@ -122,7 +116,8 @@ class MangaRepositoryImpl implements MangaRepository {
     String? filter,
   }) async {
     try {
-      const graphQLQuery = '''
+      const graphQLQuery =
+          '''
         query (\$page: Int, \$perPage: Int) {
           Page(page: \$page, perPage: \$perPage) {
             pageInfo {
@@ -139,10 +134,7 @@ class MangaRepositoryImpl implements MangaRepository {
 
       final response = await apiClient.postGraphQL(
         query: graphQLQuery,
-        variables: {
-          'page': page,
-          'perPage': limit,
-        },
+        variables: {'page': page, 'perPage': limit},
       );
 
       final data = response.data['data'] as Map<String, dynamic>?;
@@ -181,7 +173,8 @@ class MangaRepositoryImpl implements MangaRepository {
   @override
   Future<Manga> getMangaDetails(int id) async {
     try {
-      const graphQLQuery = '''
+      const graphQLQuery =
+          '''
         query (\$id: Int) {
           Media(id: \$id, type: MANGA) {
             $_mangaFields
@@ -191,16 +184,17 @@ class MangaRepositoryImpl implements MangaRepository {
 
       final response = await apiClient.postGraphQL(
         query: graphQLQuery,
-        variables: {
-          'id': id,
-        },
+        variables: {'id': id},
       );
 
       final data = response.data['data'] as Map<String, dynamic>?;
       final mangaJson = data?['Media'] as Map<String, dynamic>?;
 
       if (mangaJson == null) {
-        throw const ServerFailure('Dettagli manga non disponibili.', statusCode: 404);
+        throw const ServerFailure(
+          'Dettagli manga non disponibili.',
+          statusCode: 404,
+        );
       }
 
       return RemoteMangaDto.fromJson(mangaJson).toDomain();

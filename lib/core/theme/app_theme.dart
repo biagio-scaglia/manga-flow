@@ -52,9 +52,7 @@ class AppTheme {
               fontWeight: FontWeight.w700,
             );
           }
-          return textTheme.labelSmall?.copyWith(
-            color: AppColors.nightInkMuted,
-          );
+          return textTheme.labelSmall?.copyWith(color: AppColors.nightInkMuted);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -75,8 +73,13 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.nightSurfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.nightInkMuted),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: AppColors.nightInkMuted,
+        ),
         border: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
           borderSide: const BorderSide(color: AppColors.nightBorder, width: 1),
@@ -87,7 +90,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
-          borderSide: const BorderSide(color: AppColors.editorialRed, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.editorialRed,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
@@ -97,8 +103,12 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.nightSurfaceVariant,
         selectedColor: AppColors.editorialRed.withValues(alpha: 0.2),
-        labelStyle: textTheme.labelMedium?.copyWith(color: AppColors.nightInkSecondary),
-        secondaryLabelStyle: textTheme.labelMedium?.copyWith(color: AppColors.editorialRed),
+        labelStyle: textTheme.labelMedium?.copyWith(
+          color: AppColors.nightInkSecondary,
+        ),
+        secondaryLabelStyle: textTheme.labelMedium?.copyWith(
+          color: AppColors.editorialRed,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         shape: RoundedRectangleBorder(
           borderRadius: AppRadii.brXs,
@@ -111,9 +121,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadii.brSm,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadii.brSm),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -122,15 +130,15 @@ class AppTheme {
           foregroundColor: AppColors.nightInk,
           side: const BorderSide(color: AppColors.nightBorder, width: 1),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadii.brSm,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadii.brSm),
           textStyle: textTheme.labelLarge,
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.nightSurfaceVariant,
-        contentTextStyle: textTheme.bodyMedium?.copyWith(color: AppColors.nightInk),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: AppColors.nightInk,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: AppRadii.brSm,
           side: const BorderSide(color: AppColors.nightBorder),
@@ -193,9 +201,7 @@ class AppTheme {
               fontWeight: FontWeight.w700,
             );
           }
-          return textTheme.labelSmall?.copyWith(
-            color: AppColors.inkMuted,
-          );
+          return textTheme.labelSmall?.copyWith(color: AppColors.inkMuted);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -216,7 +222,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.paperSurfaceVariant,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
         hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkMuted),
         border: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
@@ -228,7 +237,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
-          borderSide: const BorderSide(color: AppColors.editorialRed, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.editorialRed,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadii.brSm,
@@ -238,8 +250,12 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.paperSurfaceVariant,
         selectedColor: AppColors.editorialRed.withValues(alpha: 0.12),
-        labelStyle: textTheme.labelMedium?.copyWith(color: AppColors.inkSecondary),
-        secondaryLabelStyle: textTheme.labelMedium?.copyWith(color: AppColors.editorialRed),
+        labelStyle: textTheme.labelMedium?.copyWith(
+          color: AppColors.inkSecondary,
+        ),
+        secondaryLabelStyle: textTheme.labelMedium?.copyWith(
+          color: AppColors.editorialRed,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         shape: RoundedRectangleBorder(
           borderRadius: AppRadii.brXs,
@@ -252,9 +268,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadii.brSm,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadii.brSm),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -263,15 +277,15 @@ class AppTheme {
           foregroundColor: AppColors.inkBlack,
           side: const BorderSide(color: AppColors.paperBorder, width: 1),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadii.brSm,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadii.brSm),
           textStyle: textTheme.labelLarge,
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.paperSurfaceVariant,
-        contentTextStyle: textTheme.bodyMedium?.copyWith(color: AppColors.inkBlack),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: AppColors.inkBlack,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: AppRadii.brSm,
           side: const BorderSide(color: AppColors.paperBorder),

@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manga_library/presentation/widgets/progress_stepper.dart';
 
 void main() {
-  testWidgets('ProgressStepper incrementa e decrementa correttamente', (tester) async {
+  testWidgets('ProgressStepper incrementa e decrementa correttamente', (
+    tester,
+  ) async {
     int current = 10;
 
     await tester.pumpWidget(
@@ -38,27 +40,33 @@ void main() {
     expect(current, equals(10));
   });
 
-  testWidgets('ProgressStepper mostra suggerimento completamento al capitolo finale', (tester) async {
-    bool completedPressed = false;
+  testWidgets(
+    'ProgressStepper mostra suggerimento completamento al capitolo finale',
+    (tester) async {
+      bool completedPressed = false;
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: ProgressStepper(
-            currentChapter: 50,
-            totalChapters: 50,
-            onProgressChanged: (_) {},
-            onMarkCompleted: () => completedPressed = true,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ProgressStepper(
+              currentChapter: 50,
+              totalChapters: 50,
+              onProgressChanged: (_) {},
+              onMarkCompleted: () => completedPressed = true,
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'), findsOneWidget);
+      expect(
+        find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'),
+        findsOneWidget,
+      );
 
-    await tester.tap(find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'));
-    await tester.pump();
+      await tester.tap(find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'));
+      await tester.pump();
 
-    expect(completedPressed, isTrue);
-  });
+      expect(completedPressed, isTrue);
+    },
+  );
 }

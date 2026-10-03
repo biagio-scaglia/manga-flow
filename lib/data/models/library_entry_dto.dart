@@ -50,13 +50,22 @@ class LibraryEntryDto {
       totalVolumes: json['totalVolumes'] as int?,
       rating: json['rating'] as int? ?? 0,
       notes: json['notes'] as String? ?? '',
-      isFavorite: json['isFavorite'] as bool? ?? json['favorite'] as bool? ?? false,
-      genres: (json['genres'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+      isFavorite:
+          json['isFavorite'] as bool? ?? json['favorite'] as bool? ?? false,
+      genres:
+          (json['genres'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
           [],
-      authors: (json['authors'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      authors:
+          (json['authors'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       addedAt: json['addedAt'] as String? ?? DateTime.now().toIso8601String(),
-      updatedAt: json['updatedAt'] as String? ?? DateTime.now().toIso8601String(),
+      updatedAt:
+          json['updatedAt'] as String? ?? DateTime.now().toIso8601String(),
       lastReadAt: json['lastReadAt'] as String?,
     );
   }

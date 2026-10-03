@@ -4,6 +4,7 @@ import 'package:manga_library/core/constants/app_constants.dart';
 import 'package:manga_library/core/errors/failures.dart';
 import 'package:manga_library/core/utils/debouncer.dart';
 import 'package:manga_library/domain/entities/library_entry.dart';
+import 'package:manga_library/domain/entities/library_entry_merger.dart';
 import 'package:manga_library/domain/entities/reading_status.dart';
 import 'package:manga_library/domain/repositories/library_repository.dart';
 import 'package:manga_library/data/models/library_entry_dto.dart';
@@ -27,27 +28,44 @@ class LibraryRepositoryImpl implements LibraryRepository {
     try {
       final data = await storage.readData();
       final entriesRaw = data['entries'] as List<dynamic>? ?? [];
-      
-      _entries.clear();
+      final List<LibraryEntry> parsedEntries = [];
+
       for (final item in entriesRaw) {
         if (item is Map<String, dynamic>) {
           try {
             final dto = LibraryEntryDto.fromJson(item);
-            _entries.add(dto.toDomain());
+            parsedEntries.add(dto.toDomain());
           } catch (e) {
             if (kDebugMode) {
-              debugPrint('[LibraryRepository] Voce saltata a causa di errore di parsing: $e');
+              debugPrint(
+                '[LibraryRepository] Voce saltata a causa di errore di parsing: $e',
+              );
             }
           }
         }
       }
+
+      // Applicazione deduplicazione deterministica all'avvio
+      final cleanEntries = LibraryEntryMerger.deduplicateAndMerge(
+        parsedEntries,
+      );
+      _entries.clear();
+      _entries.addAll(cleanEntries);
+
       _isLoaded = true;
       if (!_initCompleter.isCompleted) {
         _initCompleter.complete();
       }
+
+      // Se c'erano duplicati nel file, ripulisci il file fisico salvando la lista pulita
+      if (cleanEntries.length != parsedEntries.length) {
+        _scheduleAutosave();
+      }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[LibraryRepository] Errore caricamento libreria da storage: $e');
+        debugPrint(
+          '[LibraryRepository] Errore caricamento libreria da storage: $e',
+        );
       }
       _isLoaded = true;
       if (!_initCompleter.isCompleted) {
@@ -63,25 +81,41 @@ class LibraryRepositoryImpl implements LibraryRepository {
   }
 
   void _scheduleAutosave() {
-    _autosaveDebouncer.run(() async {
-      await _persistToDisk();
-    });
+    if (_autosaveDebouncer.delay == Duration.zero) {
+      _persistToDisk();
+    } else {
+      _autosaveDebouncer.run(() async {
+        await _persistToDisk();
+      });
+    }
+  }
+
+  @override
+  Future<void> flush() async {
+    _autosaveDebouncer.cancel();
+    await _persistToDisk();
   }
 
   Future<void> _persistToDisk() async {
     try {
-      final dtos = _entries.map((entry) => LibraryEntryDto.fromDomain(entry).toJson()).toList();
+      final dtos = _entries
+          .map((entry) => LibraryEntryDto.fromDomain(entry).toJson())
+          .toList();
       await storage.writeData({
         'version': AppConstants.currentSchemaVersion,
         'updatedAt': DateTime.now().toIso8601String(),
         'entries': dtos,
       });
       if (kDebugMode) {
-        debugPrint('[LibraryRepository] Autosave completato con successo (${_entries.length} manga)');
+        debugPrint(
+          '[LibraryRepository] Autosave completato con successo (${_entries.length} manga)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[LibraryRepository] Errore durante il salvataggio su disco: $e');
+        debugPrint(
+          '[LibraryRepository] Errore durante il salvataggio su disco: $e',
+        );
       }
     }
   }
@@ -109,10 +143,9 @@ class LibraryRepositoryImpl implements LibraryRepository {
     if (index >= 0) {
       _entries[index] = entry.copyWith(updatedAt: DateTime.now());
     } else {
-      _entries.add(entry.copyWith(
-        addedAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      _entries.add(
+        entry.copyWith(addedAt: DateTime.now(), updatedAt: DateTime.now()),
+      );
     }
     _scheduleAutosave();
   }
@@ -131,7 +164,7 @@ class LibraryRepositoryImpl implements LibraryRepository {
     if (index >= 0) {
       final current = _entries[index];
       final safeChapter = chapter < 0 ? 0 : chapter;
-      
+
       _entries[index] = current.copyWith(
         currentChapter: safeChapter,
         lastReadAt: DateTime.now(),
@@ -142,7 +175,11 @@ class LibraryRepositoryImpl implements LibraryRepository {
   }
 
   @override
-  Future<void> updateVolumes(int mangaId, int ownedVolumes, {int? totalVolumes}) async {
+  Future<void> updateVolumes(
+    int mangaId,
+    int ownedVolumes, {
+    int? totalVolumes,
+  }) async {
     await _ensureLoaded();
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);
     if (index >= 0) {

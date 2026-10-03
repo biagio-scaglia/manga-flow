@@ -51,7 +51,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
   }
 
   Future<void> _fetchDetailsIfNeeded() async {
-    if (_manga != null && _manga!.synopsis != null && _manga!.synopsis!.isNotEmpty) {
+    if (_manga != null &&
+        _manga!.synopsis != null &&
+        _manga!.synopsis!.isNotEmpty) {
       return;
     }
 
@@ -77,7 +79,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
     }
   }
 
-  void _showAddDialog(BuildContext context, LibraryController libraryController) {
+  void _showAddDialog(
+    BuildContext context,
+    LibraryController libraryController,
+  ) {
     ReadingStatus selectedStatus = ReadingStatus.reading;
     int initialOwnedVolumes = 0;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -108,18 +113,24 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                     children: [
                       Text(
                         'AGGIUNGI AL CATALOGO',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.8,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.8,
+                            ),
                       ),
-                      const Text('登録', style: TextStyle(fontSize: 10, letterSpacing: 1.0)),
+                      const Text(
+                        '登録',
+                        style: TextStyle(fontSize: 10, letterSpacing: 1.0),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Container(
                     height: 1,
-                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    color: isDark
+                        ? AppColors.nightBorder
+                        : AppColors.paperBorder,
                   ),
                   const SizedBox(height: 14),
                   Text(
@@ -137,19 +148,29 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                     children: ReadingStatus.values.map((status) {
                       final isSelected = selectedStatus == status;
                       return InkWell(
-                        onTap: () => setModalState(() => selectedStatus = status),
+                        onTap: () =>
+                            setModalState(() => selectedStatus = status),
                         borderRadius: AppRadii.brXs,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? status.color.withValues(alpha: isDark ? 0.25 : 0.12)
-                                : (isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant),
+                                ? status.color.withValues(
+                                    alpha: isDark ? 0.25 : 0.12,
+                                  )
+                                : (isDark
+                                      ? AppColors.nightSurfaceVariant
+                                      : AppColors.paperSurfaceVariant),
                             borderRadius: AppRadii.brXs,
                             border: Border.all(
                               color: isSelected
                                   ? status.color
-                                  : (isDark ? AppColors.nightBorder : AppColors.paperBorder),
+                                  : (isDark
+                                        ? AppColors.nightBorder
+                                        : AppColors.paperBorder),
                               width: isSelected ? 1.4 : 1.0,
                             ),
                           ),
@@ -158,7 +179,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                             style: AppTypography.volumeMono(
                               isDark: isDark,
                               fontSize: 10,
-                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: isSelected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               color: isSelected ? status.color : null,
                             ),
                           ),
@@ -182,10 +205,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                             ),
                           ),
                           Text(
-                            _manga?.totalVolumes != null && _manga!.totalVolumes! > 0
+                            _manga?.totalVolumes != null &&
+                                    _manga!.totalVolumes! > 0
                                 ? 'Totale serie: ${_manga!.totalVolumes} volumi'
                                 : 'Totale non specificato',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(fontSize: 10),
                           ),
                         ],
                       ),
@@ -194,16 +220,24 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           IconButton(
                             icon: const Icon(Icons.remove_rounded, size: 18),
                             onPressed: initialOwnedVolumes > 0
-                                ? () => setModalState(() => initialOwnedVolumes--)
+                                ? () =>
+                                      setModalState(() => initialOwnedVolumes--)
                                 : null,
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                              color: isDark
+                                  ? AppColors.nightSurfaceVariant
+                                  : AppColors.paperSurfaceVariant,
                               borderRadius: AppRadii.brXs,
                               border: Border.all(
-                                color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                                color: isDark
+                                    ? AppColors.nightBorder
+                                    : AppColors.paperBorder,
                               ),
                             ),
                             child: Text(
@@ -217,7 +251,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_rounded, size: 18),
-                            onPressed: () => setModalState(() => initialOwnedVolumes++),
+                            onPressed: () =>
+                                setModalState(() => initialOwnedVolumes++),
                           ),
                         ],
                       ),
@@ -225,8 +260,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                   ),
                   const SizedBox(height: 22),
                   ElevatedButton(
-                    onPressed: () {
-                      final newEntry = LibraryEntry(
+                    onPressed: () async {
+                      final newEntry = LibraryEntry.validated(
                         mangaId: widget.mangaId,
                         title: _manga?.title ?? 'Manga #${widget.mangaId}',
                         coverUrl: _manga?.bestCoverUrl ?? '',
@@ -237,14 +272,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                         totalVolumes: _manga?.totalVolumes,
                         genres: _manga?.genres ?? [],
                         authors: _manga?.authors ?? [],
-                        addedAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
                       );
-                      libraryController.addOrUpdateEntry(newEntry);
+                      final result = await libraryController.addOrUpdateEntry(
+                        newEntry,
+                      );
+                      if (!context.mounted) return;
                       Navigator.of(bottomSheetContext).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Volume aggiunto a "${selectedStatus.label}"')),
-                      );
+
+                      final message = result == AddEntryResult.alreadyInLibrary
+                          ? 'Volume già presente: scheda catalogo aggiornata a "${selectedStatus.label}"'
+                          : 'Volume aggiunto a "${selectedStatus.label}"';
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(message)));
                     },
                     child: const Text('CONFERMA E AGGIUNGI'),
                   ),
@@ -257,9 +297,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
     );
   }
 
-  void _showEditVolumesDialog(BuildContext context, LibraryController libraryController, LibraryEntry entry) {
+  void _showEditVolumesDialog(
+    BuildContext context,
+    LibraryController libraryController,
+    LibraryEntry entry,
+  ) {
     final ownedCtrl = TextEditingController(text: '${entry.ownedVolumes}');
-    final totalCtrl = TextEditingController(text: entry.totalVolumes != null ? '${entry.totalVolumes}' : '');
+    final totalCtrl = TextEditingController(
+      text: entry.totalVolumes != null ? '${entry.totalVolumes}' : '',
+    );
 
     showDialog(
       context: context,
@@ -275,7 +321,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Volumi posseduti / acquistati',
                   hintText: 'Es. 5',
-                  prefixIcon: Icon(Icons.collections_bookmark_rounded, size: 18),
+                  prefixIcon: Icon(
+                    Icons.collections_bookmark_rounded,
+                    size: 18,
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
@@ -297,7 +346,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                final owned = int.tryParse(ownedCtrl.text.trim()) ?? entry.ownedVolumes;
+                final owned =
+                    int.tryParse(ownedCtrl.text.trim()) ?? entry.ownedVolumes;
                 final total = int.tryParse(totalCtrl.text.trim());
                 libraryController.updateVolumes(
                   widget.mangaId,
@@ -306,7 +356,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                 );
                 Navigator.of(dialogContext).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Volumi aggiornati con successo')),
+                  const SnackBar(
+                    content: Text('Volumi aggiornati con successo'),
+                  ),
                 );
               },
               child: const Text('Salva'),
@@ -317,20 +369,27 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
     );
   }
 
-  void _confirmDelete(BuildContext context, LibraryController libraryController) {
+  void _confirmDelete(
+    BuildContext context,
+    LibraryController libraryController,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Rimuovi dal catalogo'),
-          content: const Text('Sei sicuro di voler rimuovere questo manga dalla tua libreria personale?'),
+          content: const Text(
+            'Sei sicuro di voler rimuovere questo manga dalla tua libreria personale?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: const Text('Annulla'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.editorialRed),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.editorialRed,
+              ),
               onPressed: () {
                 libraryController.removeEntry(widget.mangaId);
                 Navigator.of(dialogContext).pop();
@@ -370,11 +429,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
           if (isInLibrary)
             IconButton(
               icon: Icon(
-                entry.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                entry.isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
                 color: entry.isFavorite ? AppColors.editorialRed : null,
                 size: 22,
               ),
-              tooltip: entry.isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti',
+              tooltip: entry.isFavorite
+                  ? 'Rimuovi dai preferiti'
+                  : 'Aggiungi ai preferiti',
               onPressed: () => libraryController.toggleFavorite(widget.mangaId),
             ),
         ],
@@ -421,14 +484,17 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                       ),
 
                       // Titolo Originale Giapponese
-                      if (_manga?.titleJapanese != null && _manga!.titleJapanese!.isNotEmpty) ...[
+                      if (_manga?.titleJapanese != null &&
+                          _manga!.titleJapanese!.isNotEmpty) ...[
                         const SizedBox(height: 3),
                         Text(
                           _manga!.titleJapanese!,
                           style: theme.textTheme.bodySmall?.copyWith(
                             fontSize: 12,
                             letterSpacing: 0.5,
-                            color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+                            color: isDark
+                                ? AppColors.nightInkSecondary
+                                : AppColors.inkSecondary,
                           ),
                         ),
                       ],
@@ -452,18 +518,29 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                       // Valutazione punteggio MAL
                       if (_manga?.score != null)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                            color: isDark
+                                ? AppColors.nightSurfaceVariant
+                                : AppColors.paperSurfaceVariant,
                             borderRadius: AppRadii.brXs,
                             border: Border.all(
-                              color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                              color: isDark
+                                  ? AppColors.nightBorder
+                                  : AppColors.paperBorder,
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.star_rounded, size: 14, color: AppColors.paperGold),
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 14,
+                                color: AppColors.paperGold,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 '${_manga!.score!.toStringAsFixed(2)} MAL',
@@ -499,14 +576,18 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                   _buildMetadataCell(
                     context,
                     label: 'PUBBLICAZIONE',
-                    value: _manga?.publicationStatusItalian.toUpperCase() ?? 'IN CORSO',
+                    value:
+                        _manga?.publicationStatusItalian.toUpperCase() ??
+                        'IN CORSO',
                     isDark: isDark,
                   ),
                   _buildCellDivider(isDark),
                   _buildMetadataCell(
                     context,
                     label: 'CAPITOLI',
-                    value: _manga?.totalChapters != null && _manga!.totalChapters! > 0
+                    value:
+                        _manga?.totalChapters != null &&
+                            _manga!.totalChapters! > 0
                         ? '${_manga!.totalChapters} CAP'
                         : 'IN CORSO',
                     isDark: isDark,
@@ -515,8 +596,11 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                   _buildMetadataCell(
                     context,
                     label: 'VOLUMI',
-                    value: (_manga?.totalVolumes != null && _manga!.totalVolumes! > 0) ||
-                            (entry?.totalVolumes != null && entry!.totalVolumes! > 0)
+                    value:
+                        (_manga?.totalVolumes != null &&
+                                _manga!.totalVolumes! > 0) ||
+                            (entry?.totalVolumes != null &&
+                                entry!.totalVolumes! > 0)
                         ? '${entry?.totalVolumes ?? _manga?.totalVolumes} VOL'
                         : 'N/D',
                     isDark: isDark,
@@ -539,10 +623,14 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                  color: isDark
+                      ? AppColors.nightSurface
+                      : AppColors.paperSurface,
                   borderRadius: AppRadii.brSm,
                   border: Border.all(
-                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    color: isDark
+                        ? AppColors.nightBorder
+                        : AppColors.paperBorder,
                     width: 1,
                   ),
                 ),
@@ -567,19 +655,31 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6),
                             child: InkWell(
-                              onTap: () => libraryController.updateStatus(widget.mangaId, status),
+                              onTap: () => libraryController.updateStatus(
+                                widget.mangaId,
+                                status,
+                              ),
                               borderRadius: AppRadii.brXs,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 5,
+                                ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? status.color.withValues(alpha: isDark ? 0.25 : 0.12)
-                                      : (isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant),
+                                      ? status.color.withValues(
+                                          alpha: isDark ? 0.25 : 0.12,
+                                        )
+                                      : (isDark
+                                            ? AppColors.nightSurfaceVariant
+                                            : AppColors.paperSurfaceVariant),
                                   borderRadius: AppRadii.brXs,
                                   border: Border.all(
                                     color: isSelected
                                         ? status.color
-                                        : (isDark ? AppColors.nightBorder : AppColors.paperBorder),
+                                        : (isDark
+                                              ? AppColors.nightBorder
+                                              : AppColors.paperBorder),
                                     width: isSelected ? 1.4 : 1.0,
                                   ),
                                 ),
@@ -588,7 +688,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                                   style: AppTypography.volumeMono(
                                     isDark: isDark,
                                     fontSize: 9,
-                                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w800
+                                        : FontWeight.w600,
                                     color: isSelected ? status.color : null,
                                   ),
                                 ),
@@ -613,15 +715,24 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                     const SizedBox(height: 8),
                     ProgressStepper(
                       currentChapter: entry.currentChapter,
-                      totalChapters: entry.totalChapters ?? _manga?.totalChapters,
+                      totalChapters:
+                          entry.totalChapters ?? _manga?.totalChapters,
                       isCompleted: entry.status == ReadingStatus.completed,
                       onProgressChanged: (newChapter) {
-                        libraryController.updateProgress(widget.mangaId, newChapter);
+                        libraryController.updateProgress(
+                          widget.mangaId,
+                          newChapter,
+                        );
                       },
                       onMarkCompleted: () {
-                        libraryController.updateStatus(widget.mangaId, ReadingStatus.completed);
+                        libraryController.updateStatus(
+                          widget.mangaId,
+                          ReadingStatus.completed,
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Manga segnato come completato!')),
+                          const SnackBar(
+                            content: Text('Manga segnato come completato!'),
+                          ),
                         );
                       },
                     ),
@@ -641,9 +752,16 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => _showEditVolumesDialog(context, libraryController, entry),
+                          onPressed: () => _showEditVolumesDialog(
+                            context,
+                            libraryController,
+                            entry,
+                          ),
                           style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -663,10 +781,14 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                        color: isDark
+                            ? AppColors.nightSurfaceVariant
+                            : AppColors.paperSurfaceVariant,
                         borderRadius: AppRadii.brXs,
                         border: Border.all(
-                          color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                          color: isDark
+                              ? AppColors.nightBorder
+                              : AppColors.paperBorder,
                         ),
                       ),
                       child: Column(
@@ -678,22 +800,39 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                               Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.remove_rounded, size: 18),
+                                    icon: const Icon(
+                                      Icons.remove_rounded,
+                                      size: 18,
+                                    ),
                                     tooltip: 'Rimuovi volume',
                                     onPressed: entry.ownedVolumes > 0
-                                        ? () => libraryController.decrementOwnedVolume(widget.mangaId)
+                                        ? () => libraryController
+                                              .decrementOwnedVolume(
+                                                widget.mangaId,
+                                              )
                                         : null,
                                   ),
                                   InkWell(
-                                    onTap: () => _showEditVolumesDialog(context, libraryController, entry),
+                                    onTap: () => _showEditVolumesDialog(
+                                      context,
+                                      libraryController,
+                                      entry,
+                                    ),
                                     borderRadius: AppRadii.brXs,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                                        color: isDark
+                                            ? AppColors.nightSurface
+                                            : AppColors.paperSurface,
                                         borderRadius: AppRadii.brXs,
                                         border: Border.all(
-                                          color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                                          color: isDark
+                                              ? AppColors.nightBorder
+                                              : AppColors.paperBorder,
                                         ),
                                       ),
                                       child: Text(
@@ -707,20 +846,32 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.add_rounded, size: 18),
+                                    icon: const Icon(
+                                      Icons.add_rounded,
+                                      size: 18,
+                                    ),
                                     tooltip: 'Aggiungi volume',
                                     color: AppColors.editorialRed,
-                                    onPressed: () => libraryController.incrementOwnedVolume(widget.mangaId),
+                                    onPressed: () => libraryController
+                                        .incrementOwnedVolume(widget.mangaId),
                                   ),
                                 ],
                               ),
-                              if (entry.totalVolumes != null && entry.totalVolumes! > 0)
+                              if (entry.totalVolumes != null &&
+                                  entry.totalVolumes! > 0)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 3,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: entry.volumesToBuy == 0
-                                        ? AppColors.forestGreen.withValues(alpha: 0.15)
-                                        : AppColors.editorialRed.withValues(alpha: 0.15),
+                                        ? AppColors.forestGreen.withValues(
+                                            alpha: 0.15,
+                                          )
+                                        : AppColors.editorialRed.withValues(
+                                            alpha: 0.15,
+                                          ),
                                     borderRadius: AppRadii.brXs,
                                     border: Border.all(
                                       color: entry.volumesToBuy == 0
@@ -745,16 +896,23 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                                 ),
                             ],
                           ),
-                          if (entry.totalVolumes != null && entry.totalVolumes! > 0) ...[
+                          if (entry.totalVolumes != null &&
+                              entry.totalVolumes! > 0) ...[
                             const SizedBox(height: 8),
                             Container(
                               height: 3,
-                              color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                              color: isDark
+                                  ? AppColors.nightSurface
+                                  : AppColors.paperSurface,
                               alignment: Alignment.centerLeft,
                               child: FractionallySizedBox(
-                                widthFactor: (entry.ownedVolumes / entry.totalVolumes!).clamp(0.0, 1.0),
+                                widthFactor:
+                                    (entry.ownedVolumes / entry.totalVolumes!)
+                                        .clamp(0.0, 1.0),
                                 child: Container(
-                                  color: entry.volumesToBuy == 0 ? AppColors.forestGreen : AppColors.editorialRed,
+                                  color: entry.volumesToBuy == 0
+                                      ? AppColors.forestGreen
+                                      : AppColors.editorialRed,
                                 ),
                               ),
                             ),
@@ -778,12 +936,16 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           ),
                         ),
                         Text(
-                          entry.rating > 0 ? '${entry.rating} / 10' : 'NON VALUTATO',
+                          entry.rating > 0
+                              ? '${entry.rating} / 10'
+                              : 'NON VALUTATO',
                           style: AppTypography.volumeMono(
                             isDark: isDark,
                             fontSize: 11,
                             fontWeight: FontWeight.w800,
-                            color: entry.rating > 0 ? AppColors.paperGold : null,
+                            color: entry.rating > 0
+                                ? AppColors.paperGold
+                                : null,
                           ),
                         ),
                       ],
@@ -793,7 +955,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                       rating: entry.rating,
                       iconSize: 24,
                       onRatingChanged: (newRating) {
-                        libraryController.updateRating(widget.mangaId, newRating);
+                        libraryController.updateRating(
+                          widget.mangaId,
+                          newRating,
+                        );
                       },
                     ),
 
@@ -818,7 +983,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                               setState(() => _isEditingNotes = true);
                             },
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
@@ -840,7 +1008,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                         controller: _notesController,
                         maxLines: 3,
                         decoration: const InputDecoration(
-                          hintText: 'Aggiungi una recensione o promemoria del volume...',
+                          hintText:
+                              'Aggiungi una recensione o promemoria del volume...',
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -848,13 +1017,17 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () => setState(() => _isEditingNotes = false),
+                            onPressed: () =>
+                                setState(() => _isEditingNotes = false),
                             child: const Text('Annulla'),
                           ),
                           const SizedBox(width: 8),
                           ElevatedButton(
                             onPressed: () {
-                              libraryController.updateNotes(widget.mangaId, _notesController.text.trim());
+                              libraryController.updateNotes(
+                                widget.mangaId,
+                                _notesController.text.trim(),
+                              );
                               setState(() => _isEditingNotes = false);
                             },
                             child: const Text('SALVA'),
@@ -867,15 +1040,22 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                          color: isDark
+                              ? AppColors.nightSurfaceVariant
+                              : AppColors.paperSurfaceVariant,
                           borderRadius: AppRadii.brXs,
                           border: Border(
-                            left: BorderSide(color: AppColors.editorialRed, width: 3),
+                            left: BorderSide(
+                              color: AppColors.editorialRed,
+                              width: 3,
+                            ),
                           ),
                         ),
                         child: Text(
                           entry.notes,
-                          style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ] else ...[
@@ -889,7 +1069,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                     const SizedBox(height: 14),
                     Container(
                       height: 1,
-                      color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                      color: isDark
+                          ? AppColors.nightBorder
+                          : AppColors.paperBorder,
                     ),
                     const SizedBox(height: 10),
 
@@ -898,7 +1080,8 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'REGISTRATO: ${DateFormatter.formatShortDate(entry.addedAt)}'.toUpperCase(),
+                          'REGISTRATO: ${DateFormatter.formatShortDate(entry.addedAt)}'
+                              .toUpperCase(),
                           style: AppTypography.volumeMono(
                             isDark: isDark,
                             fontSize: 9,
@@ -906,8 +1089,13 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           ),
                         ),
                         TextButton.icon(
-                          onPressed: () => _confirmDelete(context, libraryController),
-                          icon: const Icon(Icons.delete_outline_rounded, size: 14, color: AppColors.editorialRed),
+                          onPressed: () =>
+                              _confirmDelete(context, libraryController),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 14,
+                            color: AppColors.editorialRed,
+                          ),
                           label: Text(
                             'RIMUOVI',
                             style: AppTypography.volumeMono(
@@ -950,12 +1138,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                 runSpacing: 6,
                 children: _manga!.genres.map((genre) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                      color: isDark
+                          ? AppColors.nightSurface
+                          : AppColors.paperSurface,
                       borderRadius: AppRadii.brXs,
                       border: Border.all(
-                        color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                        color: isDark
+                            ? AppColors.nightBorder
+                            : AppColors.paperBorder,
                       ),
                     ),
                     child: Text(
@@ -976,8 +1171,12 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
             // SEZIONE TRAMA DELL'OPERA (Sinossi in stile retro copertina)
             EditorialSectionHeader(
               index: isInLibrary
-                  ? (_manga?.genres != null && _manga!.genres.isNotEmpty ? '03' : '02')
-                  : (_manga?.genres != null && _manga!.genres.isNotEmpty ? '02' : '01'),
+                  ? (_manga?.genres != null && _manga!.genres.isNotEmpty
+                        ? '03'
+                        : '02')
+                  : (_manga?.genres != null && _manga!.genres.isNotEmpty
+                        ? '02'
+                        : '01'),
               title: 'TRAMA DELL\'OPERA',
               subtitle: 'Sinossi editoriale',
             ),
@@ -989,14 +1188,19 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
               const SkeletonLoader(width: double.infinity, height: 14),
               const SizedBox(height: 6),
               const SkeletonLoader(width: 220, height: 14),
-            ] else if (_manga?.synopsis != null && _manga!.synopsis!.isNotEmpty) ...[
+            ] else if (_manga?.synopsis != null &&
+                _manga!.synopsis!.isNotEmpty) ...[
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                  color: isDark
+                      ? AppColors.nightSurface
+                      : AppColors.paperSurface,
                   borderRadius: AppRadii.brSm,
                   border: Border.all(
-                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    color: isDark
+                        ? AppColors.nightBorder
+                        : AppColors.paperBorder,
                     width: 1,
                   ),
                 ),

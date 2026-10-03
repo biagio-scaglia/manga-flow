@@ -18,7 +18,10 @@ class MangaCard extends StatelessWidget {
     this.libraryEntry,
     required this.onTap,
     this.heroTagPrefix = 'cover',
-  }) : assert(manga != null || libraryEntry != null, 'Deve essere fornito o manga o libraryEntry');
+  }) : assert(
+         manga != null || libraryEntry != null,
+         'Deve essere fornito o manga o libraryEntry',
+       );
 
   int get id => manga?.id ?? libraryEntry!.mangaId;
   String get title => manga?.title ?? libraryEntry!.title;
@@ -50,7 +53,9 @@ class MangaCard extends StatelessWidget {
                       coverUrl: coverUrl,
                       heroTag: '$heroTagPrefix-$id',
                       showSpineEffect: true,
-                      badge: entry != null ? StatusBadge(status: entry.status, isCompact: true) : null,
+                      badge: entry != null
+                          ? StatusBadge(status: entry.status, isCompact: true)
+                          : null,
                     ),
 
                     // Icona Segnalibro Preferito (timbro editoriale in alto a destra)
@@ -80,7 +85,9 @@ class MangaCard extends StatelessWidget {
                       ),
 
                     // Barra sottile di lettura alla base della copertina
-                    if (entry != null && entry.totalChapters != null && entry.totalChapters! > 0)
+                    if (entry != null &&
+                        entry.totalChapters != null &&
+                        entry.totalChapters! > 0)
                       Positioned(
                         bottom: 0,
                         left: 0,
@@ -133,7 +140,9 @@ class MangaCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontSize: 10,
-                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                    color: isDark
+                        ? AppColors.nightInkMuted
+                        : AppColors.inkMuted,
                   ),
                 ),
             ],

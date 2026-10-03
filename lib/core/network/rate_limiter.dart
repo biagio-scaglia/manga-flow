@@ -31,7 +31,9 @@ class RateLimiter {
   void blockFor(Duration duration) {
     _blockedUntil = DateTime.now().add(duration);
     if (kDebugMode) {
-      debugPrint('[RateLimiter] Bloccato per ${duration.inSeconds} secondi fino a $_blockedUntil');
+      debugPrint(
+        '[RateLimiter] Bloccato per ${duration.inSeconds} secondi fino a $_blockedUntil',
+      );
     }
   }
 
@@ -57,7 +59,9 @@ class RateLimiter {
       final waitTime = window - now.difference(oldestInWindow);
       if (waitTime > Duration.zero) {
         if (kDebugMode) {
-          debugPrint('[RateLimiter] Finestra piena. Attesa di ${waitTime.inMilliseconds}ms');
+          debugPrint(
+            '[RateLimiter] Finestra piena. Attesa di ${waitTime.inMilliseconds}ms',
+          );
         }
         await Future.delayed(waitTime);
       }

@@ -107,10 +107,7 @@ class CatalogFilterTabs extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: AppRadii.brXs,
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 1.4 : 1.0,
-          ),
+          border: Border.all(color: borderColor, width: isSelected ? 1.4 : 1.0),
         ),
         alignment: Alignment.center,
         child: Text(

@@ -48,16 +48,19 @@ class RemoteMangaDto {
     if (json.containsKey('title') && json['title'] is Map<String, dynamic>) {
       final id = json['id'] as int? ?? 0;
       final titles = json['title'] as Map<String, dynamic>;
-      final canonicalTitle = titles['romaji']?.toString() ??
+      final canonicalTitle =
+          titles['romaji']?.toString() ??
           titles['english']?.toString() ??
           titles['native']?.toString() ??
           'Senza titolo';
 
       final coverImages = json['coverImage'] as Map<String, dynamic>?;
-      final imgUrl = coverImages?['medium']?.toString() ??
+      final imgUrl =
+          coverImages?['medium']?.toString() ??
           coverImages?['large']?.toString() ??
           '';
-      final largeImgUrl = coverImages?['extraLarge']?.toString() ??
+      final largeImgUrl =
+          coverImages?['extraLarge']?.toString() ??
           coverImages?['large']?.toString() ??
           imgUrl;
 
@@ -78,7 +81,9 @@ class RemoteMangaDto {
             if (node is Map<String, dynamic> && node['name'] != null) {
               final nameMap = node['name'] as Map<String, dynamic>;
               final fullName = nameMap['full']?.toString();
-              if (fullName != null && fullName.isNotEmpty && !authorsList.contains(fullName)) {
+              if (fullName != null &&
+                  fullName.isNotEmpty &&
+                  !authorsList.contains(fullName)) {
                 authorsList.add(fullName);
               }
             }
@@ -106,12 +111,16 @@ class RemoteMangaDto {
       // Pulizia descrizione da tag HTML
       String? cleanDesc = json['description']?.toString();
       if (cleanDesc != null) {
-        cleanDesc = cleanDesc.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ' ').replaceAll('  ', ' ').trim();
+        cleanDesc = cleanDesc
+            .replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ' ')
+            .replaceAll('  ', ' ')
+            .trim();
       }
 
       // Date di inizio
       DateTime? fromDate;
-      if (json['startDate'] != null && json['startDate'] is Map<String, dynamic>) {
+      if (json['startDate'] != null &&
+          json['startDate'] is Map<String, dynamic>) {
         final start = json['startDate'] as Map<String, dynamic>;
         final y = start['year'] as int?;
         final m = start['month'] as int? ?? 1;
@@ -163,8 +172,16 @@ class RemoteMangaDto {
       synopsis: json['synopsis'] as String?,
       imageUrl: imgUrl,
       largeImageUrl: largeImgUrl,
-      authors: (json['authors'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      genres: (json['genres'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      authors:
+          (json['authors'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      genres:
+          (json['genres'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       status: json['status'] as String? ?? 'Publishing',
       chapters: json['chapters'] as int?,
       volumes: json['volumes'] as int?,

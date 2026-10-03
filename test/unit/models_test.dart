@@ -7,11 +7,7 @@ void main() {
   test('RemoteMangaDto parse da AniList GraphQL', () {
     final aniListJson = {
       'id': 30002,
-      'title': {
-        'romaji': 'Berserk',
-        'english': 'Berserk',
-        'native': 'ベルセルク',
-      },
+      'title': {'romaji': 'Berserk', 'english': 'Berserk', 'native': 'ベルセルク'},
       'description': 'Guts, a former mercenary...',
       'coverImage': {
         'large': 'https://example.com/berserk_large.jpg',
@@ -21,9 +17,9 @@ void main() {
       'staff': {
         'nodes': [
           {
-            'name': {'full': 'Kentarou Miura'}
-          }
-        ]
+            'name': {'full': 'Kentarou Miura'},
+          },
+        ],
       },
       'status': 'RELEASING',
       'chapters': 375,

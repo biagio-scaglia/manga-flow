@@ -23,9 +23,7 @@ class HomeScreen extends StatelessWidget {
 
   void _navigateToDetail(BuildContext context, int mangaId) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MangaDetailScreen(mangaId: mangaId),
-      ),
+      MaterialPageRoute(builder: (_) => MangaDetailScreen(mangaId: mangaId)),
     );
   }
 
@@ -54,9 +52,19 @@ class HomeScreen extends StatelessWidget {
                 height: 28,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
                   color: AppColors.editorialRed,
-                  child: const Text('MF', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11)),
+                  child: const Text(
+                    'MF',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -78,7 +86,9 @@ class HomeScreen extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontSize: 9,
                     letterSpacing: 0.8,
-                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                    color: isDark
+                        ? AppColors.nightInkMuted
+                        : AppColors.inkMuted,
                   ),
                 ),
               ],
@@ -90,9 +100,9 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.tune_rounded, size: 20),
             tooltip: 'Impostazioni',
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
           ),
         ],
@@ -102,7 +112,8 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.auto_stories_outlined,
               title: 'La libreria è vuota',
               japaneseSub: '目録は空です',
-              message: 'Il primo volume deve ancora arrivare. Cerca un manga per iniziare la tua collezione.',
+              message:
+                  'Il primo volume deve ancora arrivare. Cerca un manga per iniziare la tua collezione.',
               actionLabel: 'Cerca Manga',
               onAction: onNavigateToSearch,
             )
@@ -126,8 +137,13 @@ class HomeScreen extends StatelessWidget {
                       // Hero principale
                       MangaHeroEditorial(
                         entry: continueReading.first,
-                        onTap: () => _navigateToDetail(context, continueReading.first.mangaId),
-                        onIncrement: () => libraryCtrl.incrementChapter(continueReading.first.mangaId),
+                        onTap: () => _navigateToDetail(
+                          context,
+                          continueReading.first.mangaId,
+                        ),
+                        onIncrement: () => libraryCtrl.incrementChapter(
+                          continueReading.first.mangaId,
+                        ),
                       ),
                       // Se ci sono altri manga in lettura, mostra scaffale orizzontale
                       if (continueReading.length > 1) ...[
@@ -140,7 +156,9 @@ class HomeScreen extends StatelessWidget {
                               isDark: isDark,
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                              color: isDark
+                                  ? AppColors.nightInkMuted
+                                  : AppColors.inkMuted,
                             ),
                           ),
                         ),
@@ -158,7 +176,8 @@ class HomeScreen extends StatelessWidget {
                                 margin: const EdgeInsets.only(right: 12),
                                 child: MangaCard(
                                   libraryEntry: entry,
-                                  onTap: () => _navigateToDetail(context, entry.mangaId),
+                                  onTap: () =>
+                                      _navigateToDetail(context, entry.mangaId),
                                 ),
                               );
                             },
@@ -176,7 +195,10 @@ class HomeScreen extends StatelessWidget {
                         trailing: TextButton(
                           onPressed: onNavigateToLibrary,
                           style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
@@ -205,7 +227,8 @@ class HomeScreen extends StatelessWidget {
                               margin: const EdgeInsets.only(right: 12),
                               child: MangaCard(
                                 libraryEntry: entry,
-                                onTap: () => _navigateToDetail(context, entry.mangaId),
+                                onTap: () =>
+                                    _navigateToDetail(context, entry.mangaId),
                               ),
                             );
                           },
@@ -235,7 +258,8 @@ class HomeScreen extends StatelessWidget {
                               margin: const EdgeInsets.only(right: 12),
                               child: MangaCard(
                                 libraryEntry: entry,
-                                onTap: () => _navigateToDetail(context, entry.mangaId),
+                                onTap: () =>
+                                    _navigateToDetail(context, entry.mangaId),
                               ),
                             );
                           },
@@ -246,7 +270,9 @@ class HomeScreen extends StatelessWidget {
 
                     // SEZIONE 04: STATO COLLEZIONE (Riepilogo Editoriale)
                     EditorialSectionHeader(
-                      index: continueReading.isNotEmpty ? (planToRead.isNotEmpty ? '04' : '03') : '02',
+                      index: continueReading.isNotEmpty
+                          ? (planToRead.isNotEmpty ? '04' : '03')
+                          : '02',
                       title: 'STATO COLLEZIONE',
                     ),
                     const SizedBox(height: 8),
@@ -255,10 +281,14 @@ class HomeScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                          color: isDark
+                              ? AppColors.nightSurface
+                              : AppColors.paperSurface,
                           borderRadius: AppRadii.brSm,
                           border: Border.all(
-                            color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                            color: isDark
+                                ? AppColors.nightBorder
+                                : AppColors.paperBorder,
                             width: 1,
                           ),
                         ),
@@ -326,7 +356,9 @@ class HomeScreen extends StatelessWidget {
               isDark: isDark,
               fontSize: 18,
               fontWeight: FontWeight.w900,
-              color: isHighlight ? AppColors.editorialRed : (isDark ? AppColors.nightInk : AppColors.inkBlack),
+              color: isHighlight
+                  ? AppColors.editorialRed
+                  : (isDark ? AppColors.nightInk : AppColors.inkBlack),
             ),
           ),
           const SizedBox(height: 2),
@@ -336,7 +368,9 @@ class HomeScreen extends StatelessWidget {
               isDark: isDark,
               fontSize: 9,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+              color: isDark
+                  ? AppColors.nightInkSecondary
+                  : AppColors.inkSecondary,
             ),
           ),
           Text(

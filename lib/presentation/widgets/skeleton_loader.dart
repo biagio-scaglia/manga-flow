@@ -31,9 +31,10 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.3, end: 0.8).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.3,
+      end: 0.8,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -45,8 +46,12 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = isDark ? AppColors.skeletonBaseDark : AppColors.skeletonBaseLight;
-    final highlightColor = isDark ? AppColors.skeletonHighlightDark : AppColors.skeletonHighlightLight;
+    final baseColor = isDark
+        ? AppColors.skeletonBaseDark
+        : AppColors.skeletonBaseLight;
+    final highlightColor = isDark
+        ? AppColors.skeletonHighlightDark
+        : AppColors.skeletonHighlightLight;
 
     return AnimatedBuilder(
       animation: _animation,

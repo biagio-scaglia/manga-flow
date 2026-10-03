@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manga_library/presentation/widgets/empty_state.dart';
 
 void main() {
-  testWidgets('EmptyState mostra titolo, messaggio e trigger azione', (tester) async {
+  testWidgets('EmptyState mostra titolo, messaggio e trigger azione', (
+    tester,
+  ) async {
     bool actionTriggered = false;
 
     await tester.pumpWidget(

@@ -25,7 +25,11 @@ class StaleBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.offline_bolt_outlined, size: 14, color: AppColors.paperGold),
+          const Icon(
+            Icons.offline_bolt_outlined,
+            size: 14,
+            color: AppColors.paperGold,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

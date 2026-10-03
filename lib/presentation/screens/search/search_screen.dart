@@ -37,7 +37,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 300) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 300) {
       context.read<MangaSearchController>().loadMore();
     }
   }
@@ -45,10 +46,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void _navigateToDetail(Manga manga) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => MangaDetailScreen(
-          mangaId: manga.id,
-          initialManga: manga,
-        ),
+        builder: (_) =>
+            MangaDetailScreen(mangaId: manga.id, initialManga: manga),
       ),
     );
   }
@@ -101,14 +100,20 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: _textController,
               onChanged: searchCtrl.onQueryChanged,
               textInputAction: TextInputAction.search,
-              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
               decoration: InputDecoration(
                 hintText: 'Cerca titolo, autore o serie (es. Berserk, Nana)...',
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                   color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
                   fontSize: 13,
                 ),
-                prefixIcon: const Icon(Icons.search_rounded, size: 18, color: AppColors.editorialRed),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  size: 18,
+                  color: AppColors.editorialRed,
+                ),
                 suffixIcon: _textController.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.close_rounded, size: 16),
@@ -118,7 +123,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         },
                       )
                     : null,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
               ),
             ),
           ),
@@ -127,21 +135,25 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           // Stale banner se offline o da cache
-          if (searchCtrl.isStale)
-            StaleBanner(onRefresh: searchCtrl.retry),
+          if (searchCtrl.isStale) StaleBanner(onRefresh: searchCtrl.retry),
 
           Expanded(
             child: Builder(
               builder: (context) {
                 // Errore
-                if (searchCtrl.errorMessage != null && searchCtrl.searchResults.isEmpty) {
+                if (searchCtrl.errorMessage != null &&
+                    searchCtrl.searchResults.isEmpty) {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.wifi_off_rounded, size: 36, color: AppColors.editorialRed),
+                          const Icon(
+                            Icons.wifi_off_rounded,
+                            size: 36,
+                            color: AppColors.editorialRed,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             searchCtrl.errorMessage!,
@@ -176,12 +188,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
                 // Risultati di ricerca trovati
                 if (searchCtrl.isSearching) {
-                  if (searchCtrl.searchResults.isEmpty && !searchCtrl.isLoading) {
+                  if (searchCtrl.searchResults.isEmpty &&
+                      !searchCtrl.isLoading) {
                     return const EmptyState(
                       icon: Icons.search_off_rounded,
                       title: 'Nessun volume trovato',
                       japaneseSub: '見つかりませんでした',
-                      message: 'Non abbiamo trovato alcun manga corrispondente alla tua ricerca. Prova a verificare l\'ortografia o cerca il titolo internazionale.',
+                      message:
+                          'Non abbiamo trovato alcun manga corrispondente alla tua ricerca. Prova a verificare l\'ortografia o cerca il titolo internazionale.',
                     );
                   }
 
@@ -191,18 +205,23 @@ class _SearchScreenState extends State<SearchScreen> {
                       SliverToBoxAdapter(
                         child: EditorialSectionHeader(
                           index: '01',
-                          title: 'RISULTATI (${searchCtrl.searchResults.length})',
+                          title:
+                              'RISULTATI (${searchCtrl.searchResults.length})',
                         ),
                       ),
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         sliver: SliverGrid(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: columns,
-                            childAspectRatio: 0.62,
-                            crossAxisSpacing: 14,
-                            mainAxisSpacing: 18,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: columns,
+                                childAspectRatio: 0.62,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 18,
+                              ),
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
                               if (index >= searchCtrl.searchResults.length) {
@@ -215,7 +234,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 onTap: () => _navigateToDetail(manga),
                               );
                             },
-                            childCount: searchCtrl.searchResults.length + (searchCtrl.isLoadingMore ? 2 : 0),
+                            childCount:
+                                searchCtrl.searchResults.length +
+                                (searchCtrl.isLoadingMore ? 2 : 0),
                           ),
                         ),
                       ),
@@ -233,16 +254,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         subtitle: 'I manga più amati e richiesti dai lettori',
                       ),
                     ),
-                    if (searchCtrl.isLoadingPopular && searchCtrl.popularManga.isEmpty) ...[
+                    if (searchCtrl.isLoadingPopular &&
+                        searchCtrl.popularManga.isEmpty) ...[
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         sliver: SliverGrid(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: columns,
-                            childAspectRatio: 0.62,
-                            crossAxisSpacing: 14,
-                            mainAxisSpacing: 18,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: columns,
+                                childAspectRatio: 0.62,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 18,
+                              ),
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => const MangaCardSkeleton(),
                             childCount: 6,
@@ -251,25 +277,29 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ] else ...[
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         sliver: SliverGrid(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: columns,
-                            childAspectRatio: 0.62,
-                            crossAxisSpacing: 14,
-                            mainAxisSpacing: 18,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final manga = searchCtrl.popularManga[index];
-                              return MangaCard(
-                                manga: manga,
-                                libraryEntry: libraryCtrl.getEntry(manga.id),
-                                onTap: () => _navigateToDetail(manga),
-                              );
-                            },
-                            childCount: searchCtrl.popularManga.length,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: columns,
+                                childAspectRatio: 0.62,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 18,
+                              ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final manga = searchCtrl.popularManga[index];
+                            return MangaCard(
+                              manga: manga,
+                              libraryEntry: libraryCtrl.getEntry(manga.id),
+                              onTap: () => _navigateToDetail(manga),
+                            );
+                          }, childCount: searchCtrl.popularManga.length),
                         ),
                       ),
                     ],

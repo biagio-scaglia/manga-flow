@@ -35,7 +35,9 @@ void main() async {
   );
 
   // Repositories
-  final LibraryRepository libraryRepository = LibraryRepositoryImpl(storage: jsonStorage);
+  final LibraryRepository libraryRepository = LibraryRepositoryImpl(
+    storage: jsonStorage,
+  );
   final MangaRepository mangaRepository = MangaRepositoryImpl(
     apiClient: apiClient,
     cacheManager: cacheManager,

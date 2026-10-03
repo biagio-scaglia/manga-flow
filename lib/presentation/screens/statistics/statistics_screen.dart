@@ -50,7 +50,8 @@ class StatisticsScreen extends StatelessWidget {
               icon: Icons.query_stats_rounded,
               title: 'Nessuna statistica registrata',
               japaneseSub: 'データなし',
-              message: 'Le statistiche vengono calcolate in tempo reale in base ai manga e ai capitoli presenti nel tuo catalogo personale.',
+              message:
+                  'Le statistiche vengono calcolate in tempo reale in base ai manga e ai capitoli presenti nel tuo catalogo personale.',
               actionLabel: 'Cerca Manga',
               onAction: onNavigateToSearch,
             )
@@ -114,8 +115,12 @@ class StatisticsScreen extends StatelessWidget {
                               child: _buildEditorialStatTile(
                                 context,
                                 label: 'MEDIA VOTO',
-                                value: stats.ratedCount > 0 ? '${stats.averageRating} / 10' : 'N/D',
-                                sub: stats.ratedCount > 0 ? 'SU ${stats.ratedCount} VALUTATI' : 'NESSUN VOTO',
+                                value: stats.ratedCount > 0
+                                    ? '${stats.averageRating} / 10'
+                                    : 'N/D',
+                                sub: stats.ratedCount > 0
+                                    ? 'SU ${stats.ratedCount} VALUTATI'
+                                    : 'NESSUN VOTO',
                                 isDark: isDark,
                               ),
                             ),
@@ -140,10 +145,14 @@ class StatisticsScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                        color: isDark
+                            ? AppColors.nightSurface
+                            : AppColors.paperSurface,
                         borderRadius: AppRadii.brSm,
                         border: Border.all(
-                          color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                          color: isDark
+                              ? AppColors.nightBorder
+                              : AppColors.paperBorder,
                           width: 1,
                         ),
                       ),
@@ -214,17 +223,23 @@ class StatisticsScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                          color: isDark
+                              ? AppColors.nightSurface
+                              : AppColors.paperSurface,
                           borderRadius: AppRadii.brSm,
                           border: Border.all(
-                            color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                            color: isDark
+                                ? AppColors.nightBorder
+                                : AppColors.paperBorder,
                             width: 1,
                           ),
                         ),
                         child: Column(
                           children: stats.topGenres.map((entry) {
                             final maxCount = stats.topGenres.first.value;
-                            final double ratio = maxCount > 0 ? entry.value / maxCount : 0;
+                            final double ratio = maxCount > 0
+                                ? entry.value / maxCount
+                                : 0;
 
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 10),
@@ -232,7 +247,8 @@ class StatisticsScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         entry.key.toUpperCase(),
@@ -248,7 +264,9 @@ class StatisticsScreen extends StatelessWidget {
                                           isDark: isDark,
                                           fontSize: 10,
                                           fontWeight: FontWeight.w600,
-                                          color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                                          color: isDark
+                                              ? AppColors.nightInkMuted
+                                              : AppColors.inkMuted,
                                         ),
                                       ),
                                     ],
@@ -256,11 +274,15 @@ class StatisticsScreen extends StatelessWidget {
                                   const SizedBox(height: 5),
                                   Container(
                                     height: 3,
-                                    color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                                    color: isDark
+                                        ? AppColors.nightSurfaceVariant
+                                        : AppColors.paperSurfaceVariant,
                                     alignment: Alignment.centerLeft,
                                     child: FractionallySizedBox(
                                       widthFactor: ratio.clamp(0.0, 1.0),
-                                      child: Container(color: AppColors.editorialRed),
+                                      child: Container(
+                                        color: AppColors.editorialRed,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -316,7 +338,9 @@ class StatisticsScreen extends StatelessWidget {
               isDark: isDark,
               fontSize: 20,
               fontWeight: FontWeight.w900,
-              color: isRed ? AppColors.editorialRed : (isDark ? AppColors.nightInk : AppColors.inkBlack),
+              color: isRed
+                  ? AppColors.editorialRed
+                  : (isDark ? AppColors.nightInk : AppColors.inkBlack),
             ),
           ),
           const SizedBox(height: 2),
@@ -326,7 +350,9 @@ class StatisticsScreen extends StatelessWidget {
               isDark: isDark,
               fontSize: 8,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+              color: isDark
+                  ? AppColors.nightInkSecondary
+                  : AppColors.inkSecondary,
             ),
           ),
         ],
@@ -352,11 +378,7 @@ class StatisticsScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  color: color,
-                ),
+                Container(width: 6, height: 6, color: color),
                 const SizedBox(width: 6),
                 Text(
                   label,
@@ -382,7 +404,9 @@ class StatisticsScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Container(
           height: 3,
-          color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+          color: isDark
+              ? AppColors.nightSurfaceVariant
+              : AppColors.paperSurfaceVariant,
           alignment: Alignment.centerLeft,
           child: FractionallySizedBox(
             widthFactor: percentage.clamp(0.0, 1.0),

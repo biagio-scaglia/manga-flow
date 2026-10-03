@@ -18,16 +18,19 @@ void main() {
     expect(limiter.isBlocked, isFalse);
   });
 
-  test('RateLimiter blocca e solleva eccezione quando forzato in blocco', () async {
-    final limiter = RateLimiter(
-      maxRequests: 3,
-      window: const Duration(seconds: 1),
-      minInterval: const Duration(milliseconds: 50),
-    );
+  test(
+    'RateLimiter blocca e solleva eccezione quando forzato in blocco',
+    () async {
+      final limiter = RateLimiter(
+        maxRequests: 3,
+        window: const Duration(seconds: 1),
+        minInterval: const Duration(milliseconds: 50),
+      );
 
-    limiter.blockFor(const Duration(seconds: 5));
-    expect(limiter.isBlocked, isTrue);
+      limiter.blockFor(const Duration(seconds: 5));
+      expect(limiter.isBlocked, isTrue);
 
-    expect(() => limiter.acquire(), throwsA(isA<RateLimitException>()));
-  });
+      expect(() => limiter.acquire(), throwsA(isA<RateLimitException>()));
+    },
+  );
 }

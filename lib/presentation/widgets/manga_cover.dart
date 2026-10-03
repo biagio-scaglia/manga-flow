@@ -33,7 +33,9 @@ class MangaCover extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+          color: isDark
+              ? AppColors.nightSurfaceVariant
+              : AppColors.paperSurfaceVariant,
           borderRadius: AppRadii.brXs,
           border: Border.all(color: borderColor, width: 1),
           boxShadow: [
@@ -53,11 +55,14 @@ class MangaCover extends StatelessWidget {
                 Image.network(
                   coverUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _buildPlaceholder(context, isDark),
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildPlaceholder(context, isDark),
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Container(
-                      color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                      color: isDark
+                          ? AppColors.nightSurfaceVariant
+                          : AppColors.paperSurfaceVariant,
                       child: Center(
                         child: SizedBox(
                           width: 18,
@@ -65,7 +70,9 @@ class MangaCover extends StatelessWidget {
                           child: CircularProgressIndicator(
                             strokeWidth: 1.5,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                              isDark
+                                  ? AppColors.nightInkMuted
+                                  : AppColors.inkMuted,
                             ),
                           ),
                         ),
@@ -96,12 +103,7 @@ class MangaCover extends StatelessWidget {
                 ),
 
               // Badge sovrapposto se presente
-              if (badge != null)
-                Positioned(
-                  top: 4,
-                  left: 4,
-                  child: badge!,
-                ),
+              if (badge != null) Positioned(top: 4, left: 4, child: badge!),
             ],
           ),
         ),
@@ -133,7 +135,9 @@ class MangaCover extends StatelessWidget {
 
   Widget _buildPlaceholder(BuildContext context, bool isDark) {
     return Container(
-      color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+      color: isDark
+          ? AppColors.nightSurfaceVariant
+          : AppColors.paperSurfaceVariant,
       padding: const EdgeInsets.all(8),
       child: Center(
         child: Column(

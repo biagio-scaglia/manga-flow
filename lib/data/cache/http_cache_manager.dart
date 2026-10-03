@@ -29,7 +29,10 @@ class CacheEntry<T> {
     return CacheEntry(
       data: json['data'] as T,
       timestamp: DateTime.parse(json['timestamp'] as String),
-      ttl: Duration(milliseconds: json['ttl_ms'] as int? ?? AppConstants.cacheTtl.inMilliseconds),
+      ttl: Duration(
+        milliseconds:
+            json['ttl_ms'] as int? ?? AppConstants.cacheTtl.inMilliseconds,
+      ),
     );
   }
 }
@@ -76,11 +79,14 @@ class HttpCacheManager {
       if (await file.exists()) {
         final content = await file.readAsString();
         if (content.isNotEmpty) {
-          final Map<String, dynamic> decoded = jsonDecode(content) as Map<String, dynamic>;
+          final Map<String, dynamic> decoded =
+              jsonDecode(content) as Map<String, dynamic>;
           for (final entry in decoded.entries) {
             if (entry.value is Map<String, dynamic>) {
               try {
-                final cacheEntry = CacheEntry<dynamic>.fromJson(entry.value as Map<String, dynamic>);
+                final cacheEntry = CacheEntry<dynamic>.fromJson(
+                  entry.value as Map<String, dynamic>,
+                );
                 _memoryCache[entry.key] = cacheEntry;
               } catch (_) {}
             }
@@ -90,7 +96,9 @@ class HttpCacheManager {
       _isInitialized = true;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[HttpCacheManager] Inizializzazione cache su disco non disponibile: $e');
+        debugPrint(
+          '[HttpCacheManager] Inizializzazione cache su disco non disponibile: $e',
+        );
       }
       _isInitialized = true;
     }
