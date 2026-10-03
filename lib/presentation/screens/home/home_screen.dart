@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:manga_library/core/theme/app_colors.dart';
-import 'package:manga_library/core/utils/date_formatter.dart';
-import 'package:manga_library/domain/entities/library_entry.dart';
+import 'package:manga_library/core/theme/app_radii.dart';
+import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/presentation/controllers/library_controller.dart';
 import 'package:manga_library/presentation/screens/detail/manga_detail_screen.dart';
 import 'package:manga_library/presentation/screens/settings/settings_screen.dart';
+import 'package:manga_library/presentation/widgets/editorial_section_header.dart';
 import 'package:manga_library/presentation/widgets/empty_state.dart';
 import 'package:manga_library/presentation/widgets/manga_card.dart';
+import 'package:manga_library/presentation/widgets/manga_hero_editorial.dart';
 
 class HomeScreen extends StatelessWidget {
   final VoidCallback? onNavigateToSearch;
@@ -18,17 +20,6 @@ class HomeScreen extends StatelessWidget {
     this.onNavigateToSearch,
     this.onNavigateToLibrary,
   });
-
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour >= 5 && hour < 12) {
-      return 'Buongiorno';
-    } else if (hour >= 12 && hour < 18) {
-      return 'Buon pomeriggio';
-    } else {
-      return 'Buonasera';
-    }
-  }
 
   void _navigateToDetail(BuildContext context, int mangaId) {
     Navigator.of(context).push(
@@ -41,6 +32,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final libraryCtrl = context.watch<LibraryController>();
     final continueReading = libraryCtrl.continueReadingEntries;
     final recentlyAdded = libraryCtrl.recentlyAddedEntries;
@@ -51,22 +43,53 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              _getGreeting(),
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+              decoration: BoxDecoration(
+                color: AppColors.editorialRed,
+                borderRadius: AppRadii.brXs,
+              ),
+              child: const Text(
+                'MF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 11,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ),
-            Text(
-              'Pronto a continuare la lettura?',
-              style: theme.textTheme.bodySmall,
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'MANGAFLOW',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  'CATALOGO EDITORIALE • 漫画目録',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 9,
+                    letterSpacing: 0.8,
+                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(Icons.tune_rounded, size: 20),
             tooltip: 'Impostazioni',
             onPressed: () {
               Navigator.of(context).push(
@@ -78,124 +101,101 @@ class HomeScreen extends StatelessWidget {
       ),
       body: isLibraryEmpty
           ? EmptyState(
-              icon: Icons.menu_book_rounded,
-              title: 'La tua libreria è vuota',
-              message: 'Cerca i tuoi manga preferiti, aggiungili alla libreria e tieni traccia dei tuoi capitoli.',
+              icon: Icons.auto_stories_outlined,
+              title: 'La libreria è vuota',
+              japaneseSub: '目録は空です',
+              message: 'Il primo volume deve ancora arrivare. Cerca un manga per iniziare la tua collezione.',
               actionLabel: 'Cerca Manga',
               onAction: onNavigateToSearch,
             )
           : RefreshIndicator(
               onRefresh: libraryCtrl.loadLibrary,
+              color: AppColors.editorialRed,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Sezione: Continua a leggere
+                    // SEZIONE 01: CONTINUA LA LETTURA
                     if (continueReading.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Continua a leggere',
-                              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            if (continueReading.length > 1)
-                              Text(
-                                '${continueReading.length} in corso',
-                                style: theme.textTheme.bodySmall,
-                              ),
-                          ],
-                        ),
+                      const EditorialSectionHeader(
+                        index: '01',
+                        title: 'CONTINUA LA LETTURA',
+                        subtitle: 'Riprendi dal tuo ultimo capitolo aperto',
                       ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 190,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
+                      const SizedBox(height: 8),
+                      // Hero principale
+                      MangaHeroEditorial(
+                        entry: continueReading.first,
+                        onTap: () => _navigateToDetail(context, continueReading.first.mangaId),
+                        onIncrement: () => libraryCtrl.incrementChapter(continueReading.first.mangaId),
+                      ),
+                      // Se ci sono altri manga in lettura, mostra scaffale orizzontale
+                      if (continueReading.length > 1) ...[
+                        const SizedBox(height: 12),
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: continueReading.length,
-                          itemBuilder: (context, index) {
-                            final entry = continueReading[index];
-                            return _buildContinueReadingCard(context, entry, libraryCtrl);
-                          },
+                          child: Text(
+                            'ALTRI IN CORSO (${continueReading.length - 1})',
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          height: 195,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: continueReading.length - 1,
+                            itemBuilder: (context, index) {
+                              final entry = continueReading[index + 1];
+                              return Container(
+                                width: 110,
+                                margin: const EdgeInsets.only(right: 12),
+                                child: MangaCard(
+                                  libraryEntry: entry,
+                                  onTap: () => _navigateToDetail(context, entry.mangaId),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 20),
                     ],
 
-                    // Sezione: Statistiche Rapide
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Riepilogo Rapido',
-                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildQuickStatCard(
-                              context,
-                              'Manga',
-                              '${stats.totalManga}',
-                              Icons.collections_bookmark_rounded,
-                              AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildQuickStatCard(
-                              context,
-                              'In lettura',
-                              '${stats.readingCount}',
-                              Icons.auto_stories_rounded,
-                              AppColors.statusReading,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildQuickStatCard(
-                              context,
-                              'Capitoli',
-                              '${stats.totalChaptersRead}',
-                              Icons.bookmark_added_rounded,
-                              AppColors.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    // Sezione: Aggiunti di recente
+                    // SEZIONE 02: ULTIMI AGGIUNTI
                     if (recentlyAdded.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Aggiunti di recente',
-                              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                      EditorialSectionHeader(
+                        index: continueReading.isNotEmpty ? '02' : '01',
+                        title: 'ULTIMI AGGIUNTI',
+                        trailing: TextButton(
+                          onPressed: onNavigateToLibrary,
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'VEDI TUTTI',
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.editorialRed,
                             ),
-                            TextButton(
-                              onPressed: onNavigateToLibrary,
-                              child: const Text('Vedi tutti'),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
-                        height: 220,
+                        height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -203,7 +203,7 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final entry = recentlyAdded[index];
                             return Container(
-                              width: 120,
+                              width: 112,
                               margin: const EdgeInsets.only(right: 12),
                               child: MangaCard(
                                 libraryEntry: entry,
@@ -213,21 +213,19 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 20),
                     ],
 
-                    // Sezione: Da leggere
+                    // SEZIONE 03: DA LEGGERE
                     if (planToRead.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'Da leggere',
-                          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                        ),
+                      EditorialSectionHeader(
+                        index: continueReading.isNotEmpty ? '03' : '02',
+                        title: 'DA LEGGERE',
+                        subtitle: 'Volumi in lista d\'attesa',
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       SizedBox(
-                        height: 220,
+                        height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -235,7 +233,7 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final entry = planToRead[index];
                             return Container(
-                              width: 120,
+                              width: 112,
                               margin: const EdgeInsets.only(right: 12),
                               child: MangaCard(
                                 libraryEntry: entry,
@@ -245,7 +243,65 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                       ),
+                      const SizedBox(height: 20),
                     ],
+
+                    // SEZIONE 04: STATO COLLEZIONE (Riepilogo Editoriale)
+                    EditorialSectionHeader(
+                      index: continueReading.isNotEmpty ? (planToRead.isNotEmpty ? '04' : '03') : '02',
+                      title: 'STATO COLLEZIONE',
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                          borderRadius: AppRadii.brSm,
+                          border: Border.all(
+                            color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            _buildEditorialStatCounter(
+                              context,
+                              value: '${stats.totalManga}',
+                              label: 'OPERE',
+                              sub: 'IN CATALOGO',
+                              isDark: isDark,
+                            ),
+                            _buildStatDivider(isDark),
+                            _buildEditorialStatCounter(
+                              context,
+                              value: '${stats.totalChaptersRead}',
+                              label: 'CAPITOLI',
+                              sub: 'LETTI',
+                              isDark: isDark,
+                            ),
+                            _buildStatDivider(isDark),
+                            _buildEditorialStatCounter(
+                              context,
+                              value: '${stats.totalOwnedVolumes}',
+                              label: 'VOLUMI',
+                              sub: 'POSSEDUTI',
+                              isDark: isDark,
+                              isHighlight: true,
+                            ),
+                            _buildStatDivider(isDark),
+                            _buildEditorialStatCounter(
+                              context,
+                              value: '${stats.completedCount}',
+                              label: 'SERIE',
+                              sub: 'CONCLUSE',
+                              isDark: isDark,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 32),
                   ],
@@ -255,134 +311,56 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContinueReadingCard(
-    BuildContext context,
-    LibraryEntry entry,
-    LibraryController libraryCtrl,
-  ) {
-    final theme = Theme.of(context);
-
-    return Container(
-      width: 290,
-      margin: const EdgeInsets.only(right: 14),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor, width: 1),
-      ),
-      child: InkWell(
-        onTap: () => _navigateToDetail(context, entry.mangaId),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              // Copertina
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: SizedBox(
-                  width: 75,
-                  height: 110,
-                  child: Image.network(
-                    entry.coverUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: AppColors.darkSurfaceVariant,
-                      child: const Icon(Icons.broken_image_rounded),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-
-              // Dettagli e progresso rapido
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      entry.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Capitolo ${entry.currentChapter}${entry.totalChapters != null && entry.totalChapters! > 0 ? ' / ${entry.totalChapters}' : ''}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (entry.lastReadAt != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        DateFormatter.formatRelativeDate(entry.lastReadAt),
-                        style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-
-                    // Pulsante rapido +1 capitolo
-                    ElevatedButton.icon(
-                      onPressed: () => libraryCtrl.incrementChapter(entry.mangaId),
-                      icon: const Icon(Icons.add_rounded, size: 16),
-                      label: const Text('+1 Cap', style: TextStyle(fontSize: 12)),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickStatCard(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.dividerColor, width: 1),
-      ),
+  Widget _buildEditorialStatCounter(
+    BuildContext context, {
+    required String value,
+    required String label,
+    required String sub,
+    required bool isDark,
+    bool isHighlight = false,
+  }) {
+    return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: color),
-          const SizedBox(height: 8),
           Text(
             value,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
+            style: AppTypography.volumeMono(
+              isDark: isDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: isHighlight ? AppColors.editorialRed : (isDark ? AppColors.nightInk : AppColors.inkBlack),
             ),
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+            style: AppTypography.volumeMono(
+              isDark: isDark,
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+            ),
+          ),
+          Text(
+            sub,
+            style: AppTypography.volumeMono(
+              isDark: isDark,
+              fontSize: 8,
+              fontWeight: FontWeight.w600,
+              color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatDivider(bool isDark) {
+    return Container(
+      width: 1,
+      height: 36,
+      color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
 }

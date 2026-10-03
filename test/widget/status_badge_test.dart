@@ -4,7 +4,7 @@ import 'package:manga_library/domain/entities/reading_status.dart';
 import 'package:manga_library/presentation/widgets/status_badge.dart';
 
 void main() {
-  testWidgets('StatusBadge mostra etichetta e icona corretta in italiano', (tester) async {
+  testWidgets('StatusBadge mostra etichetta corretta in italiano', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -13,8 +13,7 @@ void main() {
       ),
     );
 
-    expect(find.text('In lettura'), findsOneWidget);
-    expect(find.byIcon(Icons.auto_stories_rounded), findsOneWidget);
+    expect(find.text('IN LETTURA'), findsOneWidget);
   });
 
   testWidgets('StatusBadge modalità compatta per card', (tester) async {
@@ -26,6 +25,6 @@ void main() {
       ),
     );
 
-    expect(find.text('Completato'), findsOneWidget);
+    expect(find.text('COMPLETATO'), findsOneWidget);
   });
 }

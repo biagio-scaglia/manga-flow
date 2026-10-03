@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:manga_library/core/theme/app_colors.dart';
-import 'package:manga_library/domain/entities/library_entry.dart';
-import 'package:manga_library/domain/entities/manga.dart';
-import 'package:manga_library/presentation/widgets/status_badge.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
+import '../../domain/entities/library_entry.dart';
+import '../../domain/entities/manga.dart';
+import 'manga_cover.dart';
+import 'status_badge.dart';
 
 class MangaCard extends StatelessWidget {
   final Manga? manga;
@@ -25,6 +27,7 @@ class MangaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final entry = libraryEntry;
 
     return Semantics(
@@ -34,107 +37,61 @@ class MangaCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Copertina con rapporto di forma 3:4 o 2:3
+              // Copertina fisica del volume
               Expanded(
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: theme.dividerColor,
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Hero(
-                          tag: '$heroTagPrefix-$id',
-                          child: Image.network(
-                            coverUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: AppColors.darkSurfaceVariant,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.image_not_supported_rounded,
-                                    size: 32,
-                                    color: AppColors.textMutedDark,
-                                  ),
-                                ),
-                              );
-                            },
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                color: AppColors.darkSurfaceVariant,
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                    MangaCover(
+                      coverUrl: coverUrl,
+                      heroTag: '$heroTagPrefix-$id',
+                      showSpineEffect: true,
+                      badge: entry != null ? StatusBadge(status: entry.status, isCompact: true) : null,
                     ),
 
-                    // Badge di stato (se presente in libreria)
-                    if (entry != null)
-                      Positioned(
-                        top: 8,
-                        left: 8,
-                        child: StatusBadge(status: entry.status, isCompact: true),
-                      ),
-
-                    // Icona Preferito
+                    // Icona Segnalibro Preferito (timbro editoriale in alto a destra)
                     if (entry != null && entry.isFavorite)
                       Positioned(
-                        top: 8,
-                        right: 8,
+                        top: 4,
+                        right: 4,
                         child: Container(
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
-                            shape: BoxShape.circle,
+                            color: AppColors.editorialRed,
+                            borderRadius: BorderRadius.circular(2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 3,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
                           ),
                           child: const Icon(
                             Icons.favorite_rounded,
-                            size: 14,
-                            color: AppColors.statusFavorite,
+                            size: 11,
+                            color: Colors.white,
                           ),
                         ),
                       ),
 
-                    // Barra di progresso inferiore per voci in libreria
+                    // Barra sottile di lettura alla base della copertina
                     if (entry != null && entry.totalChapters != null && entry.totalChapters! > 0)
                       Positioned(
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
-                          child: LinearProgressIndicator(
-                            value: entry.progressPercentage,
-                            minHeight: 4,
-                            backgroundColor: Colors.black.withValues(alpha: 0.5),
-                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.statusReading),
+                        child: Container(
+                          height: 3,
+                          color: Colors.black45,
+                          alignment: Alignment.centerLeft,
+                          child: FractionallySizedBox(
+                            widthFactor: entry.progressPercentage,
+                            child: Container(color: AppColors.editorialRed),
                           ),
                         ),
                       ),
@@ -142,30 +99,31 @@ class MangaCard extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
 
-              // Titolo
+              // Titolo editoriale
               Text(
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
                   height: 1.2,
                 ),
               ),
 
               const SizedBox(height: 2),
 
-              // Info progresso o autore
+              // Metadata / Progresso / Autore
               if (entry != null)
                 Text(
-                  'Capitolo ${entry.currentChapter}${entry.totalChapters != null && entry.totalChapters! > 0 ? ' / ${entry.totalChapters}' : ''}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 11,
+                  'CAP. ${entry.currentChapter}${entry.totalChapters != null && entry.totalChapters! > 0 ? ' / ${entry.totalChapters}' : ''}',
+                  style: AppTypography.volumeMono(
+                    isDark: isDark,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.editorialRed,
                   ),
                 )
               else if (manga != null)
@@ -173,7 +131,10 @@ class MangaCard extends StatelessWidget {
                   manga!.authorDisplay,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 10,
+                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                  ),
                 ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
 
 class StaleBanner extends StatelessWidget {
   final VoidCallback? onRefresh;
@@ -8,37 +9,48 @@ class StaleBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      color: AppColors.warning.withValues(alpha: 0.15),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.paperGold.withValues(alpha: isDark ? 0.18 : 0.12),
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.paperGold.withValues(alpha: 0.4),
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
-          const Icon(Icons.cloud_off_rounded, size: 16, color: AppColors.warning),
+          const Icon(Icons.offline_bolt_outlined, size: 14, color: AppColors.paperGold),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Modalità offline: stai visualizzando i dati memorizzati nella cache.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.warning,
-                    fontWeight: FontWeight.w500,
-                  ),
+              'CATALOGO OFFLINE: STAI CONSULTANDO I DATI IN CACHE',
+              style: AppTypography.volumeMono(
+                isDark: isDark,
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+                color: AppColors.paperGold,
+              ),
             ),
           ),
           if (onRefresh != null) ...[
             const SizedBox(width: 8),
             InkWell(
               onTap: onRefresh,
-              borderRadius: BorderRadius.circular(4),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
-                  'Riprova',
-                  style: TextStyle(
-                    color: AppColors.warning,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    decoration: TextDecoration.underline,
+                  'RICARICA',
+                  style: AppTypography.volumeMono(
+                    isDark: isDark,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.paperGold,
                   ),
                 ),
               ),

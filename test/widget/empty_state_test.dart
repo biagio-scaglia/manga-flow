@@ -20,11 +20,11 @@ void main() {
       ),
     );
 
-    expect(find.text('Libreria vuota'), findsOneWidget);
+    expect(find.text('LIBRERIA VUOTA'), findsOneWidget);
     expect(find.text('Aggiungi il tuo primo manga.'), findsOneWidget);
-    expect(find.text('Cerca Manga'), findsOneWidget);
+    expect(find.text('CERCA MANGA'), findsOneWidget);
 
-    await tester.tap(find.text('Cerca Manga'));
+    await tester.tap(find.text('CERCA MANGA'));
     await tester.pump();
 
     expect(actionTriggered, isTrue);

@@ -22,7 +22,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Capitolo 10'), findsOneWidget);
+    expect(find.text('CAPITOLO 10'), findsOneWidget);
     expect(find.text('su 20 totali'), findsOneWidget);
 
     // Tap sul pulsante +
@@ -54,9 +54,9 @@ void main() {
       ),
     );
 
-    expect(find.text('Hai finito i capitoli! Segna come completato'), findsOneWidget);
+    expect(find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'), findsOneWidget);
 
-    await tester.tap(find.text('Hai finito i capitoli! Segna come completato'));
+    await tester.tap(find.text('OPERA CONCLUSA: SEGNA COME COMPLETATO'));
     await tester.pump();
 
     expect(completedPressed, isTrue);

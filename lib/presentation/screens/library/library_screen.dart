@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:manga_library/core/theme/app_colors.dart';
+import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/domain/entities/library_entry.dart';
 import 'package:manga_library/domain/entities/reading_status.dart';
 import 'package:manga_library/presentation/controllers/library_controller.dart';
 import 'package:manga_library/presentation/screens/detail/manga_detail_screen.dart';
+import 'package:manga_library/presentation/widgets/catalog_filter_tabs.dart';
 import 'package:manga_library/presentation/widgets/empty_state.dart';
 import 'package:manga_library/presentation/widgets/manga_card.dart';
 import 'package:manga_library/presentation/widgets/manga_list_tile.dart';
@@ -37,11 +39,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   void _showSortDialog(BuildContext context, LibraryController controller) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: isDark ? AppColors.nightSurface : AppColors.paperSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
       ),
       builder: (bottomContext) {
         return SafeArea(
@@ -53,16 +57,44 @@ class _LibraryScreenState extends State<LibraryScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Text(
-                    'Ordina libreria per',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'ORDINA CATALOGO PER',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const Text(
+                        '並び替え',
+                        style: TextStyle(fontSize: 10, letterSpacing: 1.0),
+                      ),
+                    ],
                   ),
+                ),
+                Container(
+                  height: 1,
+                  color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                  margin: const EdgeInsets.only(bottom: 8),
                 ),
                 ...LibrarySortOption.values.map((option) {
                   final isSelected = controller.sortOption == option;
                   return ListTile(
-                    title: Text(option.label),
-                    trailing: isSelected ? const Icon(Icons.check_rounded, color: AppColors.primary) : null,
+                    dense: true,
+                    title: Text(
+                      option.label.toUpperCase(),
+                      style: AppTypography.volumeMono(
+                        isDark: isDark,
+                        fontSize: 12,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        color: isSelected ? AppColors.editorialRed : null,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? const Icon(Icons.check_rounded, color: AppColors.editorialRed, size: 18)
+                        : null,
                     onTap: () {
                       controller.setSortOption(option);
                       Navigator.of(bottomContext).pop();
@@ -77,10 +109,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
+  int _calculateColumns(double screenWidth) {
+    if (screenWidth >= 1200) return 5;
+    if (screenWidth >= 900) return 4;
+    if (screenWidth >= 600) return 3;
+    return 2; // Smartphone: 2 colonne per dare risalto alle copertine
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final libraryCtrl = context.watch<LibraryController>();
     final entries = libraryCtrl.filteredEntries;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final columns = _calculateColumns(screenWidth);
+
+    final statusCounts = <ReadingStatus, int>{};
+    for (final s in ReadingStatus.values) {
+      statusCounts[s] = libraryCtrl.allEntries.where((e) => e.status == s).length;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -89,17 +137,46 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 controller: _searchController,
                 autofocus: true,
                 onChanged: libraryCtrl.setSearchQuery,
-                decoration: const InputDecoration(
-                  hintText: 'Cerca nella tua libreria...',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Cerca per titolo nella libreria...',
+                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                  ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                  filled: false,
+                  contentPadding: EdgeInsets.zero,
                 ),
               )
-            : const Text('La Mia Libreria'),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'LA MIA LIBRERIA',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  Text(
+                    '${libraryCtrl.allEntries.length} TITOLI IN CATALOGO',
+                    style: AppTypography.volumeMono(
+                      isDark: isDark,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                    ),
+                  ),
+                ],
+              ),
         actions: [
           IconButton(
-            icon: Icon(_isSearchingInLibrary ? Icons.close_rounded : Icons.search_rounded),
+            icon: Icon(_isSearchingInLibrary ? Icons.close_rounded : Icons.search_rounded, size: 20),
             tooltip: _isSearchingInLibrary ? 'Chiudi ricerca' : 'Cerca nella libreria',
             onPressed: () {
               setState(() {
@@ -112,12 +189,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
             },
           ),
           IconButton(
-            icon: Icon(libraryCtrl.isGridView ? Icons.view_list_rounded : Icons.grid_view_rounded),
+            icon: Icon(libraryCtrl.isGridView ? Icons.view_list_rounded : Icons.grid_view_rounded, size: 20),
             tooltip: libraryCtrl.isGridView ? 'Vista elenco' : 'Vista griglia',
             onPressed: libraryCtrl.toggleViewMode,
           ),
           IconButton(
-            icon: const Icon(Icons.sort_rounded),
+            icon: const Icon(Icons.sort_rounded, size: 20),
             tooltip: 'Ordina',
             onPressed: () => _showSortDialog(context, libraryCtrl),
           ),
@@ -125,98 +202,49 @@ class _LibraryScreenState extends State<LibraryScreen> {
       ),
       body: Column(
         children: [
-          // Barra dei Filtri per Stato e Preferiti
-          SizedBox(
-            height: 48,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                // Filtro Tutti
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text('Tutti (${libraryCtrl.allEntries.length})'),
-                    selected: libraryCtrl.selectedStatusFilter == null && !libraryCtrl.showFavoritesOnly,
-                    onSelected: (selected) {
-                      if (selected) {
-                        libraryCtrl.setStatusFilter(null);
-                        if (libraryCtrl.showFavoritesOnly) {
-                          libraryCtrl.toggleFavoritesFilter();
-                        }
-                      }
-                    },
-                  ),
-                ),
+          const SizedBox(height: 10),
 
-                // Filtro Preferiti
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    avatar: const Icon(Icons.favorite_rounded, size: 14, color: AppColors.statusFavorite),
-                    label: const Text('Preferiti'),
-                    selected: libraryCtrl.showFavoritesOnly,
-                    onSelected: (selected) => libraryCtrl.toggleFavoritesFilter(),
-                  ),
-                ),
-
-                // Filtri per ciascuno stato di lettura
-                ...ReadingStatus.values.map((status) {
-                  final isSelected = libraryCtrl.selectedStatusFilter == status && !libraryCtrl.showFavoritesOnly;
-                  final count = libraryCtrl.allEntries.where((e) => e.status == status).length;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      avatar: Icon(status.icon, size: 14, color: isSelected ? Colors.white : status.color),
-                      label: Text('${status.label} ($count)'),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        if (selected) {
-                          libraryCtrl.setStatusFilter(status);
-                          if (libraryCtrl.showFavoritesOnly) {
-                            libraryCtrl.toggleFavoritesFilter();
-                          }
-                        } else {
-                          libraryCtrl.setStatusFilter(null);
-                        }
-                      },
-                    ),
-                  );
-                }),
-              ],
-            ),
+          // Selettori di stato / Segmented Editorial Tabs
+          CatalogFilterTabs(
+            selectedStatus: libraryCtrl.selectedStatusFilter,
+            showFavoritesOnly: libraryCtrl.showFavoritesOnly,
+            totalCount: libraryCtrl.allEntries.length,
+            statusCounts: statusCounts,
+            onStatusSelected: libraryCtrl.setStatusFilter,
+            onToggleFavorites: libraryCtrl.toggleFavoritesFilter,
           ),
 
           const SizedBox(height: 8),
 
-          // Contenuto principale
+          // Contenuto principale griglia o lista
           Expanded(
             child: libraryCtrl.allEntries.isEmpty
                 ? EmptyState(
                     icon: Icons.auto_stories_outlined,
-                    title: 'La tua libreria è vuota',
-                    message: 'Trova un manga che vuoi leggere e aggiungilo alla tua collezione per iniziare.',
+                    title: 'La libreria è vuota',
+                    japaneseSub: '目録は空です',
+                    message: 'Il primo volume deve ancora arrivare. Aggiungi i manga che stai leggendo o vuoi collezionare.',
                     actionLabel: 'Cerca Manga',
                     onAction: widget.onNavigateToSearch,
                   )
                 : entries.isEmpty
                     ? const EmptyState(
                         icon: Icons.filter_alt_off_rounded,
-                        title: 'Nessun manga trovato',
-                        message: 'Nessun manga corrisponde ai filtri o alla ricerca selezionata.',
+                        title: 'Nessun volume trovato',
+                        japaneseSub: '該当なし',
+                        message: 'Nessun manga corrisponde al filtro o al criterio di ricerca selezionato.',
                       )
                     : AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
+                        duration: const Duration(milliseconds: 200),
                         child: libraryCtrl.isGridView
                             ? GridView.builder(
                                 key: const ValueKey('library_grid'),
-                                padding: const EdgeInsets.all(16),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.58,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 16,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: columns,
+                                  childAspectRatio: 0.62,
+                                  crossAxisSpacing: 14,
+                                  mainAxisSpacing: 18,
                                 ),
                                 itemCount: entries.length,
                                 itemBuilder: (context, index) {
@@ -229,7 +257,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               )
                             : ListView.builder(
                                 key: const ValueKey('library_list'),
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                 itemCount: entries.length,
                                 itemBuilder: (context, index) {
                                   final entry = entries[index];

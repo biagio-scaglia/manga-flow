@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../controllers/settings_controller.dart';
-import '../tutorial/tutorial_overlay.dart';
-import 'home/home_screen.dart';
-import 'library/library_screen.dart';
-import 'search/search_screen.dart';
-import 'statistics/statistics_screen.dart';
+import 'package:manga_library/core/theme/app_colors.dart';
+import 'package:manga_library/presentation/controllers/settings_controller.dart';
+import 'package:manga_library/presentation/screens/home/home_screen.dart';
+import 'package:manga_library/presentation/screens/library/library_screen.dart';
+import 'package:manga_library/presentation/screens/search/search_screen.dart';
+import 'package:manga_library/presentation/screens/statistics/statistics_screen.dart';
+import 'package:manga_library/presentation/tutorial/tutorial_overlay.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -52,6 +53,8 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -69,31 +72,41 @@ class _MainShellState extends State<MainShell> {
           ),
         ],
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: _setTabIndex,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: 'Home',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+              width: 1,
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.collections_bookmark_outlined),
-            selectedIcon: Icon(Icons.collections_bookmark_rounded),
-            label: 'Libreria',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search_rounded),
-            label: 'Cerca',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights_rounded),
-            label: 'Statistiche',
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: _setTabIndex,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home_rounded),
+              label: '01 HOME',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.collections_bookmark_outlined),
+              selectedIcon: Icon(Icons.collections_bookmark_rounded),
+              label: '02 LIBRERIA',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search_outlined),
+              selectedIcon: Icon(Icons.search_rounded),
+              label: '03 CERCA',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.insights_outlined),
+              selectedIcon: Icon(Icons.insights_rounded),
+              label: '04 STATS',
+            ),
+          ],
+        ),
       ),
     );
   }

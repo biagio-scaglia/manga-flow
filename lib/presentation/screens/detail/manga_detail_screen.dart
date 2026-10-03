@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:manga_library/core/theme/app_colors.dart';
+import 'package:manga_library/core/theme/app_radii.dart';
+import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/core/utils/date_formatter.dart';
 import 'package:manga_library/domain/entities/library_entry.dart';
 import 'package:manga_library/domain/entities/manga.dart';
 import 'package:manga_library/domain/entities/reading_status.dart';
 import 'package:manga_library/domain/repositories/manga_repository.dart';
 import 'package:manga_library/presentation/controllers/library_controller.dart';
+import 'package:manga_library/presentation/widgets/editorial_section_header.dart';
+import 'package:manga_library/presentation/widgets/manga_cover.dart';
 import 'package:manga_library/presentation/widgets/progress_stepper.dart';
 import 'package:manga_library/presentation/widgets/rating_stars.dart';
 import 'package:manga_library/presentation/widgets/skeleton_loader.dart';
@@ -76,13 +80,14 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
   void _showAddDialog(BuildContext context, LibraryController libraryController) {
     ReadingStatus selectedStatus = ReadingStatus.reading;
     int initialOwnedVolumes = 0;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: isDark ? AppColors.nightSurface : AppColors.paperSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
       ),
       builder: (bottomSheetContext) {
         return StatefulBuilder(
@@ -92,56 +97,102 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                 20,
                 20,
                 20,
-                MediaQuery.of(context).viewInsets.bottom + 32,
+                MediaQuery.of(context).viewInsets.bottom + 28,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Aggiungi alla Libreria',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'AGGIUNGI AL CATALOGO',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const Text('登録', style: TextStyle(fontSize: 10, letterSpacing: 1.0)),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  Text('Seleziona lo stato iniziale:', style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(height: 12),
+                  Container(
+                    height: 1,
+                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'STATO INIZIALE DI LETTURA:',
+                    style: AppTypography.volumeMono(
+                      isDark: isDark,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                    spacing: 6,
+                    runSpacing: 6,
                     children: ReadingStatus.values.map((status) {
                       final isSelected = selectedStatus == status;
-                      return ChoiceChip(
-                        label: Text(status.label),
-                        selected: isSelected,
-                        avatar: Icon(status.icon, size: 16, color: isSelected ? Colors.white : status.color),
-                        onSelected: (selected) {
-                          if (selected) {
-                            setModalState(() => selectedStatus = status);
-                          }
-                        },
+                      return InkWell(
+                        onTap: () => setModalState(() => selectedStatus = status),
+                        borderRadius: AppRadii.brXs,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? status.color.withValues(alpha: isDark ? 0.25 : 0.12)
+                                : (isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant),
+                            borderRadius: AppRadii.brXs,
+                            border: Border.all(
+                              color: isSelected
+                                  ? status.color
+                                  : (isDark ? AppColors.nightBorder : AppColors.paperBorder),
+                              width: isSelected ? 1.4 : 1.0,
+                            ),
+                          ),
+                          child: Text(
+                            status.label.toUpperCase(),
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              color: isSelected ? status.color : null,
+                            ),
+                          ),
+                        ),
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Volumi posseduti:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                          Text(
+                            'VOLUMI FISICI POSSEDUTI:',
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           Text(
                             _manga?.totalVolumes != null && _manga!.totalVolumes! > 0
-                                ? 'Totale opera: ${_manga!.totalVolumes} volumi'
+                                ? 'Totale serie: ${_manga!.totalVolumes} volumi'
                                 : 'Totale non specificato',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
                           ),
                         ],
                       ),
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.remove_circle_outline_rounded),
+                            icon: const Icon(Icons.remove_rounded, size: 18),
                             onPressed: initialOwnedVolumes > 0
                                 ? () => setModalState(() => initialOwnedVolumes--)
                                 : null,
@@ -149,23 +200,30 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(8),
+                              color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                              borderRadius: AppRadii.brXs,
+                              border: Border.all(
+                                color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                              ),
                             ),
                             child: Text(
                               '$initialOwnedVolumes',
-                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                              style: AppTypography.volumeMono(
+                                isDark: isDark,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.add_circle_outline_rounded),
+                            icon: const Icon(Icons.add_rounded, size: 18),
                             onPressed: () => setModalState(() => initialOwnedVolumes++),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 22),
                   ElevatedButton(
                     onPressed: () {
                       final newEntry = LibraryEntry(
@@ -185,10 +243,10 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                       libraryController.addOrUpdateEntry(newEntry);
                       Navigator.of(bottomSheetContext).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Aggiunto a "${selectedStatus.label}"')),
+                        SnackBar(content: Text('Volume aggiunto a "${selectedStatus.label}"')),
                       );
                     },
-                    child: const Text('Conferma e aggiungi'),
+                    child: const Text('CONFERMA E AGGIUNGI'),
                   ),
                 ],
               ),
@@ -217,17 +275,17 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Volumi posseduti / acquistati',
                   hintText: 'Es. 5',
-                  prefixIcon: Icon(Icons.collections_bookmark_rounded),
+                  prefixIcon: Icon(Icons.collections_bookmark_rounded, size: 18),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               TextField(
                 controller: totalCtrl,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Totale volumi dell\'opera',
-                  hintText: 'Es. 12 (opzionale)',
-                  prefixIcon: Icon(Icons.library_books_rounded),
+                  hintText: 'Es. 34 (opzionale)',
+                  prefixIcon: Icon(Icons.library_books_rounded, size: 18),
                 ),
               ),
             ],
@@ -264,7 +322,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Rimuovi dalla libreria'),
+          title: const Text('Rimuovi dal catalogo'),
           content: const Text('Sei sicuro di voler rimuovere questo manga dalla tua libreria personale?'),
           actions: [
             TextButton(
@@ -272,7 +330,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
               child: const Text('Annulla'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.editorialRed),
               onPressed: () {
                 libraryController.removeEntry(widget.mangaId);
                 Navigator.of(dialogContext).pop();
@@ -291,6 +349,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final libraryController = context.watch<LibraryController>();
     final entry = libraryController.getEntry(widget.mangaId);
     final bool isInLibrary = entry != null;
@@ -299,189 +358,316 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
     final coverUrl = _manga?.bestCoverUrl ?? entry?.coverUrl ?? '';
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // AppBar con Copertina Espansa
-          SliverAppBar(
-            expandedHeight: 340,
-            pinned: true,
-            stretch: true,
-            leading: IconButton(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 20),
+      appBar: AppBar(
+        title: Text(
+          'SCHEDA CATALOGO',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.0,
+          ),
+        ),
+        actions: [
+          if (isInLibrary)
+            IconButton(
+              icon: Icon(
+                entry.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: entry.isFavorite ? AppColors.editorialRed : null,
+                size: 22,
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              tooltip: entry.isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti',
+              onPressed: () => libraryController.toggleFavorite(widget.mangaId),
             ),
-            actions: [
-              if (isInLibrary)
-                IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      entry.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      color: entry.isFavorite ? AppColors.statusFavorite : Colors.white,
-                      size: 20,
-                    ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // PRESENTAZIONE EDITORIALE ASIMMETRICA: COPERTINA + TITOLO + AUTORE
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Copertina fisica volume
+                SizedBox(
+                  width: 125,
+                  child: MangaCover(
+                    coverUrl: coverUrl,
+                    heroTag: 'cover-${widget.mangaId}',
+                    showSpineEffect: true,
                   ),
-                  onPressed: () => libraryController.toggleFavorite(widget.mangaId),
                 ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Sfondo sfocato o scuro
-                  if (coverUrl.isNotEmpty)
-                    Image.network(
-                      coverUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(color: AppColors.darkSurface),
-                    ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.3),
-                          Colors.black.withValues(alpha: 0.8),
-                          theme.scaffoldBackgroundColor,
-                        ],
+
+                const SizedBox(width: 16),
+
+                // Testata del volume
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (isInLibrary) ...[
+                        StatusBadge(status: entry.status),
+                        const SizedBox(height: 8),
+                      ],
+
+                      // Titolo Principale
+                      Text(
+                        title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          height: 1.2,
+                        ),
                       ),
-                    ),
-                  ),
-                  // Immagine centrale nitida in Hero
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40, bottom: 20),
-                      child: Hero(
-                        tag: 'cover-${widget.mangaId}',
-                        child: Container(
-                          width: 140,
-                          height: 200,
+
+                      // Titolo Originale Giapponese
+                      if (_manga?.titleJapanese != null && _manga!.titleJapanese!.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          _manga!.titleJapanese!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontSize: 12,
+                            letterSpacing: 0.5,
+                            color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: 8),
+
+                      // Autore
+                      Text(
+                        'AUTORE: ${_manga?.authorDisplay ?? (entry != null && entry.authors.isNotEmpty ? entry.authors.join(', ') : 'Sconosciuto')}'
+                            .toUpperCase(),
+                        style: AppTypography.volumeMono(
+                          isDark: isDark,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.editorialRed,
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // Valutazione punteggio MAL
+                      if (_manga?.score != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.5),
-                                blurRadius: 16,
-                                offset: const Offset(0, 8),
+                            color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                            borderRadius: AppRadii.brXs,
+                            border: Border.all(
+                              color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.star_rounded, size: 14, color: AppColors.paperGold),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${_manga!.score!.toStringAsFixed(2)} MAL',
+                                style: AppTypography.volumeMono(
+                                  isDark: isDark,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: coverUrl.isNotEmpty
-                                ? Image.network(coverUrl, fit: BoxFit.cover)
-                                : Container(color: AppColors.darkSurfaceVariant),
-                          ),
                         ),
-                      ),
-                    ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // MATRICE METADATI EDITORIALI (4 Caselle)
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                borderRadius: AppRadii.brSm,
+                border: Border.all(
+                  color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  _buildMetadataCell(
+                    context,
+                    label: 'PUBBLICAZIONE',
+                    value: _manga?.publicationStatusItalian.toUpperCase() ?? 'IN CORSO',
+                    isDark: isDark,
+                  ),
+                  _buildCellDivider(isDark),
+                  _buildMetadataCell(
+                    context,
+                    label: 'CAPITOLI',
+                    value: _manga?.totalChapters != null && _manga!.totalChapters! > 0
+                        ? '${_manga!.totalChapters} CAP'
+                        : 'IN CORSO',
+                    isDark: isDark,
+                  ),
+                  _buildCellDivider(isDark),
+                  _buildMetadataCell(
+                    context,
+                    label: 'VOLUMI',
+                    value: (_manga?.totalVolumes != null && _manga!.totalVolumes! > 0) ||
+                            (entry?.totalVolumes != null && entry!.totalVolumes! > 0)
+                        ? '${entry?.totalVolumes ?? _manga?.totalVolumes} VOL'
+                        : 'N/D',
+                    isDark: isDark,
                   ),
                 ],
               ),
             ),
-          ),
 
-          // Contenuto informativo
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Titolo e Autore
-                  Text(
-                    title,
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                    ),
+            const SizedBox(height: 24),
+
+            // SEZIONE 01: SCHEDA LETTURA E PROGRESSO (Se presente in Libreria)
+            if (isInLibrary) ...[
+              const EditorialSectionHeader(
+                index: '01',
+                title: 'LA TUA LETTURA',
+                subtitle: 'Avanzamento capitoli e volumi collezionati',
+              ),
+              const SizedBox(height: 8),
+
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                  borderRadius: AppRadii.brSm,
+                  border: Border.all(
+                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    width: 1,
                   ),
-                  if (_manga?.titleJapanese != null && _manga!.titleJapanese!.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Selettore Rapido Stato
                     Text(
-                      _manga!.titleJapanese!,
-                      style: theme.textTheme.bodySmall?.copyWith(fontSize: 13),
+                      'CAMBIA STATO DI LETTURA:',
+                      style: AppTypography.volumeMono(
+                        isDark: isDark,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ],
-                  const SizedBox(height: 6),
-                  Text(
-                    _manga?.authorDisplay ?? (entry != null && entry.authors.isNotEmpty ? entry.authors.join(', ') : 'Autore sconosciuto'),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 8),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: ReadingStatus.values.map((status) {
+                          final isSelected = entry.status == status;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: InkWell(
+                              onTap: () => libraryController.updateStatus(widget.mangaId, status),
+                              borderRadius: AppRadii.brXs,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? status.color.withValues(alpha: isDark ? 0.25 : 0.12)
+                                      : (isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant),
+                                  borderRadius: AppRadii.brXs,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? status.color
+                                        : (isDark ? AppColors.nightBorder : AppColors.paperBorder),
+                                    width: isSelected ? 1.4 : 1.0,
+                                  ),
+                                ),
+                                child: Text(
+                                  status.label.toUpperCase(),
+                                  style: AppTypography.volumeMono(
+                                    isDark: isDark,
+                                    fontSize: 9,
+                                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                                    color: isSelected ? status.color : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 18),
 
-                  // Pillole informative rapide (Punteggio, Stato pubblicazione, Capitoli)
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      if (_manga?.score != null)
-                        _buildInfoChip(
-                          context,
-                          Icons.star_rounded,
-                          '${_manga!.score!.toStringAsFixed(2)} MAL',
-                          AppColors.warning,
+                    // Tracker Progresso Capitolo
+                    Text(
+                      'PROGRESSO CAPITOLI:',
+                      style: AppTypography.volumeMono(
+                        isDark: isDark,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ProgressStepper(
+                      currentChapter: entry.currentChapter,
+                      totalChapters: entry.totalChapters ?? _manga?.totalChapters,
+                      isCompleted: entry.status == ReadingStatus.completed,
+                      onProgressChanged: (newChapter) {
+                        libraryController.updateProgress(widget.mangaId, newChapter);
+                      },
+                      onMarkCompleted: () {
+                        libraryController.updateStatus(widget.mangaId, ReadingStatus.completed);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Manga segnato come completato!')),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // Tracker Collezione Volumi Fisici
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'COLLEZIONE VOLUMI FISICI:',
+                          style: AppTypography.volumeMono(
+                            isDark: isDark,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      _buildInfoChip(
-                        context,
-                        Icons.info_outline_rounded,
-                        _manga?.publicationStatusItalian ?? 'Pubblicazione',
-                        AppColors.accent,
-                      ),
-                      _buildInfoChip(
-                        context,
-                        Icons.menu_book_rounded,
-                        _manga?.totalChapters != null && _manga!.totalChapters! > 0
-                            ? '${_manga!.totalChapters} cap.'
-                            : 'Capitoli N/D',
-                        AppColors.statusReading,
-                      ),
-                      if ((_manga?.totalVolumes != null && _manga!.totalVolumes! > 0) || (entry?.totalVolumes != null && entry!.totalVolumes! > 0))
-                        _buildInfoChip(
-                          context,
-                          Icons.collections_bookmark_rounded,
-                          '${entry?.totalVolumes ?? _manga?.totalVolumes} vol.',
-                          AppColors.secondary,
+                        TextButton(
+                          onPressed: () => _showEditVolumesDialog(context, libraryController, entry),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'MODIFICA',
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.editorialRed,
+                            ),
+                          ),
                         ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // SEZIONE GESTIONE LIBRERIA PERSONALE
-                  if (!isInLibrary) ...[
-                    ElevatedButton.icon(
-                      onPressed: () => _showAddDialog(context, libraryController),
-                      icon: const Icon(Icons.bookmark_add_rounded),
-                      label: const Text('Aggiungi alla Libreria'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                      ),
+                      ],
                     ),
-                  ] else ...[
-                    // Scheda di gestione della voce presente
+                    const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: theme.dividerColor, width: 1),
+                        color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                        borderRadius: AppRadii.brXs,
+                        border: Border.all(
+                          color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -489,393 +675,401 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'La tua lettura',
-                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                              ),
-                              StatusBadge(status: entry.status),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Selettore Rapido Stato
-                          Text('Cambia stato:', style: theme.textTheme.labelMedium),
-                          const SizedBox(height: 8),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: ReadingStatus.values.map((status) {
-                                final isSelected = entry.status == status;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 6),
-                                  child: FilterChip(
-                                    label: Text(status.label, style: const TextStyle(fontSize: 12)),
-                                    selected: isSelected,
-                                    onSelected: (selected) {
-                                      if (selected) {
-                                        libraryController.updateStatus(widget.mangaId, status);
-                                      }
-                                    },
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.remove_rounded, size: 18),
+                                    tooltip: 'Rimuovi volume',
+                                    onPressed: entry.ownedVolumes > 0
+                                        ? () => libraryController.decrementOwnedVolume(widget.mangaId)
+                                        : null,
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Tracker Progresso Capitolo
-                          Text('Progresso di lettura:', style: theme.textTheme.labelMedium),
-                          const SizedBox(height: 8),
-                          ProgressStepper(
-                            currentChapter: entry.currentChapter,
-                            totalChapters: entry.totalChapters ?? _manga?.totalChapters,
-                            isCompleted: entry.status == ReadingStatus.completed,
-                            onProgressChanged: (newChapter) {
-                              libraryController.updateProgress(widget.mangaId, newChapter);
-                            },
-                            onMarkCompleted: () {
-                              libraryController.updateStatus(widget.mangaId, ReadingStatus.completed);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Manga segnato come completato!')),
-                              );
-                            },
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Tracker Collezione Volumi Fisici
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Collezione Volumi Fisici:', style: theme.textTheme.labelMedium),
-                              TextButton.icon(
-                                onPressed: () => _showEditVolumesDialog(context, libraryController, entry),
-                                icon: const Icon(Icons.edit_outlined, size: 14),
-                                label: const Text('Modifica', style: TextStyle(fontSize: 12)),
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: theme.dividerColor.withValues(alpha: 0.5)),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle_outline_rounded),
-                                          tooltip: 'Rimuovi volume',
-                                          onPressed: entry.ownedVolumes > 0
-                                              ? () => libraryController.decrementOwnedVolume(widget.mangaId)
-                                              : null,
-                                        ),
-                                        InkWell(
-                                          onTap: () => _showEditVolumesDialog(context, libraryController, entry),
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.surface,
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: Border.all(color: theme.dividerColor),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  '${entry.ownedVolumes}${entry.totalVolumes != null && entry.totalVolumes! > 0 ? ' / ${entry.totalVolumes}' : ''}',
-                                                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                                                ),
-                                                Text(
-                                                  'Volumi posseduti',
-                                                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add_circle_outline_rounded),
-                                          tooltip: 'Aggiungi volume posseduto',
-                                          color: AppColors.primary,
-                                          onPressed: () => libraryController.incrementOwnedVolume(widget.mangaId),
-                                        ),
-                                      ],
-                                    ),
-                                    if (entry.totalVolumes != null && entry.totalVolumes! > 0)
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: entry.volumesToBuy == 0
-                                              ? AppColors.statusCompleted.withValues(alpha: 0.15)
-                                              : AppColors.accent.withValues(alpha: 0.15),
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          entry.volumesToBuy == 0
-                                              ? 'Completa'
-                                              : '-${entry.volumesToBuy} da prendere',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w600,
-                                            color: entry.volumesToBuy == 0
-                                                ? AppColors.statusCompleted
-                                                : AppColors.accent,
-                                          ),
+                                  InkWell(
+                                    onTap: () => _showEditVolumesDialog(context, libraryController, entry),
+                                    borderRadius: AppRadii.brXs,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                                        borderRadius: AppRadii.brXs,
+                                        border: Border.all(
+                                          color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
                                         ),
                                       ),
-                                  ],
-                                ),
-                                if (entry.totalVolumes != null && entry.totalVolumes! > 0) ...[
-                                  const SizedBox(height: 10),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: LinearProgressIndicator(
-                                      value: (entry.ownedVolumes / entry.totalVolumes!).clamp(0.0, 1.0),
-                                      minHeight: 6,
-                                      backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        entry.volumesToBuy == 0 ? AppColors.statusCompleted : AppColors.secondary,
+                                      child: Text(
+                                        'VOL. ${entry.ownedVolumes}${entry.totalVolumes != null && entry.totalVolumes! > 0 ? ' / ${entry.totalVolumes}' : ''}',
+                                        style: AppTypography.volumeMono(
+                                          isDark: isDark,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.add_rounded, size: 18),
+                                    tooltip: 'Aggiungi volume',
+                                    color: AppColors.editorialRed,
+                                    onPressed: () => libraryController.incrementOwnedVolume(widget.mangaId),
                                   ),
                                 ],
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Valutazione personale
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('La tua valutazione:', style: theme.textTheme.labelMedium),
-                              Text(
-                                entry.rating > 0 ? '${entry.rating} / 10' : 'Non valutato',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: entry.rating > 0 ? AppColors.warning : null,
-                                  fontWeight: FontWeight.w700,
-                                ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          RatingStars(
-                            rating: entry.rating,
-                            iconSize: 28,
-                            onRatingChanged: (newRating) {
-                              libraryController.updateRating(widget.mangaId, newRating);
-                            },
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Note personali
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Note personali:', style: theme.textTheme.labelMedium),
-                              if (!_isEditingNotes)
-                                TextButton(
-                                  onPressed: () {
-                                    _notesController.text = entry.notes;
-                                    setState(() => _isEditingNotes = true);
-                                  },
-                                  child: const Text('Modifica note'),
+                              if (entry.totalVolumes != null && entry.totalVolumes! > 0)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: entry.volumesToBuy == 0
+                                        ? AppColors.forestGreen.withValues(alpha: 0.15)
+                                        : AppColors.editorialRed.withValues(alpha: 0.15),
+                                    borderRadius: AppRadii.brXs,
+                                    border: Border.all(
+                                      color: entry.volumesToBuy == 0
+                                          ? AppColors.forestGreen
+                                          : AppColors.editorialRed,
+                                      width: 0.8,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    entry.volumesToBuy == 0
+                                        ? 'COMPLETA'
+                                        : '-${entry.volumesToBuy} DA COMPRARE',
+                                    style: AppTypography.volumeMono(
+                                      isDark: isDark,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w800,
+                                      color: entry.volumesToBuy == 0
+                                          ? AppColors.forestGreen
+                                          : AppColors.editorialRed,
+                                    ),
+                                  ),
                                 ),
                             ],
                           ),
-                          if (_isEditingNotes) ...[
+                          if (entry.totalVolumes != null && entry.totalVolumes! > 0) ...[
                             const SizedBox(height: 8),
-                            TextField(
-                              controller: _notesController,
-                              maxLines: 3,
-                              decoration: const InputDecoration(
-                                hintText: 'Aggiungi un promemoria o una recensione...',
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () => setState(() => _isEditingNotes = false),
-                                  child: const Text('Annulla'),
-                                ),
-                                const SizedBox(width: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    libraryController.updateNotes(widget.mangaId, _notesController.text.trim());
-                                    setState(() => _isEditingNotes = false);
-                                  },
-                                  child: const Text('Salva nota'),
-                                ),
-                              ],
-                            ),
-                          ] else if (entry.notes.isNotEmpty) ...[
-                            const SizedBox(height: 4),
                             Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-                                borderRadius: BorderRadius.circular(10),
+                              height: 3,
+                              color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                              alignment: Alignment.centerLeft,
+                              child: FractionallySizedBox(
+                                widthFactor: (entry.ownedVolumes / entry.totalVolumes!).clamp(0.0, 1.0),
+                                child: Container(
+                                  color: entry.volumesToBuy == 0 ? AppColors.forestGreen : AppColors.editorialRed,
+                                ),
                               ),
-                              child: Text(
-                                entry.notes,
-                                style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                          ] else ...[
-                            Text(
-                              'Nessuna nota aggiunta.',
-                              style: theme.textTheme.bodySmall,
                             ),
                           ],
-
-                          const SizedBox(height: 16),
-                          const Divider(),
-                          const SizedBox(height: 12),
-
-                          // Date e pulsante eliminazione
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Aggiunto: ${DateFormatter.formatShortDate(entry.addedAt)}',
-                                    style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
-                                  ),
-                                  if (entry.lastReadAt != null)
-                                    Text(
-                                      'Ultima lettura: ${DateFormatter.formatRelativeDate(entry.lastReadAt)}',
-                                      style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
-                                    ),
-                                ],
-                              ),
-                              TextButton.icon(
-                                onPressed: () => _confirmDelete(context, libraryController),
-                                icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.error),
-                                label: const Text('Rimuovi', style: TextStyle(color: AppColors.error, fontSize: 13)),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
-                  ],
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 18),
 
-                  // Generi
-                  if (_manga?.genres != null && _manga!.genres.isNotEmpty) ...[
-                    Text(
-                      'Generi e Tematiche',
-                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                    // Valutazione personale
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'LA TUA VALUTAZIONE:',
+                          style: AppTypography.volumeMono(
+                            isDark: isDark,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          entry.rating > 0 ? '${entry.rating} / 10' : 'NON VALUTATO',
+                          style: AppTypography.volumeMono(
+                            isDark: isDark,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: entry.rating > 0 ? AppColors.paperGold : null,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: _manga!.genres.map((genre) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                    RatingStars(
+                      rating: entry.rating,
+                      iconSize: 24,
+                      onRatingChanged: (newRating) {
+                        libraryController.updateRating(widget.mangaId, newRating);
+                      },
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // Note personali
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'NOTE EDITORIALI PERSONALI:',
+                          style: AppTypography.volumeMono(
+                            isDark: isDark,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
                           ),
-                          child: Text(
-                            genre,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.primaryLight,
-                              fontWeight: FontWeight.w500,
+                        ),
+                        if (!_isEditingNotes)
+                          TextButton(
+                            onPressed: () {
+                              _notesController.text = entry.notes;
+                              setState(() => _isEditingNotes = true);
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'MODIFICA',
+                              style: AppTypography.volumeMono(
+                                isDark: isDark,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.editorialRed,
+                              ),
                             ),
                           ),
-                        );
-                      }).toList(),
+                      ],
                     ),
-                    const SizedBox(height: 24),
+                    if (_isEditingNotes) ...[
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _notesController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          hintText: 'Aggiungi una recensione o promemoria del volume...',
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => setState(() => _isEditingNotes = false),
+                            child: const Text('Annulla'),
+                          ),
+                          const SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              libraryController.updateNotes(widget.mangaId, _notesController.text.trim());
+                              setState(() => _isEditingNotes = false);
+                            },
+                            child: const Text('SALVA'),
+                          ),
+                        ],
+                      ),
+                    ] else if (entry.notes.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                          borderRadius: AppRadii.brXs,
+                          border: Border(
+                            left: BorderSide(color: AppColors.editorialRed, width: 3),
+                          ),
+                        ),
+                        child: Text(
+                          entry.notes,
+                          style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ] else ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        'Nessuna nota personale registrata.',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ],
+
+                    const SizedBox(height: 14),
+                    Container(
+                      height: 1,
+                      color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Date & Rimuovi
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'REGISTRATO: ${DateFormatter.formatShortDate(entry.addedAt)}'.toUpperCase(),
+                          style: AppTypography.volumeMono(
+                            isDark: isDark,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _confirmDelete(context, libraryController),
+                          icon: const Icon(Icons.delete_outline_rounded, size: 14, color: AppColors.editorialRed),
+                          label: Text(
+                            'RIMUOVI',
+                            style: AppTypography.volumeMono(
+                              isDark: isDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.editorialRed,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
+                ),
+              ),
 
-                  // Trama / Descrizione
-                  Text(
-                    'Trama',
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 8),
+              const SizedBox(height: 24),
+            ] else ...[
+              // Pulsante grande di aggiunta
+              ElevatedButton.icon(
+                onPressed: () => _showAddDialog(context, libraryController),
+                icon: const Icon(Icons.bookmark_add_rounded, size: 18),
+                label: const Text('AGGIUNGI ALLA TUA LIBRERIA'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
 
-                  if (_isLoadingDetails) ...[
-                    const SkeletonLoader(width: double.infinity, height: 16),
-                    const SizedBox(height: 6),
-                    const SkeletonLoader(width: double.infinity, height: 16),
-                    const SizedBox(height: 6),
-                    const SkeletonLoader(width: 200, height: 16),
-                  ] else if (_manga?.synopsis != null && _manga!.synopsis!.isNotEmpty) ...[
-                    Text(
-                      _manga!.synopsis!,
-                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
-                    ),
-                  ] else ...[
-                    Text(
-                      'Descrizione non disponibile per questo manga.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: AppColors.textMutedDark,
+            // SEZIONE GENERI E TEMATICHE
+            if (_manga?.genres != null && _manga!.genres.isNotEmpty) ...[
+              EditorialSectionHeader(
+                index: isInLibrary ? '02' : '01',
+                title: 'GENERI E TEMATICHE',
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: _manga!.genres.map((genre) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                      borderRadius: AppRadii.brXs,
+                      border: Border.all(
+                        color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
                       ),
                     ),
-                  ],
-
-                  const SizedBox(height: 40),
-                ],
+                    child: Text(
+                      genre.toUpperCase(),
+                      style: AppTypography.volumeMono(
+                        isDark: isDark,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.nightInk : AppColors.inkBlack,
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
+              const SizedBox(height: 24),
+            ],
+
+            // SEZIONE TRAMA DELL'OPERA (Sinossi in stile retro copertina)
+            EditorialSectionHeader(
+              index: isInLibrary
+                  ? (_manga?.genres != null && _manga!.genres.isNotEmpty ? '03' : '02')
+                  : (_manga?.genres != null && _manga!.genres.isNotEmpty ? '02' : '01'),
+              title: 'TRAMA DELL\'OPERA',
+              subtitle: 'Sinossi editoriale',
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+
+            if (_isLoadingDetails) ...[
+              const SkeletonLoader(width: double.infinity, height: 14),
+              const SizedBox(height: 6),
+              const SkeletonLoader(width: double.infinity, height: 14),
+              const SizedBox(height: 6),
+              const SkeletonLoader(width: 220, height: 14),
+            ] else if (_manga?.synopsis != null && _manga!.synopsis!.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+                  borderRadius: AppRadii.brSm,
+                  border: Border.all(
+                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  _manga!.synopsis!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    height: 1.6,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ] else ...[
+              Text(
+                'Sinossi e descrizione non disponibili per questo volume.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 48),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildInfoChip(BuildContext context, IconData icon, String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: color,
+  Widget _buildMetadataCell(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required bool isDark,
+  }) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        child: Column(
+          children: [
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: AppTypography.volumeMono(
+                isDark: isDark,
+                fontSize: 8,
+                fontWeight: FontWeight.w700,
+                color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              value,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.volumeMono(
+                isDark: isDark,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: isDark ? AppColors.nightInk : AppColors.inkBlack,
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildCellDivider(bool isDark) {
+    return Container(
+      width: 1,
+      height: 32,
+      color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
     );
   }
 }

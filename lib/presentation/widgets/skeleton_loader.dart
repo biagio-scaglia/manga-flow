@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radii.dart';
 
 class SkeletonLoader extends StatefulWidget {
   final double width;
@@ -10,7 +11,7 @@ class SkeletonLoader extends StatefulWidget {
     super.key,
     required this.width,
     required this.height,
-    this.borderRadius = 8.0,
+    this.borderRadius = AppRadii.xs,
   });
 
   @override
@@ -27,7 +28,7 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
 
     _animation = Tween<double>(begin: 0.3, end: 0.8).animate(
@@ -68,24 +69,30 @@ class MangaCardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SkeletonLoader(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                borderRadius: 14,
-              );
-            },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: AppRadii.brXs,
+              border: Border.all(
+                color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+              ),
+            ),
+            child: const SkeletonLoader(
+              width: double.infinity,
+              height: double.infinity,
+              borderRadius: AppRadii.xs,
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        const SkeletonLoader(width: 110, height: 14, borderRadius: 4),
-        const SizedBox(height: 4),
-        const SkeletonLoader(width: 70, height: 10, borderRadius: 4),
+        const SizedBox(height: 6),
+        const SkeletonLoader(width: 100, height: 12, borderRadius: AppRadii.xs),
+        const SizedBox(height: 3),
+        const SkeletonLoader(width: 60, height: 9, borderRadius: AppRadii.xs),
       ],
     );
   }

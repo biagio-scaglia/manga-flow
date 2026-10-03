@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radii.dart';
+import '../../core/theme/app_typography.dart';
 
 class ProgressStepper extends StatelessWidget {
   final int currentChapter;
@@ -62,20 +64,26 @@ class ProgressStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasTotal = totalChapters != null && totalChapters! > 0;
     final isAtMax = hasTotal && currentChapter >= totalChapters!;
     final showCompletionPrompt = hasTotal && isAtMax && !isCompleted && onMarkCompleted != null;
+
+    final progressFraction = hasTotal
+        ? (currentChapter / totalChapters!).clamp(0.0, 1.0)
+        : 0.0;
+    final progressPct = hasTotal ? '${(progressFraction * 100).toInt()}%' : '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            color: isDark ? AppColors.nightSurface : AppColors.paperSurface,
+            borderRadius: AppRadii.brSm,
             border: Border.all(
-              color: Theme.of(context).dividerColor,
+              color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
               width: 1,
             ),
           ),
@@ -83,34 +91,40 @@ class ProgressStepper extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Pulsante decremento
-              IconButton.filledTonal(
+              IconButton(
                 onPressed: currentChapter > 0 ? () => onProgressChanged(currentChapter - 1) : null,
                 icon: const Icon(Icons.remove_rounded),
                 tooltip: 'Capitolo precedente',
                 style: IconButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  side: BorderSide(
+                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                  ),
+                  shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
+                  padding: const EdgeInsets.all(8),
                 ),
               ),
 
-              // Contatore capitolo cliccabile per inserimento diretto
+              // Contatore capitolo cliccabile
               InkWell(
                 onTap: () => _showDirectInputDialog(context),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: AppRadii.brXs,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   child: Column(
                     children: [
                       Text(
-                        'Capitolo $currentChapter',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primary,
-                            ),
+                        'CAPITOLO $currentChapter',
+                        style: AppTypography.volumeMono(
+                          isDark: isDark,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.editorialRed,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        hasTotal ? 'su $totalChapters totali' : 'Totale sconosciuto',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        hasTotal ? 'su $totalChapters totali' : 'Totale in corso / N/D',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
                       ),
                     ],
                   ),
@@ -118,45 +132,66 @@ class ProgressStepper extends StatelessWidget {
               ),
 
               // Pulsante incremento
-              IconButton.filledTonal(
+              IconButton(
                 onPressed: (!isAtMax) ? () => onProgressChanged(currentChapter + 1) : null,
                 icon: const Icon(Icons.add_rounded),
                 tooltip: 'Capitolo successivo',
+                color: AppColors.editorialRed,
                 style: IconButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  side: BorderSide(
+                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                  ),
+                  shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
+                  padding: const EdgeInsets.all(8),
                 ),
               ),
             ],
           ),
         ),
 
-        // Barra di progresso se il totale è noto
+        // Linea di avanzamento sottile
         if (hasTotal) ...[
-          const SizedBox(height: 10),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: (currentChapter / totalChapters!).clamp(0.0, 1.0),
-              minHeight: 6,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.statusReading),
-            ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 3,
+                  color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                  alignment: Alignment.centerLeft,
+                  child: FractionallySizedBox(
+                    widthFactor: progressFraction,
+                    child: Container(color: AppColors.editorialRed),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                progressPct,
+                style: AppTypography.volumeMono(
+                  isDark: isDark,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.editorialRed,
+                ),
+              ),
+            ],
           ),
         ],
 
         // Suggerimento di completamento quando si raggiunge l'ultimo capitolo
         if (showCompletionPrompt) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           OutlinedButton.icon(
             onPressed: onMarkCompleted,
-            icon: const Icon(Icons.check_circle_outline_rounded, color: AppColors.statusCompleted),
+            icon: const Icon(Icons.check_circle_outline_rounded, size: 16, color: AppColors.forestGreen),
             label: const Text(
-              'Hai finito i capitoli! Segna come completato',
-              style: TextStyle(color: AppColors.statusCompleted, fontWeight: FontWeight.w600),
+              'OPERA CONCLUSA: SEGNA COME COMPLETATO',
+              style: TextStyle(color: AppColors.forestGreen, fontSize: 11, fontWeight: FontWeight.w700),
             ),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.statusCompleted, width: 1.2),
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              side: const BorderSide(color: AppColors.forestGreen, width: 1),
+              padding: const EdgeInsets.symmetric(vertical: 10),
             ),
           ),
         ],
