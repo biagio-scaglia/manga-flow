@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:manga_library/core/theme/app_colors.dart';
 import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/domain/entities/manga.dart';
+import 'package:manga_library/presentation/controllers/library_controller.dart';
 import 'package:manga_library/presentation/controllers/search_controller.dart';
 import 'package:manga_library/presentation/screens/detail/manga_detail_screen.dart';
 import 'package:manga_library/presentation/widgets/editorial_section_header.dart';
@@ -62,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final searchCtrl = context.watch<MangaSearchController>();
+    final libraryCtrl = context.watch<LibraryController>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -209,6 +211,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               final manga = searchCtrl.searchResults[index];
                               return MangaCard(
                                 manga: manga,
+                                libraryEntry: libraryCtrl.getEntry(manga.id),
                                 onTap: () => _navigateToDetail(manga),
                               );
                             },
@@ -261,6 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               final manga = searchCtrl.popularManga[index];
                               return MangaCard(
                                 manga: manga,
+                                libraryEntry: libraryCtrl.getEntry(manga.id),
                                 onTap: () => _navigateToDetail(manga),
                               );
                             },
