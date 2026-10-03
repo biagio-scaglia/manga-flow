@@ -1,14 +1,14 @@
 # MangaFlow - Personal Manga Library
 
 Applicazione mobile Flutter in lingua italiana per tracciare e organizzare le proprie letture manga.
-Progettata con architettura modulare e pulita, offline-first, persistenza locale atomica in JSON e integrazione con l'API pubblica e documentata Jikan REST API v4 (MyAnimeList open data).
+Progettata con architettura modulare e pulita, offline-first, persistenza locale atomica in JSON e integrazione con API pubbliche documentate (Jikan REST API v4 / Kitsu REST API open data).
 
 ---
 
 ## Funzionalita Principali
 
 1. **Ricerca Manga su Catalogo Reale**:
-   - Connessione a Jikan API v4 per cercare tra decine di migliaia di manga reali.
+   - Connessione a API REST documentate per cercare tra decine di migliaia di manga reali.
    - Debounce automatico a 500ms sulla digitazione.
    - Paginazione infinita e caricamento progressivo con skeleton loader.
    - Esplorazione iniziale dei manga piu popolari quando il campo di ricerca e vuoto.
@@ -62,9 +62,9 @@ lib/
 │   └── utils/              # Debouncer, Throttler e Formattatori di date in italiano
 │
 ├── data/
-│   ├── api/                # Client Jikan REST API v4 con backoff e fallback
-│   ├── cache/              # HttpCacheManager persistente su disco
-│   ├── models/             # DTO (RemoteMangaDto, LibraryEntryDto)
+│   ├── api/                # Client REST API con backoff e fallback
+│   ├── cache/              # HttpCacheManager persistente
+│   ├── models/             # DTO (RemoteMangaDto universale, LibraryEntryDto)
 │   ├── repositories/       # Implementazioni concrete (MangaRepositoryImpl, LibraryRepositoryImpl)
 │   └── storage/            # JsonStorage atomico con lock asincrono e sistema di migrazione
 │
@@ -87,7 +87,7 @@ lib/
 
 Per evitare qualsiasi perdita o corruzione dei dati personali in caso di crash o interruzione improvvisa:
 1. La libreria viene serializzata in memoria e convalidata.
-2. Viene scritta su un file temporaneo `library.json.tmp` con flush forzato su disco.
+2. Su piattaforme native viene scritta su un file temporaneo `library.json.tmp` con flush forzato su disco.
 3. Viene verificata la completezza e la sintassi del file temporaneo.
 4. Viene eseguita una sostituzione atomica con il file di destinazione `library.json`.
 5. I salvataggi sono gestiti con debounce a 300ms per evitare carichi I/O eccessivi durante le modifiche rapide del contatore capitoli.
@@ -95,12 +95,13 @@ Per evitare qualsiasi perdita o corruzione dei dati personali in caso di crash o
 
 ---
 
-## Gestione API & Rate Limiting
+## Gestione API, Documentazione & Rate Limiting
 
-L'API pubblica di MyAnimeList/Jikan v4 richiede un limite di massimo 3 richieste al secondo:
-- **RateLimiter**: implementato a livello client per rispettare una finestra temporale di 1 secondo e un intervallo minimo di 350ms tra richieste consecutive.
-- **Exponential Backoff**: in caso di risposta HTTP 429 (*Too Many Requests*), l'app rispetta l'header `Retry-After` o attende con backoff esponenziale fino a 3 tentativi.
-- **Debounce**: le ricerche testuali scattano solo dopo 500ms dall'ultimo tasto premuto e richiedono almeno 2 caratteri.
+L'applicazione supporta le specifiche delle API aperte per manga (Jikan REST v4 documentata su `docs.api.jikan.moe` e Kitsu REST API):
+- **RateLimiter**: implementato a livello client per rispettare le finestre di rate limiting ed evitare codici 429.
+- **Exponential Backoff**: in caso di timeout o rate limit, l'app effettua tentativi controllati con backoff esponenziale.
+- **Supporto Multi-Format**: `RemoteMangaDto` e in grado di decodificare sia le risposte REST di Jikan v4 che quelle di Kitsu in entita di dominio standard `Manga`.
+- **Debounce**: le ricerche testuali scattano dopo 500ms dall'ultimo tasto premuto.
 
 ---
 
@@ -137,7 +138,7 @@ flutter run
 - `test/unit/json_storage_test.dart`: verifica della scrittura/lettura atomica e delle migrazioni di versione.
 - `test/unit/rate_limiter_test.dart`: verifica dei vincoli di frequenza e del blocco temporaneo.
 - `test/unit/library_statistics_test.dart`: calcolo matematico accurato di generi, capitoli e medie voto.
-- `test/unit/models_test.dart`: parsing dei payload reali Jikan e serializzazione DTO.
+- `test/unit/models_test.dart`: parsing dei payload reali e serializzazione DTO.
 - `test/widget/status_badge_test.dart`: rendering e traduzione corretta dei badge di stato.
 - `test/widget/progress_stepper_test.dart`: interazione con i pulsanti di incremento/decremento e completamento.
 - `test/widget/empty_state_test.dart`: visualizzazione degli stati vuoti e callback delle azioni.
