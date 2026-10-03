@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/exceptions.dart';
 import 'migrations/migration.dart';
@@ -13,7 +14,6 @@ class JsonStorage {
   final SchemaMigrationManager migrationManager;
   final Directory? customDirectory;
 
-  static final Map<String, String> _webStorage = {};
   Completer<void>? _writeLock;
 
   JsonStorage({
@@ -22,6 +22,8 @@ class JsonStorage {
     SchemaMigrationManager? migrationManager,
     this.customDirectory,
   }) : migrationManager = migrationManager ?? SchemaMigrationManager();
+
+  String get _webPrefKey => 'json_storage_$fileName';
 
   Future<File> _getFile() async {
     final dir = customDirectory ?? await getApplicationDocumentsDirectory();
@@ -38,7 +40,8 @@ class JsonStorage {
       String content = '';
 
       if (kIsWeb) {
-        content = _webStorage[fileName] ?? '';
+        final prefs = await SharedPreferences.getInstance();
+        content = prefs.getString(_webPrefKey) ?? '';
       } else {
         final file = await _getFile();
         if (await file.exists()) {
@@ -96,9 +99,10 @@ class JsonStorage {
       final jsonString = const JsonEncoder.withIndent('  ').convert(payload);
 
       if (kIsWeb) {
-        _webStorage[fileName] = jsonString;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_webPrefKey, jsonString);
         if (kDebugMode) {
-          debugPrint('[JsonStorage] Salvataggio web memory completato');
+          debugPrint('[JsonStorage] Salvataggio web localStorage completato con successo');
         }
       } else {
         final file = await _getFile();
@@ -141,7 +145,8 @@ class JsonStorage {
   Future<int> getFileSizeInBytes() async {
     try {
       if (kIsWeb) {
-        return _webStorage[fileName]?.length ?? 0;
+        final prefs = await SharedPreferences.getInstance();
+        return prefs.getString(_webPrefKey)?.length ?? 0;
       }
       final file = await _getFile();
       if (await file.exists()) {
@@ -156,7 +161,8 @@ class JsonStorage {
   Future<void> deleteStorage() async {
     try {
       if (kIsWeb) {
-        _webStorage.remove(fileName);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_webPrefKey);
         return;
       }
       final file = await _getFile();

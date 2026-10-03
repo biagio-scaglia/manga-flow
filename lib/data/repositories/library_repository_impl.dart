@@ -142,6 +142,22 @@ class LibraryRepositoryImpl implements LibraryRepository {
   }
 
   @override
+  Future<void> updateVolumes(int mangaId, int ownedVolumes, {int? totalVolumes}) async {
+    await _ensureLoaded();
+    final index = _entries.indexWhere((e) => e.mangaId == mangaId);
+    if (index >= 0) {
+      final current = _entries[index];
+      final safeOwned = ownedVolumes < 0 ? 0 : ownedVolumes;
+      _entries[index] = current.copyWith(
+        ownedVolumes: safeOwned,
+        totalVolumes: totalVolumes ?? current.totalVolumes,
+        updatedAt: DateTime.now(),
+      );
+      _scheduleAutosave();
+    }
+  }
+
+  @override
   Future<void> updateStatus(int mangaId, ReadingStatus status) async {
     await _ensureLoaded();
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);

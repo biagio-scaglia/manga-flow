@@ -7,6 +7,8 @@ class LibraryEntry {
   final ReadingStatus status;
   final int currentChapter;
   final int? totalChapters;
+  final int ownedVolumes;
+  final int? totalVolumes;
   final int rating; // 0 = non valutato, 1-10
   final String notes;
   final bool isFavorite;
@@ -23,6 +25,8 @@ class LibraryEntry {
     required this.status,
     this.currentChapter = 0,
     this.totalChapters,
+    this.ownedVolumes = 0,
+    this.totalVolumes,
     this.rating = 0,
     this.notes = '',
     this.isFavorite = false,
@@ -38,6 +42,12 @@ class LibraryEntry {
     return (currentChapter / totalChapters!).clamp(0.0, 1.0);
   }
 
+  int get volumesToBuy {
+    if (totalVolumes == null || totalVolumes! <= 0) return 0;
+    final diff = totalVolumes! - ownedVolumes;
+    return diff > 0 ? diff : 0;
+  }
+
   bool get isCompleted =>
       status == ReadingStatus.completed ||
       (totalChapters != null && totalChapters! > 0 && currentChapter >= totalChapters!);
@@ -49,6 +59,8 @@ class LibraryEntry {
     ReadingStatus? status,
     int? currentChapter,
     int? totalChapters,
+    int? ownedVolumes,
+    int? totalVolumes,
     int? rating,
     String? notes,
     bool? isFavorite,
@@ -65,6 +77,8 @@ class LibraryEntry {
       status: status ?? this.status,
       currentChapter: currentChapter ?? this.currentChapter,
       totalChapters: totalChapters ?? this.totalChapters,
+      ownedVolumes: ownedVolumes ?? this.ownedVolumes,
+      totalVolumes: totalVolumes ?? this.totalVolumes,
       rating: rating ?? this.rating,
       notes: notes ?? this.notes,
       isFavorite: isFavorite ?? this.isFavorite,
@@ -84,6 +98,7 @@ class LibraryEntry {
           mangaId == other.mangaId &&
           status == other.status &&
           currentChapter == other.currentChapter &&
+          ownedVolumes == other.ownedVolumes &&
           rating == other.rating &&
           notes == other.notes &&
           isFavorite == other.isFavorite &&

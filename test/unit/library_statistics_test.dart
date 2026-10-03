@@ -13,6 +13,8 @@ void main() {
         status: ReadingStatus.reading,
         currentChapter: 50,
         totalChapters: 100,
+        ownedVolumes: 5,
+        totalVolumes: 10,
         rating: 8,
         isFavorite: true,
         genres: ['Action', 'Fantasy'],
@@ -26,6 +28,8 @@ void main() {
         status: ReadingStatus.completed,
         currentChapter: 30,
         totalChapters: 30,
+        ownedVolumes: 3,
+        totalVolumes: 3,
         rating: 10,
         isFavorite: false,
         genres: ['Action', 'Sci-Fi'],
@@ -39,6 +43,8 @@ void main() {
         status: ReadingStatus.planToRead,
         currentChapter: 0,
         totalChapters: 20,
+        ownedVolumes: 0,
+        totalVolumes: 5,
         rating: 0,
         isFavorite: false,
         genres: ['Romance'],
@@ -55,6 +61,8 @@ void main() {
     expect(stats.planToReadCount, equals(1));
     expect(stats.favoriteCount, equals(1));
     expect(stats.totalChaptersRead, equals(80));
+    expect(stats.totalOwnedVolumes, equals(8));
+    expect(stats.totalVolumesToBuy, equals(10)); // Manga A (5) + Manga B (0) + Manga C (5)
     expect(stats.averageRating, equals(9.0));
     expect(stats.ratedCount, equals(2));
     expect(stats.topGenres.first.key, equals('Action'));

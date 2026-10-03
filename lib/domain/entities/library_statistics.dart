@@ -10,6 +10,8 @@ class LibraryStatistics {
   final int droppedCount;
   final int favoriteCount;
   final int totalChaptersRead;
+  final int totalOwnedVolumes;
+  final int totalVolumesToBuy;
   final double averageRating;
   final int ratedCount;
   final Map<String, int> genreDistribution;
@@ -24,6 +26,8 @@ class LibraryStatistics {
     required this.droppedCount,
     required this.favoriteCount,
     required this.totalChaptersRead,
+    required this.totalOwnedVolumes,
+    required this.totalVolumesToBuy,
     required this.averageRating,
     required this.ratedCount,
     required this.genreDistribution,
@@ -43,6 +47,8 @@ class LibraryStatistics {
         droppedCount: 0,
         favoriteCount: 0,
         totalChaptersRead: 0,
+        totalOwnedVolumes: 0,
+        totalVolumesToBuy: 0,
         averageRating: 0.0,
         ratedCount: 0,
         genreDistribution: {},
@@ -57,6 +63,8 @@ class LibraryStatistics {
     int dropped = 0;
     int favorites = 0;
     int chaptersRead = 0;
+    int ownedVolumes = 0;
+    int volumesToBuy = 0;
     int totalRatingSum = 0;
     int rated = 0;
     final Map<String, int> genres = {};
@@ -85,6 +93,8 @@ class LibraryStatistics {
       }
 
       chaptersRead += entry.currentChapter;
+      ownedVolumes += entry.ownedVolumes;
+      volumesToBuy += entry.volumesToBuy;
 
       if (entry.rating > 0) {
         totalRatingSum += entry.rating;
@@ -112,6 +122,8 @@ class LibraryStatistics {
       droppedCount: dropped,
       favoriteCount: favorites,
       totalChaptersRead: chaptersRead,
+      totalOwnedVolumes: ownedVolumes,
+      totalVolumesToBuy: volumesToBuy,
       averageRating: double.parse(avgRating.toStringAsFixed(1)),
       ratedCount: rated,
       genreDistribution: genres,

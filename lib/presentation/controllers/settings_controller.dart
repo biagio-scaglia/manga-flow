@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:manga_library/domain/repositories/library_repository.dart';
 import 'package:manga_library/domain/repositories/manga_repository.dart';
 
@@ -17,6 +18,7 @@ class SettingsController extends ChangeNotifier {
     required MangaRepository mangaRepository,
   })  : _libraryRepository = libraryRepository,
         _mangaRepository = mangaRepository {
+    _loadPreferences();
     refreshSizes();
   }
 
@@ -36,24 +38,53 @@ class SettingsController extends ChangeNotifier {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
 
-  void setThemeMode(ThemeMode mode) {
+  Future<void> _loadPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _tutorialCompleted = prefs.getBool('tutorial_completed') ?? false;
+      _reduceAnimations = prefs.getBool('reduce_animations') ?? false;
+      final themeIndex = prefs.getInt('theme_mode');
+      if (themeIndex != null && themeIndex >= 0 && themeIndex < ThemeMode.values.length) {
+        _themeMode = ThemeMode.values[themeIndex];
+      }
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
     _themeMode = mode;
     notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('theme_mode', mode.index);
+    } catch (_) {}
   }
 
-  void toggleReduceAnimations(bool value) {
+  Future<void> toggleReduceAnimations(bool value) async {
     _reduceAnimations = value;
     notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('reduce_animations', value);
+    } catch (_) {}
   }
 
-  void setTutorialCompleted(bool completed) {
+  Future<void> setTutorialCompleted(bool completed) async {
     _tutorialCompleted = completed;
     notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('tutorial_completed', completed);
+    } catch (_) {}
   }
 
-  void resetTutorial() {
+  Future<void> resetTutorial() async {
     _tutorialCompleted = false;
     notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('tutorial_completed', false);
+    } catch (_) {}
   }
 
   Future<void> refreshSizes() async {

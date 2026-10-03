@@ -235,6 +235,38 @@ class LibraryController extends ChangeNotifier {
     }
   }
 
+  Future<void> incrementOwnedVolume(int mangaId) async {
+    final entry = getEntry(mangaId);
+    if (entry != null) {
+      final next = entry.ownedVolumes + 1;
+      if (entry.totalVolumes != null && entry.totalVolumes! > 0 && next > entry.totalVolumes!) {
+        return;
+      }
+      await updateVolumes(mangaId, next);
+    }
+  }
+
+  Future<void> decrementOwnedVolume(int mangaId) async {
+    final entry = getEntry(mangaId);
+    if (entry != null && entry.ownedVolumes > 0) {
+      await updateVolumes(mangaId, entry.ownedVolumes - 1);
+    }
+  }
+
+  Future<void> updateVolumes(int mangaId, int ownedVolumes, {int? totalVolumes}) async {
+    final index = _entries.indexWhere((e) => e.mangaId == mangaId);
+    if (index >= 0) {
+      final updated = _entries[index].copyWith(
+        ownedVolumes: ownedVolumes < 0 ? 0 : ownedVolumes,
+        totalVolumes: totalVolumes ?? _entries[index].totalVolumes,
+        updatedAt: DateTime.now(),
+      );
+      _entries[index] = updated;
+      notifyListeners();
+      await _repository.updateVolumes(mangaId, ownedVolumes, totalVolumes: totalVolumes);
+    }
+  }
+
   Future<void> updateStatus(int mangaId, ReadingStatus status) async {
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);
     if (index >= 0) {

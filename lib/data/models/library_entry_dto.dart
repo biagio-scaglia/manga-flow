@@ -8,6 +8,8 @@ class LibraryEntryDto {
   final String status;
   final int currentChapter;
   final int? totalChapters;
+  final int ownedVolumes;
+  final int? totalVolumes;
   final int rating;
   final String notes;
   final bool isFavorite;
@@ -24,6 +26,8 @@ class LibraryEntryDto {
     required this.status,
     required this.currentChapter,
     this.totalChapters,
+    this.ownedVolumes = 0,
+    this.totalVolumes,
     required this.rating,
     required this.notes,
     required this.isFavorite,
@@ -42,6 +46,8 @@ class LibraryEntryDto {
       status: json['status'] as String? ?? 'plan_to_read',
       currentChapter: json['currentChapter'] as int? ?? 0,
       totalChapters: json['totalChapters'] as int?,
+      ownedVolumes: json['ownedVolumes'] as int? ?? 0,
+      totalVolumes: json['totalVolumes'] as int?,
       rating: json['rating'] as int? ?? 0,
       notes: json['notes'] as String? ?? '',
       isFavorite: json['isFavorite'] as bool? ?? json['favorite'] as bool? ?? false,
@@ -63,6 +69,8 @@ class LibraryEntryDto {
       'status': status,
       'currentChapter': currentChapter,
       'totalChapters': totalChapters,
+      'ownedVolumes': ownedVolumes,
+      'totalVolumes': totalVolumes,
       'rating': rating,
       'notes': notes,
       'isFavorite': isFavorite,
@@ -82,6 +90,8 @@ class LibraryEntryDto {
       status: entry.status.toStorageKey(),
       currentChapter: entry.currentChapter,
       totalChapters: entry.totalChapters,
+      ownedVolumes: entry.ownedVolumes,
+      totalVolumes: entry.totalVolumes,
       rating: entry.rating,
       notes: entry.notes,
       isFavorite: entry.isFavorite,
@@ -101,6 +111,8 @@ class LibraryEntryDto {
       status: ReadingStatus.fromStorageKey(status),
       currentChapter: currentChapter,
       totalChapters: totalChapters,
+      ownedVolumes: ownedVolumes,
+      totalVolumes: totalVolumes,
       rating: rating,
       notes: notes,
       isFavorite: isFavorite,

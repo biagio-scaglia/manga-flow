@@ -63,14 +63,29 @@ class StatisticsScreen extends StatelessWidget {
                       Expanded(
                         child: _buildHeroStatCard(
                           context,
+                          'Volumi Posseduti',
+                          '${stats.totalOwnedVolumes}',
+                          Icons.auto_stories_rounded,
+                          AppColors.secondary,
+                          subtitle: stats.totalVolumesToBuy > 0 ? '${stats.totalVolumesToBuy} da acquistare' : 'Collezione aggiornata',
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildHeroStatCard(
+                          context,
                           'Valutazione Media',
                           stats.ratedCount > 0 ? '${stats.averageRating} / 10' : 'N/D',
                           Icons.star_rounded,
                           AppColors.warning,
-                          subtitle: stats.ratedCount > 0 ? 'su ${stats.ratedCount} manga valutati' : null,
+                          subtitle: stats.ratedCount > 0 ? 'su ${stats.ratedCount} valutati' : null,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
                       Expanded(
                         child: _buildHeroStatCard(
                           context,
@@ -78,6 +93,17 @@ class StatisticsScreen extends StatelessWidget {
                           '${stats.favoriteCount}',
                           Icons.favorite_rounded,
                           AppColors.statusFavorite,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildHeroStatCard(
+                          context,
+                          'Da Acquistare',
+                          '${stats.totalVolumesToBuy}',
+                          Icons.shopping_bag_outlined,
+                          AppColors.accent,
+                          subtitle: 'Volumi mancanti',
                         ),
                       ),
                     ],
