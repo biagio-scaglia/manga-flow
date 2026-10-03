@@ -24,29 +24,22 @@ class MangaRepositoryImpl implements MangaRepository {
     String? status,
   }) async {
     try {
+      final offset = (page - 1) * limit;
       final queryParams = <String, String>{
-        'q': query,
-        'page': page.toString(),
-        'limit': limit.toString(),
-        'order_by': 'popularity',
-        'sort': 'asc',
-        'sfw': 'true',
+        'filter[text]': query,
+        'page[limit]': limit.toString(),
+        'page[offset]': offset.toString(),
       };
 
       if (type != null && type.isNotEmpty) {
-        queryParams['type'] = type;
+        queryParams['filter[subtype]'] = type.toLowerCase();
       }
       if (status != null && status.isNotEmpty) {
-        queryParams['status'] = status;
+        queryParams['filter[status]'] = status.toLowerCase();
       }
 
       final response = await apiClient.get('/manga', queryParams: queryParams);
       final data = response.data;
-
-      final pagination = data['pagination'] as Map<String, dynamic>?;
-      final bool hasNextPage = pagination?['has_next_page'] as bool? ?? false;
-      final int currentPage = pagination?['current_page'] as int? ?? page;
-      final int lastVisiblePage = pagination?['last_visible_page'] as int? ?? page;
 
       final itemsRaw = data['data'] as List<dynamic>? ?? [];
       final List<Manga> mangas = itemsRaw
@@ -54,10 +47,15 @@ class MangaRepositoryImpl implements MangaRepository {
           .map((json) => RemoteMangaDto.fromJson(json).toDomain())
           .toList();
 
+      final meta = data['meta'] as Map<String, dynamic>?;
+      final totalCount = meta?['count'] as int? ?? mangas.length;
+      final bool hasNextPage = (offset + mangas.length) < totalCount;
+      final int lastVisiblePage = (totalCount / limit).ceil();
+
       return MangaSearchResult(
         items: mangas,
         hasNextPage: hasNextPage,
-        currentPage: currentPage,
+        currentPage: page,
         lastVisiblePage: lastVisiblePage,
         isFromCache: response.isFromCache,
         isStale: response.isStale,
@@ -80,23 +78,15 @@ class MangaRepositoryImpl implements MangaRepository {
     String? filter,
   }) async {
     try {
+      final offset = (page - 1) * limit;
       final queryParams = <String, String>{
-        'page': page.toString(),
-        'limit': limit.toString(),
-        'sfw': 'true',
+        'page[limit]': limit.toString(),
+        'page[offset]': offset.toString(),
+        'sort': 'popularityRank',
       };
 
-      if (filter != null && filter.isNotEmpty) {
-        queryParams['filter'] = filter;
-      }
-
-      final response = await apiClient.get('/top/manga', queryParams: queryParams);
+      final response = await apiClient.get('/manga', queryParams: queryParams);
       final data = response.data;
-
-      final pagination = data['pagination'] as Map<String, dynamic>?;
-      final bool hasNextPage = pagination?['has_next_page'] as bool? ?? false;
-      final int currentPage = pagination?['current_page'] as int? ?? page;
-      final int lastVisiblePage = pagination?['last_visible_page'] as int? ?? page;
 
       final itemsRaw = data['data'] as List<dynamic>? ?? [];
       final List<Manga> mangas = itemsRaw
@@ -104,10 +94,15 @@ class MangaRepositoryImpl implements MangaRepository {
           .map((json) => RemoteMangaDto.fromJson(json).toDomain())
           .toList();
 
+      final meta = data['meta'] as Map<String, dynamic>?;
+      final totalCount = meta?['count'] as int? ?? mangas.length;
+      final bool hasNextPage = (offset + mangas.length) < totalCount;
+      final int lastVisiblePage = (totalCount / limit).ceil();
+
       return MangaSearchResult(
         items: mangas,
         hasNextPage: hasNextPage,
-        currentPage: currentPage,
+        currentPage: page,
         lastVisiblePage: lastVisiblePage,
         isFromCache: response.isFromCache,
         isStale: response.isStale,
@@ -126,7 +121,7 @@ class MangaRepositoryImpl implements MangaRepository {
   @override
   Future<Manga> getMangaDetails(int id) async {
     try {
-      final response = await apiClient.get('/manga/$id/full');
+      final response = await apiClient.get('/manga/$id');
       final data = response.data;
       final mangaJson = data['data'] as Map<String, dynamic>?;
 

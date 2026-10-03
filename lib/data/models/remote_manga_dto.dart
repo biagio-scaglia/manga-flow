@@ -44,7 +44,71 @@ class RemoteMangaDto {
   });
 
   factory RemoteMangaDto.fromJson(Map<String, dynamic> json) {
-    // Gestione immagini con fallback multiplo
+    // 1. Controllo formato Kitsu (JSON:API standard)
+    if (json.containsKey('attributes') && json['attributes'] is Map<String, dynamic>) {
+      final attrs = json['attributes'] as Map<String, dynamic>;
+      final id = int.tryParse(json['id']?.toString() ?? '0') ?? 0;
+
+      final titles = attrs['titles'] as Map<String, dynamic>?;
+      final canonicalTitle = attrs['canonicalTitle']?.toString() ??
+          titles?['en']?.toString() ??
+          titles?['en_jp']?.toString() ??
+          'Senza titolo';
+
+      final posterImage = attrs['posterImage'] as Map<String, dynamic>?;
+      final imgUrl = posterImage?['medium']?.toString() ??
+          posterImage?['small']?.toString() ??
+          posterImage?['original']?.toString() ??
+          '';
+      final largeImgUrl = posterImage?['large']?.toString() ??
+          posterImage?['original']?.toString() ??
+          imgUrl;
+
+      // Punteggio medio Kitsu (in scala 0-100 convertito a 0-10)
+      double? parsedScore;
+      if (attrs['averageRating'] != null) {
+        final rawScore = double.tryParse(attrs['averageRating'].toString());
+        if (rawScore != null) {
+          parsedScore = double.parse((rawScore / 10.0).toStringAsFixed(2));
+        }
+      }
+
+      // Autore o serializzazione
+      final List<String> authorsList = [];
+      if (attrs['serialization'] != null && attrs['serialization'].toString().isNotEmpty) {
+        authorsList.add(attrs['serialization'].toString());
+      }
+
+      // Stato di pubblicazione
+      String rawStatus = attrs['status']?.toString() ?? 'Unknown';
+      if (rawStatus == 'current') rawStatus = 'Publishing';
+      if (rawStatus == 'finished') rawStatus = 'Finished';
+      if (rawStatus == 'unreleased') rawStatus = 'Not yet published';
+
+      return RemoteMangaDto(
+        malId: id,
+        title: canonicalTitle,
+        titleJapanese: titles?['ja_jp']?.toString(),
+        titleEnglish: titles?['en']?.toString(),
+        synopsis: attrs['synopsis']?.toString() ?? attrs['description']?.toString(),
+        imageUrl: imgUrl,
+        largeImageUrl: largeImgUrl,
+        authors: authorsList,
+        genres: const [],
+        status: rawStatus,
+        chapters: attrs['chapterCount'] as int?,
+        volumes: attrs['volumeCount'] as int?,
+        score: parsedScore,
+        scoredBy: attrs['userCount'] as int?,
+        rank: attrs['ratingRank'] as int?,
+        popularity: attrs['popularityRank'] as int?,
+        publishedFrom: attrs['startDate'] != null ? DateTime.tryParse(attrs['startDate'].toString()) : null,
+        publishedTo: attrs['endDate'] != null ? DateTime.tryParse(attrs['endDate'].toString()) : null,
+        type: attrs['subtype']?.toString() ?? attrs['mangaType']?.toString() ?? 'Manga',
+      );
+    }
+
+    // 2. Controllo formato Jikan / MyAnimeList v4 standard
     String imgUrl = '';
     String? largeImgUrl;
 
@@ -106,7 +170,7 @@ class RemoteMangaDto {
     }
 
     return RemoteMangaDto(
-      malId: json['mal_id'] as int? ?? 0,
+      malId: json['mal_id'] as int? ?? json['id'] as int? ?? 0,
       title: json['title'] as String? ?? 'Senza titolo',
       titleJapanese: json['title_japanese'] as String?,
       titleEnglish: json['title_english'] as String?,

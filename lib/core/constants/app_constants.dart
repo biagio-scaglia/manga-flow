@@ -2,17 +2,17 @@ class AppConstants {
   static const String appName = 'MangaFlow';
   static const String appVersion = '1.0.0';
 
-  // Configurazione API Jikan (MyAnimeList v4)
-  static const String apiBaseUrl = 'https://api.jikan.moe/v4';
+  // Configurazione API Manga (Kitsu REST API Edge - Aperta, veloce e affidabile)
+  static const String apiBaseUrl = 'https://kitsu.io/api/edge';
   static const Duration apiTimeout = Duration(seconds: 12);
   static const int maxSearchLimit = 20;
 
   // Rate Limiting
-  static const int rateLimitRequests = 3;
+  static const int rateLimitRequests = 4;
   static const Duration rateLimitWindow = Duration(seconds: 1);
-  static const Duration minRequestInterval = Duration(milliseconds: 350);
+  static const Duration minRequestInterval = Duration(milliseconds: 250);
   static const int maxRetries = 3;
-  static const Duration baseRetryDelay = Duration(milliseconds: 800);
+  static const Duration baseRetryDelay = Duration(milliseconds: 600);
 
   // Cache
   static const Duration cacheTtl = Duration(hours: 24);

@@ -4,39 +4,37 @@ import 'package:manga_library/data/models/remote_manga_dto.dart';
 import 'package:manga_library/domain/entities/reading_status.dart';
 
 void main() {
-  test('RemoteMangaDto parse da JSON reale Jikan', () {
-    final jikanJson = {
-      'mal_id': 13,
-      'title': 'One Piece',
-      'title_japanese': 'ONE PIECE',
-      'images': {
-        'jpg': {
-          'image_url': 'https://example.com/onepiece.jpg',
-          'large_image_url': 'https://example.com/onepiece_large.jpg',
-        }
-      },
-      'status': 'Publishing',
-      'chapters': 1100,
-      'score': 9.22,
-      'authors': [
-        {'mal_id': 1881, 'name': 'Oda, Eiichiro'}
-      ],
-      'genres': [
-        {'mal_id': 1, 'name': 'Action'},
-        {'mal_id': 2, 'name': 'Adventure'}
-      ]
+  test('RemoteMangaDto parse da JSON reale Kitsu', () {
+    final kitsuJson = {
+      'id': '13737',
+      'type': 'manga',
+      'attributes': {
+        'canonicalTitle': 'Berserk',
+        'titles': {
+          'en': 'Berserk',
+          'ja_jp': 'ベルセルク',
+        },
+        'synopsis': 'Guts, a former mercenary...',
+        'posterImage': {
+          'medium': 'https://example.com/berserk_medium.jpg',
+          'large': 'https://example.com/berserk_large.jpg',
+        },
+        'status': 'current',
+        'chapterCount': 375,
+        'averageRating': '88.74',
+        'serialization': 'Young Animal',
+      }
     };
 
-    final dto = RemoteMangaDto.fromJson(jikanJson);
+    final dto = RemoteMangaDto.fromJson(kitsuJson);
     final domain = dto.toDomain();
 
-    expect(domain.id, equals(13));
-    expect(domain.title, equals('One Piece'));
+    expect(domain.id, equals(13737));
+    expect(domain.title, equals('Berserk'));
     expect(domain.publicationStatusItalian, equals('In corso'));
-    expect(domain.authors.first, equals('Oda, Eiichiro'));
-    expect(domain.genres, contains('Action'));
-    expect(domain.genres, contains('Adventure'));
-    expect(domain.score, equals(9.22));
+    expect(domain.score, equals(8.87));
+    expect(domain.totalChapters, equals(375));
+    expect(domain.authors.first, equals('Young Animal'));
   });
 
   test('LibraryEntryDto serializzazione e deserializzazione corretta', () {
