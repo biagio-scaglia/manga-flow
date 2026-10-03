@@ -15,6 +15,40 @@ class MangaRepositoryImpl implements MangaRepository {
     required this.cacheManager,
   });
 
+  static const String _mangaFields = '''
+    id
+    title {
+      romaji
+      english
+      native
+    }
+    description(asHtml: false)
+    coverImage {
+      extraLarge
+      large
+      medium
+    }
+    genres
+    staff {
+      nodes {
+        name {
+          full
+        }
+      }
+    }
+    status
+    chapters
+    volumes
+    averageScore
+    popularity
+    startDate {
+      year
+      month
+      day
+    }
+    format
+''';
+
   @override
   Future<MangaSearchResult> searchManga({
     required String query,
@@ -24,38 +58,48 @@ class MangaRepositoryImpl implements MangaRepository {
     String? status,
   }) async {
     try {
-      final offset = (page - 1) * limit;
-      final queryParams = <String, String>{
-        'filter[text]': query,
-        'page[limit]': limit.toString(),
-        'page[offset]': offset.toString(),
-      };
+      const graphQLQuery = '''
+        query (\$search: String, \$page: Int, \$perPage: Int) {
+          Page(page: \$page, perPage: \$perPage) {
+            pageInfo {
+              hasNextPage
+              currentPage
+              lastPage
+            }
+            media(search: \$search, type: MANGA, sort: POPULARITY_DESC) {
+              $_mangaFields
+            }
+          }
+        }
+      ''';
 
-      if (type != null && type.isNotEmpty) {
-        queryParams['filter[subtype]'] = type.toLowerCase();
-      }
-      if (status != null && status.isNotEmpty) {
-        queryParams['filter[status]'] = status.toLowerCase();
-      }
+      final response = await apiClient.postGraphQL(
+        query: graphQLQuery,
+        variables: {
+          'search': query,
+          'page': page,
+          'perPage': limit,
+        },
+      );
 
-      final response = await apiClient.get('/manga', queryParams: queryParams);
-      final data = response.data;
+      final data = response.data['data'] as Map<String, dynamic>?;
+      final pageData = data?['Page'] as Map<String, dynamic>?;
+      final pageInfo = pageData?['pageInfo'] as Map<String, dynamic>?;
 
-      final itemsRaw = data['data'] as List<dynamic>? ?? [];
+      final itemsRaw = pageData?['media'] as List<dynamic>? ?? [];
       final List<Manga> mangas = itemsRaw
           .whereType<Map<String, dynamic>>()
           .map((json) => RemoteMangaDto.fromJson(json).toDomain())
           .toList();
 
-      final meta = data['meta'] as Map<String, dynamic>?;
-      final totalCount = meta?['count'] as int? ?? mangas.length;
-      final bool hasNextPage = (offset + mangas.length) < totalCount;
-      final int lastVisiblePage = (totalCount / limit).ceil();
+      final bool hasNextPage = pageInfo?['hasNextPage'] as bool? ?? false;
+      final int currentPage = pageInfo?['currentPage'] as int? ?? page;
+      final int lastVisiblePage = pageInfo?['lastPage'] as int? ?? page;
 
       return MangaSearchResult(
         items: mangas,
         hasNextPage: hasNextPage,
-        currentPage: page,
+        currentPage: currentPage,
         lastVisiblePage: lastVisiblePage,
         isFromCache: response.isFromCache,
         isStale: response.isStale,
@@ -78,31 +122,47 @@ class MangaRepositoryImpl implements MangaRepository {
     String? filter,
   }) async {
     try {
-      final offset = (page - 1) * limit;
-      final queryParams = <String, String>{
-        'page[limit]': limit.toString(),
-        'page[offset]': offset.toString(),
-        'sort': 'popularityRank',
-      };
+      const graphQLQuery = '''
+        query (\$page: Int, \$perPage: Int) {
+          Page(page: \$page, perPage: \$perPage) {
+            pageInfo {
+              hasNextPage
+              currentPage
+              lastPage
+            }
+            media(type: MANGA, sort: POPULARITY_DESC) {
+              $_mangaFields
+            }
+          }
+        }
+      ''';
 
-      final response = await apiClient.get('/manga', queryParams: queryParams);
-      final data = response.data;
+      final response = await apiClient.postGraphQL(
+        query: graphQLQuery,
+        variables: {
+          'page': page,
+          'perPage': limit,
+        },
+      );
 
-      final itemsRaw = data['data'] as List<dynamic>? ?? [];
+      final data = response.data['data'] as Map<String, dynamic>?;
+      final pageData = data?['Page'] as Map<String, dynamic>?;
+      final pageInfo = pageData?['pageInfo'] as Map<String, dynamic>?;
+
+      final itemsRaw = pageData?['media'] as List<dynamic>? ?? [];
       final List<Manga> mangas = itemsRaw
           .whereType<Map<String, dynamic>>()
           .map((json) => RemoteMangaDto.fromJson(json).toDomain())
           .toList();
 
-      final meta = data['meta'] as Map<String, dynamic>?;
-      final totalCount = meta?['count'] as int? ?? mangas.length;
-      final bool hasNextPage = (offset + mangas.length) < totalCount;
-      final int lastVisiblePage = (totalCount / limit).ceil();
+      final bool hasNextPage = pageInfo?['hasNextPage'] as bool? ?? false;
+      final int currentPage = pageInfo?['currentPage'] as int? ?? page;
+      final int lastVisiblePage = pageInfo?['lastPage'] as int? ?? page;
 
       return MangaSearchResult(
         items: mangas,
         hasNextPage: hasNextPage,
-        currentPage: page,
+        currentPage: currentPage,
         lastVisiblePage: lastVisiblePage,
         isFromCache: response.isFromCache,
         isStale: response.isStale,
@@ -121,9 +181,23 @@ class MangaRepositoryImpl implements MangaRepository {
   @override
   Future<Manga> getMangaDetails(int id) async {
     try {
-      final response = await apiClient.get('/manga/$id');
-      final data = response.data;
-      final mangaJson = data['data'] as Map<String, dynamic>?;
+      const graphQLQuery = '''
+        query (\$id: Int) {
+          Media(id: \$id, type: MANGA) {
+            $_mangaFields
+          }
+        }
+      ''';
+
+      final response = await apiClient.postGraphQL(
+        query: graphQLQuery,
+        variables: {
+          'id': id,
+        },
+      );
+
+      final data = response.data['data'] as Map<String, dynamic>?;
+      final mangaJson = data?['Media'] as Map<String, dynamic>?;
 
       if (mangaJson == null) {
         throw const ServerFailure('Dettagli manga non disponibili.', statusCode: 404);

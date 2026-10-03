@@ -2,17 +2,17 @@ class AppConstants {
   static const String appName = 'MangaFlow';
   static const String appVersion = '1.0.0';
 
-  // Configurazione API Manga (Kitsu REST API Edge - Aperta, veloce e affidabile)
-  static const String apiBaseUrl = 'https://kitsu.io/api/edge';
+  // Configurazione API Manga (AniList Open GraphQL API)
+  static const String apiBaseUrl = 'https://graphql.anilist.co';
   static const Duration apiTimeout = Duration(seconds: 12);
   static const int maxSearchLimit = 20;
 
   // Rate Limiting
-  static const int rateLimitRequests = 4;
+  static const int rateLimitRequests = 5;
   static const Duration rateLimitWindow = Duration(seconds: 1);
-  static const Duration minRequestInterval = Duration(milliseconds: 250);
+  static const Duration minRequestInterval = Duration(milliseconds: 200);
   static const int maxRetries = 3;
-  static const Duration baseRetryDelay = Duration(milliseconds: 600);
+  static const Duration baseRetryDelay = Duration(milliseconds: 500);
 
   // Cache
   static const Duration cacheTtl = Duration(hours: 24);

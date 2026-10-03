@@ -44,129 +44,115 @@ class RemoteMangaDto {
   });
 
   factory RemoteMangaDto.fromJson(Map<String, dynamic> json) {
-    // 1. Controllo formato Kitsu (JSON:API standard)
-    if (json.containsKey('attributes') && json['attributes'] is Map<String, dynamic>) {
-      final attrs = json['attributes'] as Map<String, dynamic>;
-      final id = int.tryParse(json['id']?.toString() ?? '0') ?? 0;
-
-      final titles = attrs['titles'] as Map<String, dynamic>?;
-      final canonicalTitle = attrs['canonicalTitle']?.toString() ??
-          titles?['en']?.toString() ??
-          titles?['en_jp']?.toString() ??
+    // 1. Controllo formato AniList GraphQL
+    if (json.containsKey('title') && json['title'] is Map<String, dynamic>) {
+      final id = json['id'] as int? ?? 0;
+      final titles = json['title'] as Map<String, dynamic>;
+      final canonicalTitle = titles['romaji']?.toString() ??
+          titles['english']?.toString() ??
+          titles['native']?.toString() ??
           'Senza titolo';
 
-      final posterImage = attrs['posterImage'] as Map<String, dynamic>?;
-      final imgUrl = posterImage?['medium']?.toString() ??
-          posterImage?['small']?.toString() ??
-          posterImage?['original']?.toString() ??
+      final coverImages = json['coverImage'] as Map<String, dynamic>?;
+      final imgUrl = coverImages?['medium']?.toString() ??
+          coverImages?['large']?.toString() ??
           '';
-      final largeImgUrl = posterImage?['large']?.toString() ??
-          posterImage?['original']?.toString() ??
+      final largeImgUrl = coverImages?['extraLarge']?.toString() ??
+          coverImages?['large']?.toString() ??
           imgUrl;
 
-      // Punteggio medio Kitsu (in scala 0-100 convertito a 0-10)
-      double? parsedScore;
-      if (attrs['averageRating'] != null) {
-        final rawScore = double.tryParse(attrs['averageRating'].toString());
-        if (rawScore != null) {
-          parsedScore = double.parse((rawScore / 10.0).toStringAsFixed(2));
+      // Generi
+      final List<String> genresList = [];
+      if (json['genres'] != null && json['genres'] is List) {
+        for (final g in json['genres']) {
+          if (g != null) genresList.add(g.toString());
         }
       }
 
-      // Autore o serializzazione
+      // Autori dallo staff
       final List<String> authorsList = [];
-      if (attrs['serialization'] != null && attrs['serialization'].toString().isNotEmpty) {
-        authorsList.add(attrs['serialization'].toString());
+      if (json['staff'] != null && json['staff'] is Map<String, dynamic>) {
+        final nodes = json['staff']['nodes'] as List<dynamic>?;
+        if (nodes != null) {
+          for (final node in nodes) {
+            if (node is Map<String, dynamic> && node['name'] != null) {
+              final nameMap = node['name'] as Map<String, dynamic>;
+              final fullName = nameMap['full']?.toString();
+              if (fullName != null && fullName.isNotEmpty && !authorsList.contains(fullName)) {
+                authorsList.add(fullName);
+              }
+            }
+          }
+        }
       }
 
-      // Stato di pubblicazione
-      String rawStatus = attrs['status']?.toString() ?? 'Unknown';
-      if (rawStatus == 'current') rawStatus = 'Publishing';
-      if (rawStatus == 'finished') rawStatus = 'Finished';
-      if (rawStatus == 'unreleased') rawStatus = 'Not yet published';
+      // Stato normalizzato
+      final rawStatus = json['status']?.toString() ?? 'RELEASING';
+      String status = 'Publishing';
+      if (rawStatus == 'FINISHED') status = 'Finished';
+      if (rawStatus == 'NOT_YET_RELEASED') status = 'Not yet published';
+      if (rawStatus == 'HIATUS') status = 'On Hiatus';
+      if (rawStatus == 'CANCELLED') status = 'Discontinued';
+
+      // Score (0-100 a 0-10)
+      double? parsedScore;
+      if (json['averageScore'] != null) {
+        final raw = double.tryParse(json['averageScore'].toString());
+        if (raw != null) {
+          parsedScore = double.parse((raw / 10.0).toStringAsFixed(1));
+        }
+      }
+
+      // Pulizia descrizione da tag HTML
+      String? cleanDesc = json['description']?.toString();
+      if (cleanDesc != null) {
+        cleanDesc = cleanDesc.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ' ').replaceAll('  ', ' ').trim();
+      }
+
+      // Date di inizio
+      DateTime? fromDate;
+      if (json['startDate'] != null && json['startDate'] is Map<String, dynamic>) {
+        final start = json['startDate'] as Map<String, dynamic>;
+        final y = start['year'] as int?;
+        final m = start['month'] as int? ?? 1;
+        final d = start['day'] as int? ?? 1;
+        if (y != null) {
+          fromDate = DateTime(y, m, d);
+        }
+      }
 
       return RemoteMangaDto(
         malId: id,
         title: canonicalTitle,
-        titleJapanese: titles?['ja_jp']?.toString(),
-        titleEnglish: titles?['en']?.toString(),
-        synopsis: attrs['synopsis']?.toString() ?? attrs['description']?.toString(),
+        titleJapanese: titles['native']?.toString(),
+        titleEnglish: titles['english']?.toString(),
+        synopsis: cleanDesc,
         imageUrl: imgUrl,
         largeImageUrl: largeImgUrl,
         authors: authorsList,
-        genres: const [],
-        status: rawStatus,
-        chapters: attrs['chapterCount'] as int?,
-        volumes: attrs['volumeCount'] as int?,
+        genres: genresList,
+        status: status,
+        chapters: json['chapters'] as int?,
+        volumes: json['volumes'] as int?,
         score: parsedScore,
-        scoredBy: attrs['userCount'] as int?,
-        rank: attrs['ratingRank'] as int?,
-        popularity: attrs['popularityRank'] as int?,
-        publishedFrom: attrs['startDate'] != null ? DateTime.tryParse(attrs['startDate'].toString()) : null,
-        publishedTo: attrs['endDate'] != null ? DateTime.tryParse(attrs['endDate'].toString()) : null,
-        type: attrs['subtype']?.toString() ?? attrs['mangaType']?.toString() ?? 'Manga',
+        popularity: json['popularity'] as int?,
+        publishedFrom: fromDate,
+        type: json['format']?.toString() ?? 'Manga',
       );
     }
 
-    // 2. Controllo formato Jikan / MyAnimeList v4 standard
+    // 2. Fallback per formati alternativi (Jikan / DTO interno)
     String imgUrl = '';
     String? largeImgUrl;
 
     if (json['images'] != null && json['images'] is Map<String, dynamic>) {
       final images = json['images'] as Map<String, dynamic>;
       final jpg = images['jpg'] as Map<String, dynamic>?;
-      final webp = images['webp'] as Map<String, dynamic>?;
-
-      imgUrl = jpg?['image_url'] ?? webp?['image_url'] ?? '';
-      largeImgUrl = jpg?['large_image_url'] ?? webp?['large_image_url'] ?? imgUrl;
-    }
-
-    // Gestione autori
-    final List<String> authorsList = [];
-    if (json['authors'] != null && json['authors'] is List) {
-      for (final author in json['authors']) {
-        if (author is Map<String, dynamic> && author['name'] != null) {
-          authorsList.add(author['name'].toString());
-        }
-      }
-    }
-
-    // Gestione generi, temi e demografiche
-    final List<String> genresList = [];
-    void extractNames(dynamic list) {
-      if (list != null && list is List) {
-        for (final item in list) {
-          if (item is Map<String, dynamic> && item['name'] != null) {
-            final name = item['name'].toString();
-            if (!genresList.contains(name)) {
-              genresList.add(name);
-            }
-          }
-        }
-      }
-    }
-
-    extractNames(json['genres']);
-    extractNames(json['themes']);
-    extractNames(json['demographics']);
-
-    // Date di pubblicazione
-    DateTime? fromDate;
-    DateTime? toDate;
-    if (json['published'] != null && json['published'] is Map<String, dynamic>) {
-      final published = json['published'] as Map<String, dynamic>;
-      if (published['from'] != null) {
-        fromDate = DateTime.tryParse(published['from'].toString());
-      }
-      if (published['to'] != null) {
-        toDate = DateTime.tryParse(published['to'].toString());
-      }
-    }
-
-    // Punteggio sicuro
-    double? parsedScore;
-    if (json['score'] != null) {
-      parsedScore = double.tryParse(json['score'].toString());
+      imgUrl = jpg?['image_url'] ?? '';
+      largeImgUrl = jpg?['large_image_url'] ?? imgUrl;
+    } else {
+      imgUrl = json['image_url']?.toString() ?? '';
+      largeImgUrl = json['large_image_url']?.toString() ?? imgUrl;
     }
 
     return RemoteMangaDto(
@@ -177,17 +163,13 @@ class RemoteMangaDto {
       synopsis: json['synopsis'] as String?,
       imageUrl: imgUrl,
       largeImageUrl: largeImgUrl,
-      authors: authorsList,
-      genres: genresList,
-      status: json['status'] as String? ?? 'Unknown',
+      authors: (json['authors'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      genres: (json['genres'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      status: json['status'] as String? ?? 'Publishing',
       chapters: json['chapters'] as int?,
       volumes: json['volumes'] as int?,
-      score: parsedScore,
-      scoredBy: json['scored_by'] as int?,
-      rank: json['rank'] as int?,
+      score: double.tryParse(json['score']?.toString() ?? ''),
       popularity: json['popularity'] as int?,
-      publishedFrom: fromDate,
-      publishedTo: toDate,
       type: json['type'] as String? ?? 'Manga',
     );
   }

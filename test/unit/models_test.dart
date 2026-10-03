@@ -4,37 +4,45 @@ import 'package:manga_library/data/models/remote_manga_dto.dart';
 import 'package:manga_library/domain/entities/reading_status.dart';
 
 void main() {
-  test('RemoteMangaDto parse da JSON reale Kitsu', () {
-    final kitsuJson = {
-      'id': '13737',
-      'type': 'manga',
-      'attributes': {
-        'canonicalTitle': 'Berserk',
-        'titles': {
-          'en': 'Berserk',
-          'ja_jp': 'ベルセルク',
-        },
-        'synopsis': 'Guts, a former mercenary...',
-        'posterImage': {
-          'medium': 'https://example.com/berserk_medium.jpg',
-          'large': 'https://example.com/berserk_large.jpg',
-        },
-        'status': 'current',
-        'chapterCount': 375,
-        'averageRating': '88.74',
-        'serialization': 'Young Animal',
-      }
+  test('RemoteMangaDto parse da AniList GraphQL', () {
+    final aniListJson = {
+      'id': 30002,
+      'title': {
+        'romaji': 'Berserk',
+        'english': 'Berserk',
+        'native': 'ベルセルク',
+      },
+      'description': 'Guts, a former mercenary...',
+      'coverImage': {
+        'large': 'https://example.com/berserk_large.jpg',
+        'extraLarge': 'https://example.com/berserk_extra.jpg',
+      },
+      'genres': ['Action', 'Adventure', 'Drama', 'Fantasy'],
+      'staff': {
+        'nodes': [
+          {
+            'name': {'full': 'Kentarou Miura'}
+          }
+        ]
+      },
+      'status': 'RELEASING',
+      'chapters': 375,
+      'volumes': 41,
+      'averageScore': 92,
+      'popularity': 180000,
     };
 
-    final dto = RemoteMangaDto.fromJson(kitsuJson);
+    final dto = RemoteMangaDto.fromJson(aniListJson);
     final domain = dto.toDomain();
 
-    expect(domain.id, equals(13737));
+    expect(domain.id, equals(30002));
     expect(domain.title, equals('Berserk'));
     expect(domain.publicationStatusItalian, equals('In corso'));
-    expect(domain.score, equals(8.87));
+    expect(domain.score, equals(9.2));
     expect(domain.totalChapters, equals(375));
-    expect(domain.authors.first, equals('Young Animal'));
+    expect(domain.totalVolumes, equals(41));
+    expect(domain.authors.first, equals('Kentarou Miura'));
+    expect(domain.genres, contains('Action'));
   });
 
   test('LibraryEntryDto serializzazione e deserializzazione corretta', () {
