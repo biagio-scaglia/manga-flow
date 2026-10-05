@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local Catalog Dumps (Private / Legal offline dumps - NEVER PUSH)
+dump/
+assets/dump/
+data/dump/
+local_dump/
+*.dump.json
+

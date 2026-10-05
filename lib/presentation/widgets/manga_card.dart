@@ -51,6 +51,7 @@ class MangaCard extends StatelessWidget {
                   children: [
                     MangaCover(
                       coverUrl: coverUrl,
+                      title: title,
                       heroTag: '$heroTagPrefix-$id',
                       showSpineEffect: true,
                       badge: entry != null

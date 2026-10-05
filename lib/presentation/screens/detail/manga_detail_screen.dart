@@ -517,6 +517,7 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                   width: 125,
                   child: MangaCover(
                     coverUrl: coverUrl,
+                    title: title,
                     heroTag: 'cover-${widget.mangaId}',
                     showSpineEffect: true,
                   ),

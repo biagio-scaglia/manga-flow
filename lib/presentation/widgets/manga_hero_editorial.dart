@@ -50,6 +50,7 @@ class MangaHeroEditorial extends StatelessWidget {
                 width: 95,
                 child: MangaCover(
                   coverUrl: entry.coverUrl,
+                  title: entry.title,
                   heroTag: 'hero-continue-${entry.mangaId}',
                   showSpineEffect: true,
                 ),

@@ -4,6 +4,7 @@ import '../../core/theme/app_radii.dart';
 
 class MangaCover extends StatelessWidget {
   final String coverUrl;
+  final String? title;
   final double? width;
   final double? height;
   final double aspectRatio;
@@ -15,6 +16,7 @@ class MangaCover extends StatelessWidget {
   const MangaCover({
     super.key,
     required this.coverUrl,
+    this.title,
     this.width,
     this.height,
     this.aspectRatio = 1 / 1.45,
@@ -28,6 +30,47 @@ class MangaCover extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? AppColors.nightBorder : AppColors.paperBorder;
+
+    Widget imageWidget;
+    final cleanUrl = coverUrl.trim();
+
+    if (cleanUrl.isEmpty) {
+      imageWidget = _buildPlaceholder(context, isDark);
+    } else if (cleanUrl.startsWith('assets/')) {
+      imageWidget = Image.asset(
+        cleanUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _buildPlaceholder(context, isDark),
+      );
+    } else {
+      imageWidget = Image.network(
+        cleanUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _buildPlaceholder(context, isDark),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: isDark
+                ? AppColors.nightSurfaceVariant
+                : AppColors.paperSurfaceVariant,
+            child: Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
 
     Widget imageContent = AspectRatio(
       aspectRatio: aspectRatio,
@@ -51,37 +94,7 @@ class MangaCover extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              if (coverUrl.isNotEmpty)
-                Image.network(
-                  coverUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildPlaceholder(context, isDark),
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: isDark
-                          ? AppColors.nightSurfaceVariant
-                          : AppColors.paperSurfaceVariant,
-                      child: Center(
-                        child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              isDark
-                                  ? AppColors.nightInkMuted
-                                  : AppColors.inkMuted,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
-              else
-                _buildPlaceholder(context, isDark),
+              imageWidget,
 
               // Effetto costina/piega volume fisico a sinistra (sottile sfumatura verticale)
               if (showSpineEffect)
@@ -94,7 +107,7 @@ class MangaCover extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.22),
+                          Colors.black.withValues(alpha: 0.25),
                           Colors.transparent,
                         ],
                       ),
@@ -134,34 +147,83 @@ class MangaCover extends StatelessWidget {
   }
 
   Widget _buildPlaceholder(BuildContext context, bool isDark) {
+    final displayTitle = title?.trim() ?? '';
+
     return Container(
       color: isDark
           ? AppColors.nightSurfaceVariant
           : AppColors.paperSurfaceVariant,
-      padding: const EdgeInsets.all(8),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.menu_book_outlined,
-              size: 24,
-              color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'COPERTINA\nNON DISPONIBILE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 8,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.5,
-                color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
-                height: 1.2,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Timbro superiore
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.editorialRed.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(2),
+                border: Border.all(
+                  color: AppColors.editorialRed.withValues(alpha: 0.4),
+                  width: 0.8,
+                ),
+              ),
+              child: const Text(
+                'MANGA',
+                style: TextStyle(
+                  fontSize: 7,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.8,
+                  color: AppColors.editorialRed,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+
+          // Icona centrale o Titolo tipografico
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.auto_stories_outlined,
+                  size: 26,
+                  color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                ),
+                if (displayTitle.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    displayTitle,
+                    maxLines: 3,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      height: 1.15,
+                      letterSpacing: 0.2,
+                      color: isDark ? AppColors.nightInk : AppColors.inkBlack,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          // Timbro inferiore
+          Text(
+            'EDIZIONE UFFICIALE',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 7,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+              color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+            ),
+          ),
+        ],
       ),
     );
   }

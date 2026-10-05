@@ -59,6 +59,7 @@ class MangaListTile extends StatelessWidget {
                   width: 52,
                   child: MangaCover(
                     coverUrl: coverUrl,
+                    title: title,
                     heroTag: 'list-cover-$id',
                     showSpineEffect: true,
                   ),
