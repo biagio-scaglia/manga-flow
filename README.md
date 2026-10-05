@@ -40,9 +40,9 @@ L'interfaccia adotta un'identità visiva ispirata al mondo dell'editoria manga e
 - Calcolate esclusivamente sulle voci reali presenti nella libreria locale.
 - Conteggio totale manga, capitoli letti, volumi posseduti, media voto e distribuzione percentuale per stato e genere.
 
-### 6. Offline-First & Caching Intelligente
-- Tutti i dati personali risiedono localmente sul dispositivo e sono pienamente accessibili e modificabili anche senza connessione internet.
-- Cache HTTP con TTL di 24 ore e fallback controllato ai dati stale in assenza di rete.
+### 6. Architettura Offline-First & Separazione delle Fonti
+- **Local Data Source come Single Source of Truth**: tutta la libreria personale dell'utente, i progressi di lettura, i volumi collezionati, i voti e le note risiedono esclusivamente su storage locale JSON. L'app e al 100% funzionante offline per qualsiasi operazione sulla propria libreria anche in caso di totale indisponibilita dei server remoti.
+- **Remote API per Discovery ed Enrichment**: la rete viene interrogata esclusivamente per la ricerca di nuovi titoli e per l'arricchimento dei metadati editoriali, con cache HTTP a disco/RAM (TTL 24 ore).
 
 ### 7. Impostazioni, Manutenzione & Onboarding
 - Scelta del tema grafico: Scuro (Night Ink), Chiaro (Paper) o Automatico di sistema.
@@ -69,12 +69,12 @@ lib/
 ├── data/
 │   ├── api/                # Client REST API con backoff esponenziale e rate limit
 │   ├── cache/              # HttpCacheManager su memoria e disco
-│   ├── models/             # DTO (RemoteMangaDto universale, LibraryEntryDto)
+│   ├── models/             # DTO e mapper di serializzazione
 │   ├── repositories/       # Implementazioni concrete (MangaRepositoryImpl, LibraryRepositoryImpl)
 │   └── storage/            # JsonStorage atomico, backup .bak e SchemaMigrationManager
 │
 ├── domain/
-│   ├── entities/           # Entita di dominio (Manga, LibraryEntry, ReadingStatus, LibraryStatistics)
+│   ├── entities/           # Entita di dominio pure (Manga, LibraryEntry, ReadingStatus, LibraryStatistics)
 │   │   └── library_entry_merger.dart # Logica di deduplicazione e merge deterministico
 │   └── repositories/       # Interfacce astratte (MangaRepository, LibraryRepository)
 │
@@ -161,7 +161,7 @@ flutter run
 
 ## Suite di Test Inclusa (28 Test)
 
-La suite di test automatici garantisce la massima affidabilita su tutte le regole critiche dell'applicazione:
+La suite di test automatizzati copre le principali regole di dominio, persistenza e concorrenza dell'applicazione:
 
 | File di Test | Descrizione della Copertura |
 | :--- | :--- |
