@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_constants.dart';
 import 'core/network/rate_limiter.dart';
 import 'core/theme/app_theme.dart';
@@ -19,6 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Inizializzazione Core Data & Storage
+  final prefs = await SharedPreferences.getInstance();
   final jsonStorage = JsonStorage();
   final cacheManager = HttpCacheManager();
   await cacheManager.init();
@@ -55,6 +57,7 @@ void main() async {
           create: (_) => SettingsController(
             libraryRepository: libraryRepository,
             mangaRepository: mangaRepository,
+            preferences: prefs,
           ),
         ),
         ChangeNotifierProvider<LibraryController>(

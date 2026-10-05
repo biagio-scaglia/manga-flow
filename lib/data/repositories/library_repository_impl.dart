@@ -184,10 +184,14 @@ class LibraryRepositoryImpl implements LibraryRepository {
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);
     if (index >= 0) {
       final current = _entries[index];
-      final safeOwned = ownedVolumes < 0 ? 0 : ownedVolumes;
+      final targetTotal = totalVolumes ?? current.totalVolumes;
+      int safeOwned = ownedVolumes < 0 ? 0 : ownedVolumes;
+      if (targetTotal != null && targetTotal > 0 && safeOwned > targetTotal) {
+        safeOwned = targetTotal;
+      }
       _entries[index] = current.copyWith(
         ownedVolumes: safeOwned,
-        totalVolumes: totalVolumes ?? current.totalVolumes,
+        totalVolumes: targetTotal,
         updatedAt: DateTime.now(),
       );
       _scheduleAutosave();

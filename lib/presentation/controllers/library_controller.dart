@@ -154,7 +154,7 @@ class LibraryController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _entries = await _repository.getLibrary();
+      _entries = List<LibraryEntry>.from(await _repository.getLibrary());
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -279,17 +279,23 @@ class LibraryController extends ChangeNotifier {
   }) async {
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);
     if (index >= 0) {
-      final updated = _entries[index].copyWith(
-        ownedVolumes: ownedVolumes < 0 ? 0 : ownedVolumes,
-        totalVolumes: totalVolumes ?? _entries[index].totalVolumes,
+      final current = _entries[index];
+      final targetTotal = totalVolumes ?? current.totalVolumes;
+      int safeOwned = ownedVolumes < 0 ? 0 : ownedVolumes;
+      if (targetTotal != null && targetTotal > 0 && safeOwned > targetTotal) {
+        safeOwned = targetTotal;
+      }
+      final updated = current.copyWith(
+        ownedVolumes: safeOwned,
+        totalVolumes: targetTotal,
         updatedAt: DateTime.now(),
       );
       _entries[index] = updated;
       notifyListeners();
       await _repository.updateVolumes(
         mangaId,
-        ownedVolumes,
-        totalVolumes: totalVolumes,
+        safeOwned,
+        totalVolumes: targetTotal,
       );
     }
   }

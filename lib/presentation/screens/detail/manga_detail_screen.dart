@@ -251,8 +251,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_rounded, size: 18),
-                            onPressed: () =>
-                                setModalState(() => initialOwnedVolumes++),
+                            onPressed:
+                                (_manga?.totalVolumes != null &&
+                                    _manga!.totalVolumes! > 0 &&
+                                    initialOwnedVolumes >=
+                                        _manga!.totalVolumes!)
+                                ? null
+                                : () => setModalState(
+                                    () => initialOwnedVolumes++,
+                                  ),
                           ),
                         ],
                       ),
@@ -346,13 +353,23 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                final owned =
+                final parsedOwned =
                     int.tryParse(ownedCtrl.text.trim()) ?? entry.ownedVolumes;
-                final total = int.tryParse(totalCtrl.text.trim());
+                final parsedTotal = int.tryParse(totalCtrl.text.trim());
+                final targetTotal = parsedTotal != null && parsedTotal > 0
+                    ? parsedTotal
+                    : entry.totalVolumes;
+                int safeOwned = parsedOwned < 0 ? 0 : parsedOwned;
+                if (targetTotal != null &&
+                    targetTotal > 0 &&
+                    safeOwned > targetTotal) {
+                  safeOwned = targetTotal;
+                }
+
                 libraryController.updateVolumes(
                   widget.mangaId,
-                  owned < 0 ? 0 : owned,
-                  totalVolumes: total != null && total > 0 ? total : null,
+                  safeOwned,
+                  totalVolumes: targetTotal,
                 );
                 Navigator.of(dialogContext).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -393,6 +410,9 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
               onPressed: () {
                 libraryController.removeEntry(widget.mangaId);
                 Navigator.of(dialogContext).pop();
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Manga rimosso dalla libreria')),
                 );
@@ -426,20 +446,61 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
           ),
         ),
         actions: [
-          if (isInLibrary)
-            IconButton(
-              icon: Icon(
-                entry.isFavorite
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                color: entry.isFavorite ? AppColors.editorialRed : null,
-                size: 22,
-              ),
-              tooltip: entry.isFavorite
-                  ? 'Rimuovi dai preferiti'
-                  : 'Aggiungi ai preferiti',
-              onPressed: () => libraryController.toggleFavorite(widget.mangaId),
+          IconButton(
+            icon: Icon(
+              (isInLibrary && entry.isFavorite)
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              color: (isInLibrary && entry.isFavorite)
+                  ? AppColors.editorialRed
+                  : null,
+              size: 22,
             ),
+            tooltip: (isInLibrary && entry.isFavorite)
+                ? 'Rimuovi dai preferiti'
+                : 'Aggiungi ai preferiti',
+            onPressed: () async {
+              if (isInLibrary) {
+                final willBeFavorite = !entry.isFavorite;
+                await libraryController.toggleFavorite(widget.mangaId);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      willBeFavorite
+                          ? 'Aggiunto ai preferiti'
+                          : 'Rimosso dai preferiti',
+                    ),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              } else {
+                final newEntry = LibraryEntry.validated(
+                  mangaId: widget.mangaId,
+                  title: _manga?.title ?? 'Manga #${widget.mangaId}',
+                  coverUrl: _manga?.bestCoverUrl ?? '',
+                  status: ReadingStatus.reading,
+                  currentChapter: 0,
+                  totalChapters: _manga?.totalChapters,
+                  ownedVolumes: 0,
+                  totalVolumes: _manga?.totalVolumes,
+                  genres: _manga?.genres ?? [],
+                  authors: _manga?.authors ?? [],
+                  isFavorite: true,
+                );
+                await libraryController.addOrUpdateEntry(newEntry);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Manga aggiunto alla libreria e nei preferiti!',
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -852,8 +913,16 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                                     ),
                                     tooltip: 'Aggiungi volume',
                                     color: AppColors.editorialRed,
-                                    onPressed: () => libraryController
-                                        .incrementOwnedVolume(widget.mangaId),
+                                    onPressed:
+                                        (entry.totalVolumes != null &&
+                                            entry.totalVolumes! > 0 &&
+                                            entry.ownedVolumes >=
+                                                entry.totalVolumes!)
+                                        ? null
+                                        : () => libraryController
+                                              .incrementOwnedVolume(
+                                                widget.mangaId,
+                                              ),
                                   ),
                                 ],
                               ),
@@ -959,6 +1028,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                           widget.mangaId,
                           newRating,
                         );
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Valutazione aggiornata: $newRating / 10',
+                            ),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
                       },
                     ),
 
@@ -1029,6 +1107,15 @@ class _MangaDetailScreenState extends State<MangaDetailScreen> {
                                 _notesController.text.trim(),
                               );
                               setState(() => _isEditingNotes = false);
+                              ScaffoldMessenger.of(
+                                context,
+                              ).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Note personali salvate'),
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
                             },
                             child: const Text('SALVA'),
                           ),
