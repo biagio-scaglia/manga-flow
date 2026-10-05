@@ -6,6 +6,7 @@ import 'package:manga_library/core/theme/app_radii.dart';
 import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/presentation/controllers/library_controller.dart';
 import 'package:manga_library/presentation/controllers/settings_controller.dart';
+import 'package:manga_library/presentation/widgets/app_logo.dart';
 import 'package:manga_library/presentation/widgets/editorial_section_header.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -363,15 +364,7 @@ class SettingsScreen extends StatelessWidget {
             title: 'INFORMAZIONI EDITORIALI',
           ),
           ListTile(
-            leading: ClipRRect(
-              borderRadius: AppRadii.brXs,
-              child: Image.asset(
-                'assets/icons/app_logo.png',
-                width: 36,
-                height: 36,
-                fit: BoxFit.cover,
-              ),
-            ),
+            leading: const AppLogo(size: 36),
             title: const Text('Applicazione'),
             subtitle: const Text(
               '${AppConstants.appName} • Versione ${AppConstants.appVersion}',

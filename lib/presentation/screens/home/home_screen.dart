@@ -6,6 +6,7 @@ import 'package:manga_library/core/theme/app_typography.dart';
 import 'package:manga_library/presentation/controllers/library_controller.dart';
 import 'package:manga_library/presentation/screens/detail/manga_detail_screen.dart';
 import 'package:manga_library/presentation/screens/settings/settings_screen.dart';
+import 'package:manga_library/presentation/widgets/app_logo.dart';
 import 'package:manga_library/presentation/widgets/editorial_section_header.dart';
 import 'package:manga_library/presentation/widgets/empty_state.dart';
 import 'package:manga_library/presentation/widgets/manga_card.dart';
@@ -44,30 +45,7 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: AppRadii.brXs,
-              child: Image.asset(
-                'assets/icons/app_logo.png',
-                width: 28,
-                height: 28,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 3,
-                  ),
-                  color: AppColors.editorialRed,
-                  child: const Text(
-                    'MF',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 11,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            const AppLogo(size: 28),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
