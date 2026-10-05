@@ -1,115 +1,136 @@
 # MangaFlow - Personal Manga Library
 
-Applicazione mobile Flutter in lingua italiana per tracciare e organizzare le proprie letture manga.
-Progettata con architettura modulare e pulita, offline-first, persistenza locale atomica in JSON e integrazione con API pubbliche documentate (Jikan REST API v4 / Kitsu REST API open data).
+Applicazione mobile Flutter in lingua italiana per catalogare, tracciare e gestire la propria collezione e lettura manga.
+Progettata secondo i principi della **Clean Architecture**, con approccio **offline-first**, persistenza locale atomica su file JSON con auto-recovery da backup, e integrazione con API pubbliche documentate (Jikan REST API v4 / Kitsu open data).
+
+L'interfaccia adotta un'identità visiva ispirata al mondo dell'editoria manga e delle fumetterie specializzate (contrasto carta/inchiostro, tipografia editoriale, etichette a timbro e indicatori fisici per volumi e capitoli).
 
 ---
 
 ## Funzionalita Principali
 
-1. **Ricerca Manga su Catalogo Reale**:
-   - Connessione a API REST documentate per cercare tra decine di migliaia di manga reali.
-   - Debounce automatico a 500ms sulla digitazione.
-   - Paginazione infinita e caricamento progressivo con skeleton loader.
-   - Esplorazione iniziale dei manga piu popolari quando il campo di ricerca e vuoto.
+### 1. Ricerca Manga su Catalogo Reale
+- Connessione ad API REST documentate per esplorare cataloghi manga reali.
+- **Debounce automatico** a 500ms durante la digitazione.
+- **Prevenzione Stale Responses**: tracciamento delle richieste con ID incrementale per impedire che risposte lente sovrascrivano ricerche piu recenti.
+- Paginazione infinita e caricamento progressivo con skeleton loader.
+- Esplorazione iniziale dei titoli piu popolari a campo vuoto.
 
-2. **Dettaglio Manga Completo**:
-   - Copertina ad alta risoluzione con transizione Hero.
-   - Titolo originale e internazionale, autori, generi, stato editoriale ("In corso", "Concluso", ecc.) e trama completa.
-   - Valutazione della community globale.
+### 2. Scheda Catalogo & Dettaglio Manga
+- Copertina ad alta risoluzione con effetto costa/dorso e transizione Hero.
+- Metadati editoriali completi: titolo originale/internazionale, autori, generi, stato di pubblicazione (*In corso*, *Concluso*, ecc.) e sinossi.
+- Punteggio della community globale.
 
-3. **Gestione Libreria Personale**:
-   - Organizzazione per stato di lettura: *In lettura*, *Da leggere*, *Completato*, *In pausa*, *Abbandonato*.
-   - Contrassegno dei titoli preferiti.
-   - Tracker tattile dei capitoli con pulsanti - / +, digitazione diretta e prompt di completamento automatico al raggiungimento dell'ultimo capitolo.
-   - Valutazione personale a stelle (da 1 a 10).
-   - Note e recensioni personali modificabili in qualsiasi momento.
+### 3. Gestione Completa della Libreria (CRUD)
+- **Stati di lettura**: *In lettura*, *Da leggere*, *Completato*, *In pausa*, *Abbandonato*.
+- **Preferiti con Toggle Rapido**: possibilita di aggiungere/rimuovere dai preferiti sia per manga gia in catalogo che direttamente dalla ricerca.
+- **Tracker Capitoli Letti**: stepper incrementale con pulsanti - / +, digitazione numerica diretta e prompt di completamento automatico all'ultimo capitolo.
+- **Collezione Volumi Fisici**: conteggio dei volumi fisici posseduti con vincolo stringente al totale della serie (es. impossibile superare 24 volumi se la serie ne ha 24), indicatore dinamico *-X DA COMPRARE* e badge *COMPLETA*.
+- **Valutazione Personale**: sistema a stelle da 1 a 10 con feedback immediato.
+- **Note Editoriali**: area appunti e recensioni personali modificabile e salvabile.
+- **Rimozione Sicura**: dialogo di conferma con eliminazione atomica e navigazione reattiva.
 
-4. **Home Dashboard**:
-   - Saluto dinamico in italiano (*Buongiorno*, *Buon pomeriggio*, *Buonasera*).
-   - Sezione *Continua a leggere* con i manga in corso e pulsante rapido per incrementare il capitolo letto.
-   - Sezione *Aggiunti di recente* e *Da leggere*.
-   - Statistiche rapide di riepilogo.
+### 4. Home Dashboard
+- Saluto orario dinamico in italiano (*Buongiorno*, *Buon pomeriggio*, *Buonasera*).
+- Sezione *Continua a leggere* con i titoli in corso e stepper rapido.
+- Sezioni *Aggiunti di recente* e *Da leggere*.
+- Matrice riassuntiva con statistiche immediate.
 
-5. **Statistiche Reali in Tempo Reale**:
-   - Calcolate esclusivamente sui dati della libreria locale (nessun dato inventato o fittizio).
-   - Conteggio manga, capitoli letti, media voto e distribuzione percentuale per stato e generi.
+### 5. Statistiche Reali & Zero Dati Fittizi
+- Calcolate esclusivamente sulle voci reali presenti nella libreria locale.
+- Conteggio totale manga, capitoli letti, volumi posseduti, media voto e distribuzione percentuale per stato e genere.
 
-6. **Offline-First & Caching Intelligente**:
-   - Tutti i dati della libreria personale sono salvati localmente su file JSON e accessibili senza rete.
-   - Cache su disco e RAM per le risposte API con TTL di 24 ore e fallback a dati stale in assenza di rete.
+### 6. Offline-First & Caching Intelligente
+- Tutti i dati personali risiedono localmente sul dispositivo e sono pienamente accessibili e modificabili anche senza connessione internet.
+- Cache HTTP con TTL di 24 ore e fallback controllato ai dati stale in assenza di rete.
 
-7. **Impostazioni & Manutenzione**:
-   - Selezione del tema: Scuro, Chiaro o Automatico di sistema.
-   - Accessibilita: interruttore per ridurre le animazioni di transizione.
-   - Tutorial guidato ripetibile.
-   - Ispezione e svuotamento sicuro della cache API (senza intaccare la libreria).
-   - Esportazione e importazione del backup JSON della libreria.
+### 7. Impostazioni, Manutenzione & Onboarding
+- Scelta del tema grafico: Scuro (Night Ink), Chiaro (Paper) o Automatico di sistema.
+- Accessibilita: interruttore per riduzione delle animazioni di transizione.
+- Guida e tutorial iniziale a schede, con salvataggio sincrono delle preferenze per evitare aperture ripetute e possibilita di rieseguirlo dalle Impostazioni.
+- Ispezione e svuotamento sicuro della sola cache API (senza toccare la libreria personale).
+- Esportazione e importazione del backup JSON della libreria.
 
 ---
 
 ## Architettura del Progetto
 
-Il codice segue i principi della Clean Architecture con separazione rigorosa delle responsabilita:
+Il codice e strutturato secondo la **Clean Architecture** a livelli indipendenti:
 
 ```
 lib/
 ├── core/
-│   ├── constants/          # Parametri e limiti di sistema (AppConstants)
-│   ├── errors/             # Failure ed Exception tipizzate
-│   ├── network/            # RateLimiter a token-bucket e intervallo minimo
-│   ├── theme/              # Design System (Colori, Tipografia Google Fonts, Temi M3)
+│   ├── constants/          # Parametri di sistema, limiti e chiavi di configurazione
+│   ├── errors/             # Failure ed Exception fortemente tipizzate
+│   ├── network/            # RateLimiter token-bucket con supporto Retry-After
+│   ├── theme/              # Design System editoriale (Colori, Tipografia, Radii)
 │   └── utils/              # Debouncer, Throttler e Formattatori di date in italiano
 │
 ├── data/
-│   ├── api/                # Client REST API con backoff e fallback
-│   ├── cache/              # HttpCacheManager persistente
+│   ├── api/                # Client REST API con backoff esponenziale e rate limit
+│   ├── cache/              # HttpCacheManager su memoria e disco
 │   ├── models/             # DTO (RemoteMangaDto universale, LibraryEntryDto)
 │   ├── repositories/       # Implementazioni concrete (MangaRepositoryImpl, LibraryRepositoryImpl)
-│   └── storage/            # JsonStorage atomico con lock asincrono e sistema di migrazione
+│   └── storage/            # JsonStorage atomico, backup .bak e SchemaMigrationManager
 │
 ├── domain/
-│   ├── entities/           # Entita pure (Manga, LibraryEntry, ReadingStatus, LibraryStatistics)
-│   └── repositories/       # Contratti astratti (MangaRepository, LibraryRepository)
+│   ├── entities/           # Entita di dominio (Manga, LibraryEntry, ReadingStatus, LibraryStatistics)
+│   │   └── library_entry_merger.dart # Logica di deduplicazione e merge deterministico
+│   └── repositories/       # Interfacce astratte (MangaRepository, LibraryRepository)
 │
 ├── presentation/
-│   ├── controllers/        # Gestione dello stato reattivo con Provider (ChangeNotifier)
+│   ├── controllers/        # Gestione dello stato con Provider / ChangeNotifier
 │   ├── screens/            # Schermate (Home, Library, Search, Detail, Statistics, Settings)
 │   ├── tutorial/           # Sistema di onboarding guidato interattivo
-│   └── widgets/            # Componenti UI (MangaCard, MangaListTile, ProgressStepper, etc.)
+│   └── widgets/            # Componenti riutilizzabili (MangaCard, ProgressStepper, etc.)
 │
-└── main.dart               # Entry point con Dependency Injection e MultiProvider
+└── main.dart               # Entry point, inizializzazione sincrona delle preferenze e DI
 ```
 
 ---
 
-## Persistenza JSON & Affidabilita Atomica
+## Data Integrity, Deduplicazione & Invarianti di Dominio
 
-Per evitare qualsiasi perdita o corruzione dei dati personali in caso di crash o interruzione improvvisa:
-1. La libreria viene serializzata in memoria e convalidata.
-2. Su piattaforme native viene scritta su un file temporaneo `library.json.tmp` con flush forzato su disco.
-3. Viene verificata la completezza e la sintassi del file temporaneo.
-4. Viene eseguita una sostituzione atomica con il file di destinazione `library.json`.
-5. I salvataggi sono gestiti con debounce a 300ms per evitare carichi I/O eccessivi durante le modifiche rapide del contatore capitoli.
-6. Il formato JSON e versionato (`version: 1`) ed e presente una pipeline automatica di migrazione schemi (`SchemaMigrationManager`).
+1. **Deduplicazione Atomica & `LibraryEntryMerger`**:
+   - Ogni manga e identificato univocamente dal suo `mangaId` remoto.
+   - Non e possibile creare voci duplicate per lo stesso manga.
+   - In caso di salvataggi concorrenti o dati legacy, `LibraryEntryMerger` esegue una fusione deterministica: conserva il massimo tra i capitoli letti e i volumi posseduti, il rating piu recente, l'unione dei generi e delle note personali, lo stato piu avanzato e il flag preferito.
+2. **Invarianti di Dominio (`LibraryEntry.validated`)**:
+   - `0 <= currentChapter <= totalChapters` (se noto).
+   - `0 <= ownedVolumes <= totalVolumes` (se noto).
+   - `0 <= rating <= 10`.
+   - Calcolo di `progressPercentage` matematicamente protetto contro divisori nulli o pari a zero, senza produzione di `NaN`, `Infinity` o percentuali negative.
 
 ---
 
-## Gestione API, Documentazione & Rate Limiting
+## Persistenza JSON & Auto-Recovery da Backup
 
-L'applicazione supporta le specifiche delle API aperte per manga (Jikan REST v4 documentata su `docs.api.jikan.moe` e Kitsu REST API):
-- **RateLimiter**: implementato a livello client per rispettare le finestre di rate limiting ed evitare codici 429.
-- **Exponential Backoff**: in caso di timeout o rate limit, l'app effettua tentativi controllati con backoff esponenziale.
-- **Supporto Multi-Format**: `RemoteMangaDto` e in grado di decodificare sia le risposte REST di Jikan v4 che quelle di Kitsu in entita di dominio standard `Manga`.
-- **Debounce**: le ricerche testuali scattano dopo 500ms dall'ultimo tasto premuto.
+1. **Scrittura Atomica a Doppio Stadio**:
+   - Serializzazione e validazione della struttura JSON in memoria.
+   - Scrittura su file temporaneo `library.json.tmp` con flush forzato su disco.
+   - Sostituzione atomica del file di destinazione `library.json`.
+2. **Auto-Recovery da File `.bak`**:
+   - A ogni salvataggio riuscito viene aggiornata una copia di backup `library.json.bak`.
+   - Se il file principale dovesse risultare troncato o corrotto (es. spegnimento del dispositivo durante una scrittura), `JsonStorage` preserva il file corrotto come `.corrupted` per analisi e ripristina automaticamente la libreria dall'ultimo backup valido senza perdita di dati.
+3. **Migrazione Idempotente Schemi**:
+   - Pipeline `SchemaMigrationManager` con controllo di versione che impedisce downgrade accidentali e applica trasformazioni sequenziali.
+
+---
+
+## Gestione API, Concorrenza & Rate Limiting
+
+- **RateLimiter**: implementato a livello client per rispettare la frequenza massima delle API ed evitare ban IP (HTTP 429).
+- **Header `Retry-After`**: parsing del tempo di attesa indicato dal server remoto con backoff controllato.
+- **Stale Response Discard**: ricerca protetta da ID di richiesta incrementali; le risposte arrivate fuori ordine vengono scartate.
+- **Multi-Format DTO**: parsing unificato compatibile con formati Jikan v4, Kitsu e GraphQL AniList.
 
 ---
 
 ## Istruzioni di Setup & Esecuzione
 
 ### Requisiti
-- Flutter SDK (versione 3.41 o superiore)
-- Dart SDK (versione 3.11 o superiore)
+- Flutter SDK (versione 3.24 o superiore)
+- Dart SDK (versione 3.5 o superiore)
 
 ### Installazione delle dipendenze
 ```bash
@@ -121,7 +142,12 @@ flutter pub get
 flutter analyze
 ```
 
-### Esecuzione dei test automatici
+### Formattazione del codice
+```bash
+dart format .
+```
+
+### Esecuzione della suite di test automatici
 ```bash
 flutter test
 ```
@@ -133,13 +159,21 @@ flutter run
 
 ---
 
-## Suite di Test Inclusa
+## Suite di Test Inclusa (28 Test)
 
-- `test/unit/json_storage_test.dart`: verifica della scrittura/lettura atomica e delle migrazioni di versione.
-- `test/unit/rate_limiter_test.dart`: verifica dei vincoli di frequenza e del blocco temporaneo.
-- `test/unit/library_statistics_test.dart`: calcolo matematico accurato di generi, capitoli e medie voto.
-- `test/unit/models_test.dart`: parsing dei payload reali e serializzazione DTO.
-- `test/widget/status_badge_test.dart`: rendering e traduzione corretta dei badge di stato.
-- `test/widget/progress_stepper_test.dart`: interazione con i pulsanti di incremento/decremento e completamento.
-- `test/widget/empty_state_test.dart`: visualizzazione degli stati vuoti e callback delle azioni.
-- `test/widget_test.dart`: smoke test generale dell'app.
+La suite di test automatici garantisce la massima affidabilita su tutte le regole critiche dell'applicazione:
+
+| File di Test | Descrizione della Copertura |
+| :--- | :--- |
+| `test/unit/crud_and_limits_test.dart` | Inizializzazione sincrona delle preferenze, vincolo massimo volumi (es. 25 su 24), toggle preferiti, aggiornamenti e rimozione. |
+| `test/unit/deduplication_test.dart` | Scenario completo di aggiunta singola, ripetuta, 3x multi-tap concorrente, riavvio del repository e merge deterministico `LibraryEntryMerger`. |
+| `test/unit/domain_invariants_test.dart` | Invarianti entita `LibraryEntry`: capitoli, volumi, rating `0..10`, calcolo sicuro di `progressPercentage` e fallback titoli. |
+| `test/unit/json_recovery_test.dart` | Ripristino automatico da file di backup `.bak` su JSON corrotto e protezione downgrade versioni schema. |
+| `test/unit/search_controller_test.dart` | Scarto stale response fuori ordine e cancellazione istantanea delle ricerche in volo tramite `clearSearch`. |
+| `test/unit/json_storage_test.dart` | Scrittura e lettura atomica del JSON e migrazione automatica schema v0 -> v1. |
+| `test/unit/library_statistics_test.dart` | Calcolo statistico accurato su libreria popolata e gestione coerente di libreria vuota. |
+| `test/unit/rate_limiter_test.dart` | Rispetto del rate limit e gestione dei blocchi temporanei. |
+| `test/unit/models_test.dart` | Deserializzazione e serializzazione DTO (`RemoteMangaDto`, `LibraryEntryDto`). |
+| `test/widget/empty_state_test.dart` | Rendering, messaggi e trigger di azione per gli stati vuoti. |
+| `test/widget/progress_stepper_test.dart` | Interazione con pulsanti stepper, inserimento manuale e prompt di completamento opera. |
+| `test/widget/status_badge_test.dart` | Rendering dei badge di stato con colori e stili editoriali coerenti. |
