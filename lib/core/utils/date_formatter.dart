@@ -1,10 +1,33 @@
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class DateFormatter {
+  static bool _isInitialized = false;
+
+  static Future<void> ensureInitialized() async {
+    if (!_isInitialized) {
+      try {
+        await initializeDateFormatting('it_IT', null);
+        _isInitialized = true;
+      } catch (_) {
+        // Fallback silently if platform doesn't need external data
+      }
+    }
+  }
+
   static String formatShortDate(DateTime? date) {
     if (date == null) return 'Data non disponibile';
-    final formatter = DateFormat('d MMM yyyy', 'it_IT');
-    return formatter.format(date);
+    try {
+      final formatter = DateFormat('d MMM yyyy', 'it_IT');
+      return formatter.format(date);
+    } catch (_) {
+      try {
+        final fallbackFormatter = DateFormat('d MMM yyyy');
+        return fallbackFormatter.format(date);
+      } catch (_) {
+        return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+      }
+    }
   }
 
   static String formatRelativeDate(DateTime? date) {
