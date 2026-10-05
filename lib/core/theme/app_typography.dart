@@ -108,10 +108,10 @@ class AppTypography {
     FontWeight fontWeight = FontWeight.w700,
     Color? color,
   }) {
-    return GoogleFonts.spaceGrotesk(
+    return GoogleFonts.spaceMono(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      letterSpacing: 0.8,
+      letterSpacing: 0.6,
       color:
           color ??
           (isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary),
