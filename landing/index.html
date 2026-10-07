@@ -3,14 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MangaFlow — L'Archivio Editoriale Definitivo per Manga | by Biagio Scaglia</title>
-  <meta name="description" content="MangaFlow è l'app definitiva per collezionare e tracciare manga. Motore Flutter offline-first, storage atomico, sincronizzazione AniList live e design editoriale tankōbon. Creata da Biagio Scaglia.">
-  <meta name="keywords" content="Manga tracker, manga collection, AniList, Flutter, MangaFlow, Biagio Scaglia, tankobon, reading progress">
+  
+  <!-- Primary Meta SEO Tags -->
+  <title>MangaFlow — Tracker Editoriale Manga Offline-First per Smartphone | Biagio Scaglia</title>
+  <meta name="title" content="MangaFlow — Tracker Editoriale Manga Offline-First per Smartphone | Biagio Scaglia">
+  <meta name="description" content="MangaFlow è l'app manga tracker offline-first per smartphone. Gestione collezione tankōbon, storage atomico a prova di crash e sync AniList live in tempo reale. Creata da Biagio Scaglia.">
+  <meta name="keywords" content="manga tracker, tracking manga, lista manga, manga collection, manga library, gestione manga, progresso lettura manga, manga tracker italiano, AniList GraphQL, Flutter offline, Biagio Scaglia, tankobon">
+  <meta name="author" content="Biagio Scaglia">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://biagio-scaglia.github.io/manga-flow/">
+  
+  <!-- Mobile & Browser Appearance Meta -->
+  <meta name="theme-color" content="#0E0F12">
+  <meta name="color-scheme" content="dark light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MangaFlow">
+  <link rel="manifest" href="manifest.webmanifest">
+  
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/png" href="assets/app_logo.png">
+  <link rel="apple-touch-icon" href="assets/app_logo.png">
+
+  <!-- Open Graph / Facebook / LinkedIn Protocol -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://biagio-scaglia.github.io/manga-flow/">
+  <meta property="og:title" content="MangaFlow — Tracker Editoriale Manga Offline-First per Smartphone">
+  <meta property="og:description" content="Colleziona e traccia i tuoi manga con stile editoriale giapponese. Storage atomico locale, zero pubblicità, sync AniList in tempo reale. Creata da Biagio Scaglia.">
+  <meta property="og:image" content="https://biagio-scaglia.github.io/manga-flow/assets/og_image.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="MangaFlow — Logo e Icona Ufficiale">
+  <meta property="og:site_name" content="MangaFlow">
+  <meta property="og:locale" content="it_IT">
+
+  <!-- Twitter / X Cards Meta -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://biagio-scaglia.github.io/manga-flow/">
+  <meta name="twitter:title" content="MangaFlow — Tracker Editoriale Manga Offline-First per Smartphone">
+  <meta name="twitter:description" content="Colleziona e traccia i tuoi manga con stile editoriale giapponese. Storage atomico locale, zero pubblicità e sync AniList.">
+  <meta name="twitter:image" content="https://biagio-scaglia.github.io/manga-flow/assets/og_image.png">
+  <meta name="twitter:creator" content="@biagioscaglia">
+
+  <!-- Performance: Resource Hints for Google Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/png" href="../assets/icons/app_logo.png">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://biagio-scaglia.github.io/manga-flow/#software",
+        "name": "MangaFlow",
+        "operatingSystem": "Android, iOS, Web",
+        "applicationCategory": "EntertainmentApplication",
+        "description": "L'archivio editoriale e manga tracker offline-first per smartphone. Sincronizzazione AniList live, storage atomico crash-proof e design tankōbon.",
+        "url": "https://biagio-scaglia.github.io/manga-flow/",
+        "image": "https://biagio-scaglia.github.io/manga-flow/assets/og_image.png",
+        "inLanguage": "it",
+        "author": {
+          "@type": "Person",
+          "name": "Biagio Scaglia",
+          "url": "https://github.com/biagio-scaglia"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock"
+        }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://biagio-scaglia.github.io/manga-flow/#webapp",
+        "name": "MangaFlow Web Simulator",
+        "url": "https://biagio-scaglia.github.io/manga-flow/",
+        "applicationCategory": "UtilitiesApplication",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "author": {
+          "@type": "Person",
+          "name": "Biagio Scaglia"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://biagio-scaglia.github.io/manga-flow/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "I miei dati sono al sicuro se cambio dispositivo o se l'app va in crash?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sì. MangaFlow utilizza un motore di scrittura atomica con flush immediato su disco e generazione automatica di un file di backup library.json.bak ad ogni modifica. In caso di corruzione del file principale, il recovery è automatico e trasparente."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Come vengono recuperati i manga e le copertine?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "I dati provengono direttamente dall'API ufficiale GraphQL di AniList. L'app include una gestione intelligente delle connessioni offline e fallback grafici editoriali in caso di assenza di rete."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "MangaFlow è completamente gratuito e open-source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sì, l'intero codice sorgente è rilasciato su GitHub sotto licenza open-source e non contiene acquisti in-app o pubblicità."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Non-blocking JavaScript Load -->
+  <script src="app.js" defer></script>
 </head>
 <body>
 
@@ -19,10 +138,10 @@
   <div class="manga-halftone-overlay" aria-hidden="true"></div>
 
   <!-- STICKY CONVERSION NAVBAR -->
-  <header class="editorial-header">
+  <header class="editorial-header" role="banner">
     <div class="header-inner">
-      <a href="#" class="brand-group">
-        <div class="brand-hanko">
+      <a href="#" class="brand-group" aria-label="MangaFlow Home - Tracker Editoriale">
+        <div class="brand-hanko" aria-hidden="true">
           <span class="spine-line"></span>
           <span class="brand-mf">MF</span>
         </div>
@@ -41,30 +160,30 @@
       </nav>
 
       <div class="header-actions">
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambia tema chiaro/scuro">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Cambia tema chiaro/scuro">
           <span class="theme-mode-text">NIGHT INK</span>
-          <span class="theme-icon-box">墨</span>
+          <span class="theme-icon-box" aria-hidden="true">墨</span>
         </button>
-        <a href="#platforms" class="btn-nav-download">
+        <a href="#platforms" class="btn-nav-download" aria-label="Scarica MangaFlow per smartphone">
           SCARICA
         </a>
       </div>
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <!-- HERO SECTION: THE MASTERPIECE -->
-    <section class="hero-section">
+    <section class="hero-section" aria-labelledby="hero-main-title">
       <div class="hero-container">
         
         <div class="hero-content">
           <div class="announcement-pill">
             <span class="pill-badge">MOBILE v1.0</span>
             <span class="pill-text">Ottimizzato per Smartphone &bull; 100% Offline-First</span>
-            <span class="pill-arrow">&rarr;</span>
+            <span class="pill-arrow" aria-hidden="true">&rarr;</span>
           </div>
 
-          <h1 class="hero-headline">
+          <h1 id="hero-main-title" class="hero-headline">
             L'arte di collezionare manga.<br>
             <span class="highlight-vermilion">Sul tuo smartphone</span>, senza compromessi.
           </h1>
@@ -74,28 +193,28 @@
           </p>
 
           <div class="hero-cta-box">
-            <a href="#demo" class="btn-primary-glow">
+            <a href="#demo" class="btn-primary-glow" aria-label="Simula MangaFlow nel browser">
               <span class="btn-index-badge">01</span>
               <span>SIMULA L'APP SUL TELEFONO</span>
             </a>
-            <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-secondary-outline">
+            <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-secondary-outline" aria-label="Scarica il pacchetto APK per smartphone da GitHub">
               <span class="btn-index-badge">02</span>
               <span>SCARICA APK SMARTPHONE</span>
             </a>
           </div>
 
           <!-- Trust Proof Signals -->
-          <div class="hero-trust-bar">
+          <div class="hero-trust-bar" role="region" aria-label="Indicatori di affidabilità">
             <div class="trust-item">
               <span class="trust-num">100%</span>
               <span class="trust-lbl">Dati sul tuo smartphone</span>
             </div>
-            <div class="trust-divider"></div>
+            <div class="trust-divider" aria-hidden="true"></div>
             <div class="trust-item">
               <span class="trust-num">&lt; 10ms</span>
               <span class="trust-lbl">Latenza locale a 120Hz</span>
             </div>
-            <div class="trust-divider"></div>
+            <div class="trust-divider" aria-hidden="true"></div>
             <div class="trust-item">
               <span class="trust-num">0</span>
               <span class="trust-lbl">Pubblicità o Tracker</span>
@@ -104,7 +223,7 @@
         </div>
 
         <!-- HERO INTERACTIVE SMARTPHONE FRAME SIMULATOR -->
-        <div class="hero-mockup-wrapper">
+        <div class="hero-mockup-wrapper" aria-label="Simulatore smartphone di MangaFlow">
           <div class="smartphone-chassis">
             <!-- Hardware Buttons Simulation -->
             <div class="phone-btn phone-btn-power" aria-hidden="true"></div>
@@ -114,7 +233,7 @@
 
             <div class="phone-inner-bezel">
               <!-- Phone Status Bar with Dynamic Island -->
-              <div class="phone-status-bar">
+              <div class="phone-status-bar" aria-hidden="true">
                 <span class="phone-clock">09:41</span>
                 <div class="phone-dynamic-island">
                   <span class="island-camera"></span>
@@ -131,20 +250,20 @@
                 <!-- Phone App Header -->
                 <div class="phone-app-header">
                   <div class="phone-app-brand">
-                    <span class="phone-brand-hanko">MF</span>
+                    <span class="phone-brand-hanko" aria-hidden="true">MF</span>
                     <div>
                       <div class="phone-brand-title">MANGAFLOW</div>
                       <div class="phone-brand-sub">MOBILE EDITION &bull; 漫画目録</div>
                     </div>
                   </div>
                   <div class="phone-header-badge">
-                    <span class="phone-live-dot"></span>
+                    <span class="phone-live-dot" aria-hidden="true"></span>
                     <span>OFFLINE</span>
                   </div>
                 </div>
 
                 <!-- Dynamic Viewport inside Smartphone -->
-                <div id="mock-view-container" class="phone-viewport">
+                <div id="mock-view-container" class="phone-viewport" role="region" aria-label="Schermata dell'app">
                   <!-- VIEW 1: HOME (Default) -->
                   <div class="mock-screen-panel active" id="panel-home">
                     <div class="phone-section-label">
@@ -153,8 +272,8 @@
                     </div>
                     
                     <!-- Featured Manga Touch Card -->
-                    <div class="phone-manga-card">
-                      <div class="phone-card-cover jujutsu">
+                    <article class="phone-manga-card" aria-label="Scheda lettura in corso Jujutsu Kaisen">
+                      <div class="phone-card-cover jujutsu" aria-hidden="true">
                         <div class="phone-spine-strip"></div>
                         <span class="cover-kanji">呪術廻戦</span>
                         <span class="phone-vol-tag">VOL. 24</span>
@@ -162,11 +281,11 @@
                       <div class="phone-card-content">
                         <div class="phone-card-meta">
                           <span class="phone-status-tag">IN LETTURA</span>
-                          <button id="phone-quick-stepper" class="phone-step-btn" title="Simula tocco: avanza capitolo">+1 CAP</button>
+                          <button id="phone-quick-stepper" class="phone-step-btn" type="button" aria-label="Simula tocco: avanza di un capitolo">+1 CAP</button>
                         </div>
-                        <h4 class="phone-manga-title">Jujutsu Kaisen</h4>
+                        <h2 class="phone-manga-title">Jujutsu Kaisen</h2>
                         <p class="phone-manga-author">Gege Akutami &bull; Shueisha</p>
-                        <div class="phone-progress-wrap">
+                        <div class="phone-progress-wrap" aria-label="Progresso capitoli 87%">
                           <div class="phone-track">
                             <div id="phone-fill-bar" class="phone-fill" style="width: 87%;"></div>
                           </div>
@@ -176,7 +295,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </article>
 
                     <!-- Shelf Grid on Mobile -->
                     <div class="phone-section-label sub">
@@ -185,21 +304,21 @@
                     </div>
                     <div class="phone-shelf-grid">
                       <div class="phone-mini-item">
-                        <div class="mini-cover-ph csm">
+                        <div class="mini-cover-ph csm" aria-hidden="true">
                           <span class="mini-ph-vol">VOL. 16</span>
                         </div>
                         <span class="mini-ph-name">Chainsaw Man</span>
                         <span class="mini-ph-prog">140/232</span>
                       </div>
                       <div class="phone-mini-item">
-                        <div class="mini-cover-ph berserk">
+                        <div class="mini-cover-ph berserk" aria-hidden="true">
                           <span class="mini-ph-vol">VOL. 41</span>
                         </div>
                         <span class="mini-ph-name">Berserk</span>
                         <span class="mini-ph-prog">364/376</span>
                       </div>
                       <div class="phone-mini-item">
-                        <div class="mini-cover-ph solo">
+                        <div class="mini-cover-ph solo" aria-hidden="true">
                           <span class="mini-ph-vol">VOL. 14</span>
                         </div>
                         <span class="mini-ph-name">Solo Leveling</span>
@@ -214,14 +333,14 @@
                       <span class="sec-idx">02</span>
                       <span>COLLEZIONE PERSONALE (34)</span>
                     </div>
-                    <div class="phone-chips-row">
+                    <div class="phone-chips-row" role="tablist" aria-label="Filtri catalogo">
                       <span class="ph-chip active">TUTTI (34)</span>
                       <span class="ph-chip">IN LETTURA (8)</span>
                       <span class="ph-chip">COMPLETI (22)</span>
                     </div>
                     <div class="phone-lib-list">
                       <div class="phone-lib-entry">
-                        <div class="entry-indicator comp"></div>
+                        <div class="entry-indicator comp" aria-hidden="true"></div>
                         <div class="entry-main">
                           <strong>Monster</strong>
                           <span>18 / 18 Volumi &bull; Naoki Urasawa</span>
@@ -229,7 +348,7 @@
                         <span class="entry-tag comp">COMPLETO</span>
                       </div>
                       <div class="phone-lib-entry">
-                        <div class="entry-indicator read"></div>
+                        <div class="entry-indicator read" aria-hidden="true"></div>
                         <div class="entry-main">
                           <strong>Dandadan</strong>
                           <span>Vol. 12 &bull; Yukinobu Tatsu</span>
@@ -237,7 +356,7 @@
                         <span class="entry-tag read">CAP. 128</span>
                       </div>
                       <div class="phone-lib-entry">
-                        <div class="entry-indicator read"></div>
+                        <div class="entry-indicator read" aria-hidden="true"></div>
                         <div class="entry-main">
                           <strong>20th Century Boys</strong>
                           <span>Vol. 11 &bull; Naoki Urasawa</span>
@@ -245,7 +364,7 @@
                         <span class="entry-tag read">CAP. 94</span>
                       </div>
                       <div class="phone-lib-entry">
-                        <div class="entry-indicator read"></div>
+                        <div class="entry-indicator read" aria-hidden="true"></div>
                         <div class="entry-main">
                           <strong>Sakamoto Days</strong>
                           <span>Vol. 08 &bull; Yuto Suzuki</span>
@@ -288,15 +407,15 @@
 
                 <!-- Native Mobile Bottom Navigation Bar in Phone -->
                 <nav class="phone-bottom-nav" aria-label="Navigazione interna smartphone">
-                  <button class="mock-tab phone-nav-item active" data-mock-screen="home">
+                  <button class="mock-tab phone-nav-item active" data-mock-screen="home" type="button" aria-label="Schermata Home">
                     <span class="ph-tab-num">01</span>
                     <span class="ph-tab-txt">HOME</span>
                   </button>
-                  <button class="mock-tab phone-nav-item" data-mock-screen="library">
+                  <button class="mock-tab phone-nav-item" data-mock-screen="library" type="button" aria-label="Schermata Libreria">
                     <span class="ph-tab-num">02</span>
                     <span class="ph-tab-txt">LIBRERIA</span>
                   </button>
-                  <button class="mock-tab phone-nav-item" data-mock-screen="stats">
+                  <button class="mock-tab phone-nav-item" data-mock-screen="stats" type="button" aria-label="Schermata Statistiche">
                     <span class="ph-tab-num">03</span>
                     <span class="ph-tab-txt">STATS</span>
                   </button>
@@ -315,22 +434,22 @@
     </section>
 
     <!-- BENTO GRID: COMMERCIAL GRADE ARCHITECTURE -->
-    <section id="features" class="section-container">
+    <section id="features" class="section-container" aria-labelledby="features-main-title">
       <div class="section-heading-centered">
         <span class="section-kicker">01 / PERCHÉ SCEGLIERE MANGAFLOW</span>
-        <h2 class="section-main-title">Ingegneria Robusta. Gusto Visivo Straordinario.</h2>
+        <h2 id="features-main-title" class="section-main-title">Ingegneria Robusta. Gusto Visivo Straordinario.</h2>
         <p class="section-main-sub">Ogni riga di codice è stata pensata per darti la massima affidabilità e zero spreco di tempo.</p>
       </div>
 
       <div class="bento-grid">
         <!-- BENTO CARD 1: LARGE HERO FEATURE (AniList GraphQL Engine) -->
-        <div class="bento-card bento-col-2 bento-hero">
+        <article class="bento-card bento-col-2 bento-hero">
           <div class="bento-badge">API ENGINE</div>
           <h3 class="bento-title">AniList GraphQL Sync in Tempo Reale</h3>
           <p class="bento-desc">
             Cerca tra oltre 50.000 manga con metadati ufficiali giapponesi, copertine in altissima risoluzione, date di rilascio e sinossi senza mai attendere. Include rate-limiting adattivo anti-ban e cache offline a più livelli.
           </p>
-          <div class="bento-visual-search">
+          <div class="bento-visual-search" aria-label="Esempio ricerca API AniList">
             <div class="search-bar-mock">
               <span class="search-tag-index">SEARCH:</span>
               <span class="search-text">Chainsaw Man...</span>
@@ -340,10 +459,10 @@
               <span>Chainsaw Man</span> &bull; <span>Tatsuki Fujimoto</span> &bull; <span class="score">VOTO: 8.8 / 10</span>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- BENTO CARD 2: Atomic Storage & Recovery -->
-        <div class="bento-card">
+        <article class="bento-card">
           <div class="bento-badge">CRASH-PROOF</div>
           <h3 class="bento-title">Storage Atomico &amp; Backup .bak</h3>
           <p class="bento-desc">
@@ -352,10 +471,10 @@
           <div class="code-pill-preview">
             <code>library.json.tmp &rarr; flush &rarr; .bak</code>
           </div>
-        </div>
+        </article>
 
         <!-- BENTO CARD 3: Invariant Enforcement -->
-        <div class="bento-card">
+        <article class="bento-card">
           <div class="bento-badge">INVARIANTI DI DOMINIO</div>
           <h3 class="bento-title">Controllo Rigido Limiti Volumi</h3>
           <p class="bento-desc">
@@ -365,39 +484,39 @@
             <span class="check-index">[OK]</span>
             <span>Regola: ownedVolumes &le; totalVolumes</span>
           </div>
-        </div>
+        </article>
 
         <!-- BENTO CARD 4: Japanese Editorial Design -->
-        <div class="bento-card bento-col-2">
+        <article class="bento-card bento-col-2">
           <div class="bento-badge">DESIGN SYSTEM</div>
           <h3 class="bento-title">Identità Visiva Tankōbon &amp; Tipografia Space</h3>
           <p class="bento-desc">
             Nessun template SaaS banale con bordi a pillola ovunque. MangaFlow usa contorni netti a 1px, inchiostro Sumi (#141416), carta Washi (#F6F3EC), sfumature di costina laterale e accoppiamento geometrico <strong>Space Grotesk + Space Mono</strong>.
           </p>
-          <div class="design-preview-strip">
+          <div class="design-preview-strip" aria-label="Palette cromatica editoriale">
             <div class="strip-swatch s1">SUMI INK</div>
             <div class="strip-swatch s2">VERMILION</div>
             <div class="strip-swatch s3">WASHI PAPER</div>
             <div class="strip-swatch s4">SPACE MONO</div>
           </div>
-        </div>
+        </article>
       </div>
     </section>
 
     <!-- LIVE INTERACTIVE TRACKER SANDBOX -->
-    <section id="demo" class="section-container">
+    <section id="demo" class="section-container" aria-labelledby="demo-main-title">
       <div class="section-heading-centered">
         <span class="section-kicker">02 / SIMULATORE INTERATTIVO</span>
-        <h2 class="section-main-title">Metti alla Prova il Motore di MangaFlow</h2>
+        <h2 id="demo-main-title" class="section-main-title">Metti alla Prova il Motore di MangaFlow</h2>
         <p class="section-main-sub">Prova direttamente nel browser come risponde l'algoritmo di tracciamento e verifica le regole di business.</p>
       </div>
 
       <div class="interactive-sandbox">
-        <div class="sandbox-manga-showcase">
+        <div class="sandbox-manga-showcase" aria-label="Copertina Chainsaw Man">
           <div class="sandbox-cover">
             <div class="sandbox-spine"></div>
             <div class="sandbox-cover-content">
-              <span class="sb-kanji">チェンソーマン</span>
+              <span class="sb-kanji" aria-hidden="true">チェンソーマン</span>
               <span class="sb-title">CHAINSAW MAN</span>
               <span class="sb-author">Tatsuki Fujimoto</span>
               <span class="sb-seal">公式公認</span>
@@ -411,19 +530,19 @@
               <span class="sb-manga-name">Chainsaw Man</span>
               <span class="sb-meta">Shueisha &bull; In Corso &bull; 24 Volumi Previsti</span>
             </div>
-            <button id="btn-toggle-fav" class="btn-fav-stamp" aria-label="Aggiungi ai preferiti">
-              <span id="fav-status-dot" class="fav-dot"></span>
+            <button id="btn-toggle-fav" class="btn-fav-stamp" type="button" aria-label="Aggiungi o rimuovi dai preferiti">
+              <span id="fav-status-dot" class="fav-dot" aria-hidden="true"></span>
               <span id="fav-label">PREFERITO</span>
             </button>
           </div>
 
           <!-- Status Selector -->
           <div class="control-group">
-            <label class="control-label">STATO DI LETTURA:</label>
-            <div class="status-button-bar">
-              <button class="sb-status-btn active" data-sb-status="reading">IN LETTURA</button>
-              <button class="sb-status-btn" data-sb-status="completed">COMPLETATO</button>
-              <button class="sb-status-btn" data-sb-status="plan">DA LEGGERE</button>
+            <label class="control-label" id="lbl-status-select">STATO DI LETTURA:</label>
+            <div class="status-button-bar" role="group" aria-labelledby="lbl-status-select">
+              <button class="sb-status-btn active" data-sb-status="reading" type="button">IN LETTURA</button>
+              <button class="sb-status-btn" data-sb-status="completed" type="button">COMPLETATO</button>
+              <button class="sb-status-btn" data-sb-status="plan" type="button">DA LEGGERE</button>
             </div>
           </div>
 
@@ -435,10 +554,10 @@
                 <span id="sb-ch-ratio" class="st-ratio">140 / 232</span>
               </div>
               <div class="st-actions">
-                <button id="sb-ch-minus" class="st-btn">-</button>
+                <button id="sb-ch-minus" class="st-btn" type="button" aria-label="Diminuisci capitolo letto">-</button>
                 <span id="sb-ch-val" class="st-number">140</span>
-                <button id="sb-ch-plus" class="st-btn">+</button>
-                <button id="sb-ch-jump" class="st-jump">+10 CAP</button>
+                <button id="sb-ch-plus" class="st-btn" type="button" aria-label="Aumenta capitolo letto">+</button>
+                <button id="sb-ch-jump" class="st-jump" type="button" aria-label="Avanza di 10 capitoli">+10 CAP</button>
               </div>
             </div>
 
@@ -448,17 +567,17 @@
                 <span id="sb-vol-ratio" class="st-ratio">16 / 24</span>
               </div>
               <div class="st-actions">
-                <button id="sb-vol-minus" class="st-btn">-</button>
+                <button id="sb-vol-minus" class="st-btn" type="button" aria-label="Diminuisci volumi posseduti">-</button>
                 <span id="sb-vol-val" class="st-number">16</span>
-                <button id="sb-vol-plus" class="st-btn">+</button>
-                <button id="sb-vol-all" class="st-jump">TUTTI</button>
+                <button id="sb-vol-plus" class="st-btn" type="button" aria-label="Aumenta volumi posseduti">+</button>
+                <button id="sb-vol-all" class="st-jump" type="button" aria-label="Segna tutti i volumi come posseduti">TUTTI</button>
               </div>
             </div>
           </div>
 
           <!-- Progress Visual -->
           <div class="sandbox-progress-panel">
-            <div class="sb-progress-bar-bg">
+            <div class="sb-progress-bar-bg" aria-hidden="true">
               <div id="sb-progress-bar-fill" class="sb-progress-bar-fill" style="width: 60.3%;"></div>
             </div>
             <div class="sb-progress-meta">
@@ -471,56 +590,57 @@
     </section>
 
     <!-- COMPARISON MATRIX: WHY MANGAFLOW WINS -->
-    <section id="comparison" class="section-container">
+    <section id="comparison" class="section-container" aria-labelledby="comparison-main-title">
       <div class="section-heading-centered">
         <span class="section-kicker">03 / CONFRONTO DIRETTO</span>
-        <h2 class="section-main-title">Costruito Senza Scorciatoie.</h2>
+        <h2 id="comparison-main-title" class="section-main-title">Costruito Senza Scorciatoie.</h2>
         <p class="section-main-sub">Vedi come MangaFlow si posiziona rispetto ai metodi tradizionali o alle solite app generiche.</p>
       </div>
 
       <div class="table-responsive-wrapper">
         <table class="comparison-table">
+          <caption class="sr-only">Confronto tra MangaFlow, App Generiche e Fogli di Calcolo</caption>
           <thead>
             <tr>
-              <th>CARATTERISTICA</th>
-              <th class="col-highlight">MANGAFLOW</th>
-              <th>APP GENERICHE</th>
-              <th>FOGLI EXCEL / NOTION</th>
+              <th scope="col">CARATTERISTICA</th>
+              <th scope="col" class="col-highlight">MANGAFLOW</th>
+              <th scope="col">APP GENERICHE</th>
+              <th scope="col">FOGLI EXCEL / NOTION</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Velocità &amp; Latenza</strong></td>
+              <th scope="row"><strong>Velocità &amp; Latenza</strong></th>
               <td class="col-highlight"><span class="badge-win">&lt; 10ms (Istantaneo)</span></td>
               <td>Lento (Webview / Pubblicità)</td>
               <td>Manuale / Scomodo su mobile</td>
             </tr>
             <tr>
-              <td><strong>Integrità Dati &amp; Backup</strong></td>
+              <th scope="row"><strong>Integrità Dati &amp; Backup</strong></th>
               <td class="col-highlight"><span class="badge-win">Atomic JSON + Auto .bak</span></td>
               <td>Database cloud proprietario</td>
               <td>Manuale</td>
             </tr>
             <tr>
-              <td><strong>API Manga Live Ufficiali</strong></td>
+              <th scope="row"><strong>API Manga Live Ufficiali</strong></th>
               <td class="col-highlight"><span class="badge-win">AniList GraphQL Integrata</span></td>
               <td>Dati obsoleti / Scraping fragile</td>
               <td>Zero integrazione automatica</td>
             </tr>
             <tr>
-              <td><strong>Controlli Invarianti di Dominio</strong></td>
+              <th scope="row"><strong>Controlli Invarianti di Dominio</strong></th>
               <td class="col-highlight"><span class="badge-win">Blocco rigido over-limit</span></td>
               <td>Bug e volumi sballati</td>
               <td>Nessun controllo</td>
             </tr>
             <tr>
-              <td><strong>Privacy &amp; Tracciamento</strong></td>
+              <th scope="row"><strong>Privacy &amp; Tracciamento</strong></th>
               <td class="col-highlight"><span class="badge-win">100% Locale, Zero Telemetria</span></td>
               <td>Tracker pubblicitari invasivi</td>
               <td>Dipendente da cloud terzi</td>
             </tr>
             <tr>
-              <td><strong>Design &amp; Tipografia</strong></td>
+              <th scope="row"><strong>Design &amp; Tipografia</strong></th>
               <td class="col-highlight"><span class="badge-win">Tankōbon Editorial Bimodale</span></td>
               <td>Template SaaS generico</td>
               <td>Nessuna identità manga</td>
@@ -531,66 +651,68 @@
     </section>
 
     <!-- PLATFORM & DOWNLOAD MATRIX -->
-    <section id="platforms" class="section-container">
+    <section id="platforms" class="section-container" aria-labelledby="platforms-main-title">
       <div class="section-heading-centered">
         <span class="section-kicker">04 / DISPONIBILITÀ MOBILE &amp; SMARTPHONE</span>
-        <h2 class="section-main-title">Progettato su Misura per il Tuo Telefono.</h2>
+        <h2 id="platforms-main-title" class="section-main-title">Progettato su Misura per il Tuo Telefono.</h2>
         <p class="section-main-sub">Nessun compromesso: interfaccia touch nativa a 120 FPS, swipe fluidi, uso con una sola mano e storage offline locale.</p>
       </div>
 
       <div class="platform-cards-grid">
-        <div class="platform-card highlight-border">
+        <article class="platform-card highlight-border">
           <div class="platform-badge">CONSIGLIATO</div>
           <div class="platform-stamp-num highlight">PLATFORM 01</div>
           <h3 class="platform-title">Android Smartphone (APK)</h3>
           <p class="platform-desc">Installazione diretta e immediata. Prestazioni native a 120 FPS, vibrazione aptica al cambio capitolo e storage atomico a zero consumo dati.</p>
-          <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-platform-action primary">DOWNLOAD APK DIRETTO &rarr;</a>
-        </div>
+          <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-platform-action primary" aria-label="Scarica il pacchetto APK Android da GitHub Releases">DOWNLOAD APK DIRETTO &rarr;</a>
+        </article>
 
-        <div class="platform-card">
+        <article class="platform-card">
           <div class="platform-stamp-num">PLATFORM 02</div>
           <h3 class="platform-title">iOS &amp; iPhone (Mobile PWA)</h3>
           <p class="platform-desc">Aggiungi MangaFlow alla schermata Home del tuo iPhone tramite Safari: zero banner, full-screen nativo e salvataggio offline locale.</p>
-          <a href="#demo" class="btn-platform-action">GUIDA INSTALLAZIONE &rarr;</a>
-        </div>
+          <a href="#demo" class="btn-platform-action" aria-label="Istruzioni per installazione PWA su iPhone">GUIDA INSTALLAZIONE &rarr;</a>
+        </article>
 
-        <div class="platform-card">
+        <article class="platform-card">
           <div class="platform-stamp-num">PLATFORM 03</div>
           <h3 class="platform-title">Simulatore Mobile Browser</h3>
           <p class="platform-desc">Vuoi testare l'algoritmo di tracciamento e il catalogo prima di installarlo? Prova il simulatore interattivo dal tuo browser.</p>
-          <a href="#demo" class="btn-platform-action">PROVA NEL BROWSER &rarr;</a>
-        </div>
+          <a href="#demo" class="btn-platform-action" aria-label="Prova il simulatore mobile nel browser">PROVA NEL BROWSER &rarr;</a>
+        </article>
       </div>
     </section>
 
     <!-- AUTHOR & ARCHITECT SPOTLIGHT -->
-    <section id="author" class="section-container">
+    <section id="author" class="section-container" aria-labelledby="author-main-title">
       <div class="author-master-card">
-        <div class="author-hanko-seal">
+        <div class="author-hanko-seal" aria-hidden="true">
           <span class="seal-kanji">作者</span>
           <span class="seal-initials">BS</span>
         </div>
 
         <div class="author-details-column">
           <div class="author-pill">
-            <span class="pill-dot"></span>
+            <span class="pill-dot" aria-hidden="true"></span>
             <span>LEAD ENGINEER &amp; PRODUCT DESIGNER</span>
           </div>
 
-          <h2 class="author-full-name">BIAGIO SCAGLIA</h2>
+          <h2 id="author-main-title" class="author-full-name">BIAGIO SCAGLIA</h2>
           
-          <p class="author-statement">
-            <em>"Ho creato MangaFlow perché ero stanco di app per manga mal progettate, piene di banner o costruite con template copia-incolla. Volevo uno strumento che rispettasse sia l'ingegneria del software (salvataggio atomico, deduplicazione deterministica, 100% test coverage) sia la bellezza visiva dell'oggetto libro cartaceo."</em>
-          </p>
+          <blockquote class="author-statement">
+            <p>
+              <em>"Ho creato MangaFlow perché ero stanco di app per manga mal progettate, piene di banner o costruite con template copia-incolla. Volevo uno strumento che rispettasse sia l'ingegneria del software (salvataggio atomico, deduplicazione deterministica, 100% test coverage) sia la bellezza visiva dell'oggetto libro cartaceo."</em>
+            </p>
+          </blockquote>
 
           <div class="author-actions-row">
-            <a href="https://github.com/biagio-scaglia" target="_blank" rel="noopener noreferrer" class="author-btn">
-              <svg class="gh-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <a href="https://github.com/biagio-scaglia" target="_blank" rel="noopener noreferrer" class="author-btn" aria-label="Visualizza il profilo GitHub di Biagio Scaglia">
+              <svg class="gh-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
               </svg>
               <span>GITHUB PROFILE</span>
             </a>
-            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="author-btn primary">
+            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="author-btn primary" aria-label="Esplora il repository open-source di MangaFlow su GitHub">
               <span>EXPLORE REPOSITORY &rarr;</span>
             </a>
           </div>
@@ -599,10 +721,10 @@
     </section>
 
     <!-- FAQ ACCORDION -->
-    <section class="section-container faq-section">
+    <section class="section-container faq-section" aria-labelledby="faq-main-title">
       <div class="section-heading-centered">
         <span class="section-kicker">05 / DOMANDE FREQUENTI</span>
-        <h2 class="section-main-title">Tutto Quello che Devi Sapere</h2>
+        <h2 id="faq-main-title" class="section-main-title">Tutto Quello che Devi Sapere</h2>
       </div>
 
       <div class="faq-accordion-list">
@@ -631,11 +753,11 @@
   </main>
 
   <!-- MASTER EDITORIAL FOOTER -->
-  <footer class="editorial-footer">
+  <footer class="editorial-footer" role="contentinfo">
     <div class="footer-inner">
       <div class="footer-left">
         <div class="footer-brand-row">
-          <span class="footer-hanko-box">MF</span>
+          <span class="footer-hanko-box" aria-hidden="true">MF</span>
           <span class="footer-brand-title">MANGAFLOW</span>
         </div>
         <p class="footer-mission">
@@ -645,13 +767,12 @@
 
       <div class="footer-right">
         <div class="footer-stamp-container">
-          <span class="stamp-chip">TANKŌBON EDITION &bull; 2026</span>
+          <span class="stamp-chip">TANKŌBON EDITION &bull; <time datetime="2026">2026</time></span>
           <span class="stamp-sub">FLUTTER &bull; ANILIST GRAPHQL &bull; CLEAN ARCHITECTURE</span>
         </div>
       </div>
     </div>
   </footer>
 
-  <script src="app.js"></script>
 </body>
 </html>

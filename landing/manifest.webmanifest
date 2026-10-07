@@ -1,0 +1,19 @@
+{
+  "name": "MangaFlow — Editorial Manga Tracker",
+  "short_name": "MangaFlow",
+  "description": "L'archivio editoriale e tracker definitivo per manga su smartphone. 100% offline-first, storage atomico e sync AniList.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0E0F12",
+  "theme_color": "#0E0F12",
+  "icons": [
+    {
+      "src": "assets/app_logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["books", "entertainment", "productivity"],
+  "lang": "it"
+}
