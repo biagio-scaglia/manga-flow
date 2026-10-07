@@ -3,38 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MangaFlow — Catalogo Editoriale & Manga Tracker | by Biagio Scaglia</title>
-  <meta name="description" content="MangaFlow è la piattaforma editoriale definitiva per tracciare e collezionare manga con rigore ingegneristico e identità visiva tankōbon. Creata da Biagio Scaglia.">
+  <title>MangaFlow — L'Archivio Editoriale Definitivo per Manga | by Biagio Scaglia</title>
+  <meta name="description" content="MangaFlow è l'app definitiva per collezionare e tracciare manga. Motore Flutter offline-first, storage atomico, sincronizzazione AniList live e design editoriale tankōbon. Creata da Biagio Scaglia.">
+  <meta name="keywords" content="Manga tracker, manga collection, AniList, Flutter, MangaFlow, Biagio Scaglia, tankobon, reading progress">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/png" href="../assets/icons/app_logo.png">
 </head>
 <body>
 
-  <!-- Background Halftone Screentone Pattern -->
+  <!-- Background Ambient Glow & Halftone Screentone -->
+  <div class="ambient-glow" aria-hidden="true"></div>
   <div class="manga-halftone-overlay" aria-hidden="true"></div>
 
-  <!-- Top Editorial Header Bar -->
+  <!-- STICKY CONVERSION NAVBAR -->
   <header class="editorial-header">
     <div class="header-inner">
-      <div class="brand-group">
+      <a href="#" class="brand-group">
         <div class="brand-hanko">
           <span class="spine-line"></span>
           <span class="brand-mf">MF</span>
         </div>
         <div class="brand-title-wrap">
           <span class="brand-name">MANGAFLOW</span>
-          <span class="brand-sub">漫画目録 • EDITORIAL ARCHIVE</span>
+          <span class="brand-sub">EDITORIAL TRACKER • 漫画目録</span>
         </div>
-      </div>
+      </a>
 
       <nav class="editorial-nav" aria-label="Navigazione principale">
-        <a href="#philosophy" class="nav-item"><span class="nav-num">01</span> FILOSOFIA</a>
-        <a href="#demo" class="nav-item"><span class="nav-num">02</span> LIVE TRACKER</a>
-        <a href="#architecture" class="nav-item"><span class="nav-num">03</span> ARCHITETTURA</a>
-        <a href="#author" class="nav-item"><span class="nav-num">04</span> AUTORE</a>
+        <a href="#features" class="nav-item"><span class="nav-num">01</span> FUNZIONALITÀ</a>
+        <a href="#demo" class="nav-item"><span class="nav-num">02</span> LIVE DEMO</a>
+        <a href="#comparison" class="nav-item"><span class="nav-num">03</span> CONFRONTO</a>
+        <a href="#platforms" class="nav-item"><span class="nav-num">04</span> PIATTAFORME</a>
+        <a href="#author" class="nav-item"><span class="nav-num">05</span> AUTORE</a>
       </nav>
 
       <div class="header-actions">
@@ -42,112 +45,199 @@
           <span class="theme-mode-text">NIGHT INK</span>
           <span class="theme-icon-box">墨</span>
         </button>
-        <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="btn-github">
-          GITHUB
+        <a href="#platforms" class="btn-nav-download">
+          SCARICA
         </a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- HERO SECTION (KOMA PANEL 01) -->
-    <section class="hero-section koma-panel">
+    <!-- HERO SECTION: THE MASTERPIECE -->
+    <section class="hero-section">
       <div class="hero-container">
         
-        <div class="hero-koma-left">
-          <div class="stamp-badge">
-            <span class="stamp-kanji">公認</span>
-            <span class="stamp-text">OPERA ORIGINALE &bull; VOL. 01</span>
+        <div class="hero-content">
+          <div class="announcement-pill">
+            <span class="pill-badge">RELEASE v1.0</span>
+            <span class="pill-text">Architettura Flutter • 100% Offline-First</span>
+            <span class="pill-arrow">&rarr;</span>
           </div>
 
           <h1 class="hero-headline">
-            IL TRACKER DEI MANGA.<br>
-            <span class="highlight-vermilion">RIGORE EDITORIALE</span> &bull; ZERO SLOP.
+            L'arte di collezionare manga.<br>
+            <span class="highlight-vermilion">Zero compromessi</span>, pura eleganza.
           </h1>
 
           <p class="hero-lead">
-            Un'applicazione Flutter concepita come un <em>tankōbon</em> fisico: solida architettura a prova di corruzione, integrazione AniList GraphQL in tempo reale e una vera identità visiva ispirata all'eccellenza editoriale giapponese.
+            Dimentica i fogli Excel noiosi e le app lente piene di pubblicità. <strong>MangaFlow</strong> è il tracker editoriale per chi ama i manga: storage atomico a prova di crash, sync AniList GraphQL in tempo reale e una cura tipografica degna dei migliori <em>tankōbon</em>.
           </p>
 
-          <div class="author-hero-badge">
-            <span class="author-label">AUTORE & LEAD ARCHITECT</span>
-            <span class="author-name">BIAGIO SCAGLIA</span>
-            <span class="author-role">Senior Software Engineer & Product Designer</span>
-          </div>
-
-          <div class="hero-cta-group">
-            <a href="#demo" class="btn-primary">
-              <span class="btn-index">01</span> PROVA IL LIVE DEMO
+          <div class="hero-cta-box">
+            <a href="#demo" class="btn-primary-glow">
+              <span class="btn-glow-icon">⚡</span>
+              <span>PROVA IL TRACKER LIVE</span>
             </a>
-            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="btn-secondary">
-              <span class="btn-index">02</span> REPOSITORY OPEN SOURCE
+            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="btn-secondary-outline">
+              <svg class="gh-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              <span>GITHUB SOURCE</span>
             </a>
           </div>
 
-          <!-- Speedlines visual accent -->
-          <div class="manga-speedlines-accent"></div>
+          <!-- Trust Proof Signals -->
+          <div class="hero-trust-bar">
+            <div class="trust-item">
+              <span class="trust-num">100%</span>
+              <span class="trust-lbl">Dati sul tuo dispositivo</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <span class="trust-num">&lt; 10ms</span>
+              <span class="trust-lbl">Latenza locale</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <span class="trust-num">0</span>
+              <span class="trust-lbl">Pubblicità o Tracker</span>
+            </div>
+          </div>
         </div>
 
-        <div class="hero-koma-right">
-          <div class="tankobon-device-mockup">
-            <div class="device-spine"></div>
-            <div class="device-screen">
-              <div class="screen-header">
-                <div class="screen-title-row">
-                  <div class="screen-hanko">MF</div>
-                  <div class="screen-headline">
-                    <div class="screen-app-title">MANGAFLOW</div>
-                    <div class="screen-app-sub">CATALOGO EDITORIALE • 漫画目録</div>
+        <!-- HERO INTERACTIVE APP SHOWCASE MOCKUP -->
+        <div class="hero-mockup-wrapper">
+          <div class="mockup-frame">
+            <div class="mockup-spine-bar"></div>
+            
+            <div class="mockup-screen">
+              <!-- Top App Bar -->
+              <div class="mock-appbar">
+                <div class="mock-brand">
+                  <span class="mock-hanko">MF</span>
+                  <div>
+                    <div class="mock-name">MANGAFLOW</div>
+                    <div class="mock-sub">CATALOGO EDITORIALE</div>
                   </div>
+                </div>
+                <div class="mock-tab-pills">
+                  <button class="mock-tab active" data-mock-screen="home">HOME</button>
+                  <button class="mock-tab" data-mock-screen="library">LIBRERIA</button>
+                  <button class="mock-tab" data-mock-screen="stats">STATS</button>
                 </div>
               </div>
 
-              <div class="screen-body">
-                <div class="mock-section-header">
-                  <span class="section-tag">01 / CONTINUA LA LETTURA</span>
-                </div>
-
-                <div class="mock-hero-card">
-                  <div class="mock-cover-spine-wrap">
-                    <div class="mock-cover-spine"></div>
-                    <div class="mock-cover-content">
-                      <span class="mock-cover-kanji">呪術廻戦</span>
-                      <span class="mock-cover-stamp">VOL. 24</span>
+              <!-- Dynamic Screen Views -->
+              <div id="mock-view-container" class="mock-viewport">
+                <!-- VIEW 1: HOME (Default) -->
+                <div class="mock-screen-panel active" id="panel-home">
+                  <div class="mock-tag-header">01 / CONTINUA LA LETTURA</div>
+                  
+                  <div class="mock-featured-card">
+                    <div class="mock-cover-art jujutsu">
+                      <div class="spine-edge"></div>
+                      <span class="cover-kanji">呪術廻戦</span>
+                      <span class="cover-vol-badge">VOL. 24</span>
+                    </div>
+                    <div class="mock-details">
+                      <span class="status-chip-live">LETTURA IN CORSO</span>
+                      <h4 class="manga-title">Jujutsu Kaisen</h4>
+                      <p class="manga-author">Gege Akutami</p>
+                      <div class="mock-progress-wrap">
+                        <div class="mock-track">
+                          <div class="mock-fill" style="width: 87%;"></div>
+                        </div>
+                        <div class="mock-track-labels">
+                          <span>CAP. 236 / 271</span>
+                          <span>87%</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="mock-card-info">
-                    <div class="mock-status-pill">LETTURA IN CORSO</div>
-                    <div class="mock-manga-title">Jujutsu Kaisen</div>
-                    <div class="mock-manga-author">Gege Akutami</div>
-                    <div class="mock-manga-progress">
-                      <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 82%;"></div>
-                      </div>
-                      <div class="progress-text-row">
-                        <span class="cap-mono">CAP. 236 / 271</span>
-                        <span class="pct-mono">82%</span>
-                      </div>
+
+                  <div class="mock-grid-preview">
+                    <div class="mini-card">
+                      <div class="mini-cover csm"><span class="mini-vol">VOL. 16</span></div>
+                      <span class="mini-name">Chainsaw Man</span>
+                      <span class="mini-prog">CAP. 140/232</span>
+                    </div>
+                    <div class="mini-card">
+                      <div class="mini-cover berserk"><span class="mini-vol">VOL. 41</span></div>
+                      <span class="mini-name">Berserk</span>
+                      <span class="mini-prog">CAP. 364/376</span>
+                    </div>
+                    <div class="mini-card">
+                      <div class="mini-cover solo"><span class="mini-vol">VOL. 14</span></div>
+                      <span class="mini-name">Solo Leveling</span>
+                      <span class="mini-prog">COMPLETATO</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="mock-stats-row">
-                  <div class="mock-stat-item">
-                    <span class="mock-stat-num">48</span>
-                    <span class="mock-stat-lbl">OPERE</span>
+                <!-- VIEW 2: LIBRERIA -->
+                <div class="mock-screen-panel" id="panel-library">
+                  <div class="mock-tag-header">02 / LA TUA COLLEZIONE (34 OPERE)</div>
+                  <div class="mock-filter-row">
+                    <span class="filter-chip active">TUTTI (34)</span>
+                    <span class="filter-chip">IN CORSO (8)</span>
+                    <span class="filter-chip">COMPLETATI (22)</span>
                   </div>
-                  <div class="mock-stat-divider"></div>
-                  <div class="mock-stat-item">
-                    <span class="mock-stat-num">1.420</span>
-                    <span class="mock-stat-lbl">CAPITOLI</span>
+                  <div class="library-list-mock">
+                    <div class="lib-row">
+                      <div class="lib-dot active"></div>
+                      <div class="lib-info">
+                        <strong>Monster</strong>
+                        <span>18 / 18 Volumi Posseduti &bull; Naoki Urasawa</span>
+                      </div>
+                      <span class="lib-status completed">COMPLETO</span>
+                    </div>
+                    <div class="lib-row">
+                      <div class="lib-dot reading"></div>
+                      <div class="lib-info">
+                        <strong>Dandadan</strong>
+                        <span>Vol. 12 &bull; Yukinobu Tatsu</span>
+                      </div>
+                      <span class="lib-status reading">CAP. 128</span>
+                    </div>
+                    <div class="lib-row">
+                      <div class="lib-dot reading"></div>
+                      <div class="lib-info">
+                        <strong>20th Century Boys</strong>
+                        <span>Vol. 11 &bull; Naoki Urasawa</span>
+                      </div>
+                      <span class="lib-status reading">CAP. 94</span>
+                    </div>
                   </div>
-                  <div class="mock-stat-divider"></div>
-                  <div class="mock-stat-item highlight">
-                    <span class="mock-stat-num">112</span>
-                    <span class="mock-stat-lbl">VOLUMI</span>
+                </div>
+
+                <!-- VIEW 3: STATS -->
+                <div class="mock-screen-panel" id="panel-stats">
+                  <div class="mock-tag-header">04 / STATISTICHE EDITORIALI</div>
+                  <div class="stats-big-grid">
+                    <div class="stat-card-unit">
+                      <span class="stat-big-val">34</span>
+                      <span class="stat-big-lbl">OPERE IN CATALOGO</span>
+                    </div>
+                    <div class="stat-card-unit highlight">
+                      <span class="stat-big-val">3.480</span>
+                      <span class="stat-big-lbl">CAPITOLI LETTI</span>
+                    </div>
+                    <div class="stat-card-unit">
+                      <span class="stat-big-val">248</span>
+                      <span class="stat-big-lbl">VOLUMI CARTACEI</span>
+                    </div>
+                    <div class="stat-card-unit">
+                      <span class="stat-big-val">22</span>
+                      <span class="stat-big-lbl">SERIE COMPLETATE</span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Bottom Bar -->
+              <div class="mock-bottom-bar">
+                <span class="bar-indicator"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -155,226 +245,340 @@
       </div>
     </section>
 
-    <!-- PHILOSOPHY / DESIGN SYSTEM SECTION -->
-    <section id="philosophy" class="section-container koma-panel">
-      <div class="section-header-editorial">
-        <span class="editorial-index">01 / MANIFESTO & DESIGN SYSTEM</span>
-        <h2 class="section-title">ESTETICA EDITORIALE GIAPPONESE</h2>
-        <p class="section-subtitle">Niente card dentro card casuali o gradienti viola artificiali. Ogni millimetro è progettato per celebrare l'opera cartacea.</p>
+    <!-- BENTO GRID: COMMERCIAL GRADE ARCHITECTURE -->
+    <section id="features" class="section-container">
+      <div class="section-heading-centered">
+        <span class="section-kicker">01 / PERCHÉ SCEGLIERE MANGAFLOW</span>
+        <h2 class="section-main-title">Ingegneria Robusta. Gusto Visivo Straordinario.</h2>
+        <p class="section-main-sub">Ogni riga di codice è stata pensata per darti la massima affidabilità e zero spreco di tempo.</p>
       </div>
 
-      <div class="grid-3-cards">
-        <article class="editorial-card">
-          <div class="card-spine-accent"></div>
-          <div class="card-inner">
-            <div class="card-stamp">01 &bull; 墨 INK &amp; 和紙 WASHI</div>
-            <h3 class="card-title">Palette Inchiostro Sumi</h3>
-            <p class="card-desc">
-              Modalità scura profonda a base di inchiostro Sumi (#141416) e modalità chiara Washi Paper (#F6F3EC) con contorni solidi a 1px per un contrasto che supera i requisiti WCAG AAA (>14:1).
-            </p>
-            <div class="palette-swatches">
-              <span class="swatch sumi" title="Sumi Ink #141416"></span>
-              <span class="swatch surface" title="Dark Surface #1E1E22"></span>
-              <span class="swatch vermilion" title="Editorial Vermilion #D9272E"></span>
-              <span class="swatch washi" title="Washi Paper #F6F3EC"></span>
+      <div class="bento-grid">
+        <!-- BENTO CARD 1: LARGE HERO FEATURE (AniList GraphQL Engine) -->
+        <div class="bento-card bento-col-2 bento-hero">
+          <div class="bento-badge">API ENGINE</div>
+          <h3 class="bento-title">AniList GraphQL Sync in Tempo Reale</h3>
+          <p class="bento-desc">
+            Cerca tra oltre 50.000 manga con metadati ufficiali giapponesi, copertine in altissima risoluzione, date di rilascio e sinossi senza mai attendere. Include rate-limiting adattivo anti-ban e cache offline a più livelli.
+          </p>
+          <div class="bento-visual-search">
+            <div class="search-bar-mock">
+              <span class="search-icon">🔍</span>
+              <span class="search-text">Chainsaw Man...</span>
+              <span class="search-tag">LIVE API</span>
             </div>
-          </div>
-        </article>
-
-        <article class="editorial-card">
-          <div class="card-spine-accent"></div>
-          <div class="card-inner">
-            <div class="card-stamp">02 &bull; 活字 TYPOGRAPHY</div>
-            <h3 class="card-title">Space Grotesk + Space Mono</h3>
-            <p class="card-desc">
-              Accoppiamento tipografico rigoroso: testate geometriche editoriali in <strong>Space Grotesk</strong> e timbri di metadati/volumi (<em>VOL. 01 / 24</em>) tracciati in <strong>Space Mono</strong>.
-            </p>
-            <div class="typography-preview-box">
-              <span class="type-grotesk">MANGAFLOW VOL. 01</span>
-              <span class="type-mono">CAP. 142 • STAT: READING</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="editorial-card">
-          <div class="card-spine-accent"></div>
-          <div class="card-inner">
-            <div class="card-stamp">03 &bull; 背表紙 TANKŌBON SPINE</div>
-            <h3 class="card-title">Costine dei Volumi Fisici</h3>
-            <p class="card-desc">
-              Ogni copertina integra il bordo sfumato della costina di rilegatura e il sistema di fallback tipografico automatico in caso di indisponibilità della risorsa remota.
-            </p>
-            <div class="spine-interactive-badge">
-              <span class="badge-mini-hanko">MF</span>
-              <span class="badge-mini-text">LEGATURA TANKŌBON</span>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- LIVE INTERACTIVE TRACKER DEMO -->
-    <section id="demo" class="section-container koma-panel">
-      <div class="section-header-editorial">
-        <span class="editorial-index">02 / SIMULATORE INTERATTIVO</span>
-        <h2 class="section-title">PROVA IL MOTORE DI TRACKING</h2>
-        <p class="section-subtitle">Interagisci in tempo reale con le invarianti di dominio e i controlli sui limiti dei volumi.</p>
-      </div>
-
-      <div class="tracker-demo-box">
-        <div class="demo-left-manga">
-          <div class="demo-cover-wrap">
-            <div class="demo-cover-spine"></div>
-            <div class="demo-cover-main">
-              <span class="demo-cover-title">CHAINSAW MAN</span>
-              <span class="demo-cover-sub">Tatsuki Fujimoto</span>
-              <span class="demo-cover-seal">公認</span>
+            <div class="search-result-pill">
+              <span>Chainsaw Man</span> &bull; <span>Tatsuki Fujimoto</span> &bull; <span class="score">★ 8.8 / 10</span>
             </div>
           </div>
         </div>
 
-        <div class="demo-right-controls">
-          <div class="demo-status-row">
-            <span class="demo-label">STATO LETTURA:</span>
-            <div class="status-selector-group">
-              <button class="status-btn active" data-status="reading">IN LETTURA</button>
-              <button class="status-btn" data-status="completed">COMPLETATO</button>
-              <button class="status-btn" data-status="plan_to_read">DA LEGGERE</button>
-            </div>
+        <!-- BENTO CARD 2: Atomic Storage & Recovery -->
+        <div class="bento-card">
+          <div class="bento-badge">CRASH-PROOF</div>
+          <h3 class="bento-title">Storage Atomico &amp; Backup .bak</h3>
+          <p class="bento-desc">
+            Scrittura sicura su file temporaneo, flush immediato e rotazione del file <code>library.json.bak</code>. Anche se il dispositivo si spegne durante il salvataggio, i tuoi dati non andranno mai persi.
+          </p>
+          <div class="code-pill-preview">
+            <code>library.json.tmp &rarr; flush &rarr; .bak</code>
           </div>
+        </div>
 
-          <div class="demo-stepper-panel">
-            <div class="stepper-unit">
-              <div class="stepper-header">
-                <span class="stepper-title">CAPITOLO ATTUALE</span>
-                <span id="chapter-ratio" class="stepper-ratio">140 / 232</span>
-              </div>
-              <div class="stepper-actions">
-                <button id="btn-ch-dec" class="step-btn" aria-label="Decrementa capitolo">-</button>
-                <span id="ch-val" class="step-value">140</span>
-                <button id="btn-ch-inc" class="step-btn" aria-label="Incrementa capitolo">+</button>
-                <button id="btn-ch-quick" class="step-quick-btn">+10 CAP</button>
-              </div>
-            </div>
-
-            <div class="stepper-unit">
-              <div class="stepper-header">
-                <span class="stepper-title">VOLUMI POSSEDUTI (LIMITE MAX: 24)</span>
-                <span id="volume-ratio" class="stepper-ratio">16 / 24</span>
-              </div>
-              <div class="stepper-actions">
-                <button id="btn-vol-dec" class="step-btn" aria-label="Decrementa volume">-</button>
-                <span id="vol-val" class="step-value">16</span>
-                <button id="btn-vol-inc" class="step-btn" aria-label="Incrementa volume">+</button>
-                <button id="btn-vol-max" class="step-quick-btn">TUTTI I VOLUMI</button>
-              </div>
-            </div>
+        <!-- BENTO CARD 3: Invariant Enforcement -->
+        <div class="bento-card">
+          <div class="bento-badge">INVARIANTI DI DOMINIO</div>
+          <h3 class="bento-title">Controllo Rigido Limiti Volumi</h3>
+          <p class="bento-desc">
+            Impossibile registrare dati incoerenti: il sistema impedisce matematicamente di impostare capitoli negativi o di possedere più volumi di quelli effettivamente stampati (es. max 24 su 24).
+          </p>
+          <div class="invariant-check-box">
+            <span class="check-icon">✓</span>
+            <span>Regola: ownedVolumes &le; totalVolumes</span>
           </div>
+        </div>
 
-          <div class="demo-progress-visual">
-            <div class="progress-bar-container">
-              <div id="demo-progress-bar" class="progress-bar-active" style="width: 60.3%;"></div>
-            </div>
-            <div class="progress-footer-stats">
-              <span id="demo-pct-text" class="stat-pct">60.3% COMPLETATO</span>
-              <span id="demo-status-feedback" class="stat-feedback">INVARIANTE DI DOMINIO RISPETTATA (MAX 24 VOLUMI)</span>
-            </div>
+        <!-- BENTO CARD 4: Japanese Editorial Design -->
+        <div class="bento-card bento-col-2">
+          <div class="bento-badge">DESIGN SYSTEM</div>
+          <h3 class="bento-title">Identità Visiva Tankōbon &amp; Tipografia Space</h3>
+          <p class="bento-desc">
+            Nessun template SaaS banale con bordi a pillola ovunque. MangaFlow usa contorni netti a 1px, inchiostro Sumi (#141416), carta Washi (#F6F3EC), sfumature di costina laterale e accoppiamento geometrico <strong>Space Grotesk + Space Mono</strong>.
+          </p>
+          <div class="design-preview-strip">
+            <div class="strip-swatch s1">SUMI INK</div>
+            <div class="strip-swatch s2">VERMILION</div>
+            <div class="strip-swatch s3">WASHI PAPER</div>
+            <div class="strip-swatch s4">SPACE MONO</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ARCHITECTURE & CODE EXCELLENCE -->
-    <section id="architecture" class="section-container koma-panel">
-      <div class="section-header-editorial">
-        <span class="editorial-index">03 / INGEGNERIA DEL SOFTWARE</span>
-        <h2 class="section-title">CLEAN ARCHITECTURE &amp; ZERO DATI FITTIZI</h2>
-        <p class="section-subtitle">Costruito per durare nel tempo, con protezione totale dell'integrità dei dati utente.</p>
+    <!-- LIVE INTERACTIVE TRACKER SANDBOX -->
+    <section id="demo" class="section-container">
+      <div class="section-heading-centered">
+        <span class="section-kicker">02 / SIMULATORE INTERATTIVO</span>
+        <h2 class="section-main-title">Metti alla Prova il Motore di MangaFlow</h2>
+        <p class="section-main-sub">Prova direttamente nel browser come risponde l'algoritmo di tracciamento e verifica le regole di business.</p>
       </div>
 
-      <div class="arch-grid">
-        <div class="arch-box">
-          <div class="arch-number">01</div>
-          <h3 class="arch-title">Atomic JSON Storage &amp; Backup .bak</h3>
-          <p class="arch-desc">
-            Scrittura atomica a doppio stadio: <code>library.json.tmp</code> &rarr; flush su disco &rarr; rotazione automatica <code>library.json.bak</code>. Se il file principale dovesse subire una corruzione improvvisa, il sistema ripristina automaticamente lo stato precedente senza alcuna perdita.
-          </p>
+      <div class="interactive-sandbox">
+        <div class="sandbox-manga-showcase">
+          <div class="sandbox-cover">
+            <div class="sandbox-spine"></div>
+            <div class="sandbox-cover-content">
+              <span class="sb-kanji">チェンソーマン</span>
+              <span class="sb-title">CHAINSAW MAN</span>
+              <span class="sb-author">Tatsuki Fujimoto</span>
+              <span class="sb-seal">公式公認</span>
+            </div>
+          </div>
         </div>
 
-        <div class="arch-box">
-          <div class="arch-number">02</div>
-          <h3 class="arch-title">Deterministic Deduplication Engine</h3>
-          <p class="arch-desc">
-            La classe <code>LibraryEntryMerger</code> garantisce l'unicità deterministica per singolo <code>mangaId</code>: tap concorrenti, import legacy o sincronizzazioni multi-istanza confluiscono in una sola entry integra, preservando sempre i progressi più avanzati.
-          </p>
-        </div>
+        <div class="sandbox-controls">
+          <div class="sandbox-header-row">
+            <div>
+              <span class="sb-manga-name">Chainsaw Man</span>
+              <span class="sb-meta">Shueisha &bull; In Corso &bull; 24 Volumi Previsti</span>
+            </div>
+            <button id="btn-toggle-fav" class="btn-fav-stamp" aria-label="Aggiungi ai preferiti">
+              <span id="fav-icon">♡</span>
+              <span id="fav-label">PREFERITO</span>
+            </button>
+          </div>
 
-        <div class="arch-box">
-          <div class="arch-number">03</div>
-          <h3 class="arch-title">AniList GraphQL Live API</h3>
-          <p class="arch-desc">
-            Integrazione diretta con l'API ufficiale GraphQL di AniList con rate-limiting dinamico adattivo (HTTP 429 Retry-After), prevenzione risposte stale in volo e cache offline a più livelli.
-          </p>
-        </div>
+          <!-- Status Selector -->
+          <div class="control-group">
+            <label class="control-label">STATO DI LETTURA:</label>
+            <div class="status-button-bar">
+              <button class="sb-status-btn active" data-sb-status="reading">IN LETTURA</button>
+              <button class="sb-status-btn" data-sb-status="completed">COMPLETATO</button>
+              <button class="sb-status-btn" data-sb-status="plan">DA LEGGERE</button>
+            </div>
+          </div>
 
-        <div class="arch-box">
-          <div class="arch-number">04</div>
-          <h3 class="arch-title">100% Test Suite &amp; Zero Warning</h3>
-          <p class="arch-desc">
-            Copertura totale con 28 test automatizzati su regole di business, mutazioni di stato, migrazioni di schema v0 &rarr; v1 e test sui widget Flutter, con 0 warning da <code>flutter analyze</code>.
-          </p>
+          <!-- Steppers Grid -->
+          <div class="steppers-grid">
+            <div class="stepper-card">
+              <div class="st-top">
+                <span>CAPITOLO CORRENTE</span>
+                <span id="sb-ch-ratio" class="st-ratio">140 / 232</span>
+              </div>
+              <div class="st-actions">
+                <button id="sb-ch-minus" class="st-btn">-</button>
+                <span id="sb-ch-val" class="st-number">140</span>
+                <button id="sb-ch-plus" class="st-btn">+</button>
+                <button id="sb-ch-jump" class="st-jump">+10 CAP</button>
+              </div>
+            </div>
+
+            <div class="stepper-card">
+              <div class="st-top">
+                <span>VOLUMI POSSEDUTI (MAX 24)</span>
+                <span id="sb-vol-ratio" class="st-ratio">16 / 24</span>
+              </div>
+              <div class="st-actions">
+                <button id="sb-vol-minus" class="st-btn">-</button>
+                <span id="sb-vol-val" class="st-number">16</span>
+                <button id="sb-vol-plus" class="st-btn">+</button>
+                <button id="sb-vol-all" class="st-jump">TUTTI</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Visual -->
+          <div class="sandbox-progress-panel">
+            <div class="sb-progress-bar-bg">
+              <div id="sb-progress-bar-fill" class="sb-progress-bar-fill" style="width: 60.3%;"></div>
+            </div>
+            <div class="sb-progress-meta">
+              <span id="sb-pct-badge" class="pct-badge">60.3% COMPLETATO</span>
+              <span id="sb-feedback" class="feedback-text">INVARIANTE ATTIVA: Limite massimo 24 volumi</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- AUTHOR SECTION -->
-    <section id="author" class="section-container koma-panel author-section-wrap">
-      <div class="author-frame">
-        <div class="author-hanko-large">
-          <span class="hanko-kanji">作者</span>
-          <span class="hanko-initials">BS</span>
+    <!-- COMPARISON MATRIX: WHY MANGAFLOW WINS -->
+    <section id="comparison" class="section-container">
+      <div class="section-heading-centered">
+        <span class="section-kicker">03 / CONFRONTO DIRETTO</span>
+        <h2 class="section-main-title">Costruito Senza Scorciatoie.</h2>
+        <p class="section-main-sub">Vedi come MangaFlow si posiziona rispetto ai metodi tradizionali o alle solite app generiche.</p>
+      </div>
+
+      <div class="table-responsive-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>CARATTERISTICA</th>
+              <th class="col-highlight">MANGAFLOW</th>
+              <th>APP GENERICHE</th>
+              <th>FOGLI EXCEL / NOTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Velocità &amp; Latenza</strong></td>
+              <td class="col-highlight"><span class="badge-win">&lt; 10ms (Istantaneo)</span></td>
+              <td>Lento (Webview / Pubblicità)</td>
+              <td>Manuale / Scomodo su mobile</td>
+            </tr>
+            <tr>
+              <td><strong>Integrità Dati &amp; Backup</strong></td>
+              <td class="col-highlight"><span class="badge-win">Atomic JSON + Auto .bak</span></td>
+              <td>Database cloud proprietario</td>
+              <td>Manuale</td>
+            </tr>
+            <tr>
+              <td><strong>API Manga Live Ufficiali</strong></td>
+              <td class="col-highlight"><span class="badge-win">AniList GraphQL Integrata</span></td>
+              <td>Dati obsoleti / Scraping fragile</td>
+              <td>Zero integrazione automatica</td>
+            </tr>
+            <tr>
+              <td><strong>Controlli Invarianti di Dominio</strong></td>
+              <td class="col-highlight"><span class="badge-win">Blocco rigido over-limit</span></td>
+              <td>Bug e volumi sballati</td>
+              <td>Nessun controllo</td>
+            </tr>
+            <tr>
+              <td><strong>Privacy &amp; Tracciamento</strong></td>
+              <td class="col-highlight"><span class="badge-win">100% Locale, Zero Telemetria</span></td>
+              <td>Tracker pubblicitari invasivi</td>
+              <td>Dipendente da cloud terzi</td>
+            </tr>
+            <tr>
+              <td><strong>Design &amp; Tipografia</strong></td>
+              <td class="col-highlight"><span class="badge-win">Tankōbon Editorial Bimodale</span></td>
+              <td>Template SaaS generico</td>
+              <td>Nessuna identità manga</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PLATFORM & DOWNLOAD MATRIX -->
+    <section id="platforms" class="section-container">
+      <div class="section-heading-centered">
+        <span class="section-kicker">04 / DISPONIBILITÀ PIATTAFORME</span>
+        <h2 class="section-main-title">Esegui MangaFlow Ovunque.</h2>
+        <p class="section-main-sub">Sviluppato con Flutter 3.x per garantire massime prestazioni native su ogni sistema.</p>
+      </div>
+
+      <div class="platform-cards-grid">
+        <div class="platform-card">
+          <div class="platform-icon">🌐</div>
+          <h3 class="platform-title">Web Application</h3>
+          <p class="platform-desc">Accessibile istantaneamente da qualsiasi browser desktop e mobile via Chrome, Safari o Firefox.</p>
+          <a href="http://127.0.0.1:8080" class="btn-platform-action">APRI WEB APP &rarr;</a>
         </div>
 
-        <div class="author-content-block">
-          <div class="stamp-badge">
-            <span class="stamp-kanji">設計者</span>
-            <span class="stamp-text">CREATORE DEL PROGETTO</span>
+        <div class="platform-card highlight-border">
+          <div class="platform-badge">CONSIGLIATO</div>
+          <div class="platform-icon">📱</div>
+          <h3 class="platform-title">Android APK</h3>
+          <p class="platform-desc">Esperienza mobile nativa fluida a 120 FPS con feedback tattile, gesture swipe e storage offline.</p>
+          <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-platform-action primary">DOWNLOAD APK &rarr;</a>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-icon">💻</div>
+          <h3 class="platform-title">Desktop (Windows)</h3>
+          <p class="platform-desc">Client nativo super-rapido per monitor grandi, multi-colonna e gestione collezione veloce.</p>
+          <a href="https://github.com/biagio-scaglia/manga-flow/releases" target="_blank" rel="noopener noreferrer" class="btn-platform-action">BUILD WINDOWS &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUTHOR & ARCHITECT SPOTLIGHT -->
+    <section id="author" class="section-container">
+      <div class="author-master-card">
+        <div class="author-hanko-seal">
+          <span class="seal-kanji">作者</span>
+          <span class="seal-initials">BS</span>
+        </div>
+
+        <div class="author-details-column">
+          <div class="author-pill">
+            <span class="pill-dot"></span>
+            <span>LEAD ENGINEER &amp; PRODUCT DESIGNER</span>
           </div>
-          <h2 class="author-title">BIAGIO SCAGLIA</h2>
-          <p class="author-bio">
-            Ingegnere del software e product designer. Ha ideato e sviluppato <strong>MangaFlow</strong> combinando architettura pulita Flutter, storage deterministico locale e una visione tipografica/editoriale senza compromessi.
+
+          <h2 class="author-full-name">BIAGIO SCAGLIA</h2>
+          
+          <p class="author-statement">
+            <em>"Ho creato MangaFlow perché ero stanco di app per manga mal progettate, piene di banner o costruite con template copia-incolla. Volevo uno strumento che rispettasse sia l'ingegneria del software (salvataggio atomico, deduplicazione deterministica, 100% test coverage) sia la bellezza visiva dell'oggetto libro cartaceo."</em>
           </p>
 
-          <div class="author-links">
-            <a href="https://github.com/biagio-scaglia" target="_blank" rel="noopener noreferrer" class="author-link-btn">
-              GITHUB &bull; @biagio-scaglia
+          <div class="author-actions-row">
+            <a href="https://github.com/biagio-scaglia" target="_blank" rel="noopener noreferrer" class="author-btn">
+              <svg class="gh-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              <span>GITHUB PROFILE</span>
             </a>
-            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="author-link-btn primary">
-              PROGETTO MANGAFLOW REPO
+            <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="author-btn primary">
+              <span>EXPLORE REPOSITORY &rarr;</span>
             </a>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- FAQ ACCORDION -->
+    <section class="section-container faq-section">
+      <div class="section-heading-centered">
+        <span class="section-kicker">05 / DOMANDE FREQUENTI</span>
+        <h2 class="section-main-title">Tutto Quello che Devi Sapere</h2>
+      </div>
+
+      <div class="faq-accordion-list">
+        <details class="faq-item" open>
+          <summary class="faq-question">I miei dati sono al sicuro se cambio dispositivo o se l'app va in crash?</summary>
+          <div class="faq-answer">
+            Sì. MangaFlow utilizza un motore di scrittura atomica con flush immediato su disco e generazione automatica di un file di backup <code>library.json.bak</code> ad ogni modifica. In caso di corruzione del file principale, il recovery è automatico e trasparente.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">Come vengono recuperati i manga e le copertine?</summary>
+          <div class="faq-answer">
+            I dati provengono direttamente dall'API ufficiale GraphQL di AniList. L'app include una gestione intelligente delle connessioni offline e fallback grafici editoriali in caso di assenza di rete.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">MangaFlow è completamente gratuito e open-source?</summary>
+          <div class="faq-answer">
+            Sì, l'intero codice sorgente è rilasciato su GitHub sotto licenza open-source e non contiene acquisti in-app o pubblicità.
+          </div>
+        </details>
       </div>
     </section>
   </main>
 
-  <!-- EDITORIAL FOOTER -->
+  <!-- MASTER EDITORIAL FOOTER -->
   <footer class="editorial-footer">
     <div class="footer-inner">
-      <div class="footer-col-left">
-        <div class="footer-brand">
-          <span class="footer-hanko">MF</span>
-          <span class="footer-brand-name">MANGAFLOW</span>
+      <div class="footer-left">
+        <div class="footer-brand-row">
+          <span class="footer-hanko-box">MF</span>
+          <span class="footer-brand-title">MANGAFLOW</span>
         </div>
-        <p class="footer-copy">
-          Archivio editoriale per lettori e collezionisti di manga. Progettato e sviluppato da <strong>Biagio Scaglia</strong>.
+        <p class="footer-mission">
+          L'archivio editoriale definitivo per collezionisti e lettori di manga. Ideato, disegnato e sviluppato da <strong>Biagio Scaglia</strong>.
         </p>
       </div>
 
-      <div class="footer-col-right">
-        <span class="footer-stamp-box">
-          TANKŌBON EDITION &bull; 2026 &bull; ALL RIGHTS RESERVED
-        </span>
+      <div class="footer-right">
+        <div class="footer-stamp-container">
+          <span class="stamp-chip">TANKŌBON EDITION &bull; 2026</span>
+          <span class="stamp-sub">FLUTTER &bull; ANILIST GRAPHQL &bull; CLEAN ARCHITECTURE</span>
+        </div>
       </div>
     </div>
   </footer>

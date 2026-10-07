@@ -1,10 +1,10 @@
 /**
- * MANGAFLOW LANDING PAGE INTERACTIVE ENGINE
+ * MANGAFLOW COMMERCIAL LANDING ENGINE
  * Author: Biagio Scaglia
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. THEME SWITCHER (Night Ink vs Washi Paper)
+  // 1. THEME TOGGLE (Night Ink 墨色 vs Washi Paper 和紙)
   const themeToggleBtn = document.getElementById('theme-toggle');
   const themeText = document.querySelector('.theme-mode-text');
   const themeIcon = document.querySelector('.theme-icon-box');
@@ -33,127 +33,160 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 2. INTERACTIVE LIVE TRACKER DEMO
+  // 2. HERO MOCKUP SCREEN TABS SWITCHER
+  const mockTabs = document.querySelectorAll('.mock-tab');
+  const mockPanels = document.querySelectorAll('.mock-screen-panel');
+
+  mockTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetScreen = tab.getAttribute('data-mock-screen');
+      mockTabs.forEach(t => t.classList.remove('active'));
+      mockPanels.forEach(p => p.classList.remove('active'));
+
+      tab.classList.add('active');
+      const targetPanel = document.getElementById(`panel-${targetScreen}`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+      }
+    });
+  });
+
+  // 3. INTERACTIVE LIVE TRACKER SANDBOX ENGINE
   let currentChapter = 140;
   const totalChapters = 232;
   let ownedVolumes = 16;
   const totalVolumes = 24;
+  let isFavorite = false;
 
-  const chValEl = document.getElementById('ch-val');
-  const chRatioEl = document.getElementById('chapter-ratio');
-  const volValEl = document.getElementById('vol-val');
-  const volRatioEl = document.getElementById('volume-ratio');
-  const progressBarEl = document.getElementById('demo-progress-bar');
-  const pctTextEl = document.getElementById('demo-pct-text');
-  const feedbackEl = document.getElementById('demo-status-feedback');
+  const chRatioEl = document.getElementById('sb-ch-ratio');
+  const chValEl = document.getElementById('sb-ch-val');
+  const volRatioEl = document.getElementById('sb-vol-ratio');
+  const volValEl = document.getElementById('sb-vol-val');
+  const progressBarFill = document.getElementById('sb-progress-bar-fill');
+  const pctBadge = document.getElementById('sb-pct-badge');
+  const feedbackEl = document.getElementById('sb-feedback');
 
-  const btnChDec = document.getElementById('btn-ch-dec');
-  const btnChInc = document.getElementById('btn-ch-inc');
-  const btnChQuick = document.getElementById('btn-ch-quick');
+  const btnChMinus = document.getElementById('sb-ch-minus');
+  const btnChPlus = document.getElementById('sb-ch-plus');
+  const btnChJump = document.getElementById('sb-ch-jump');
 
-  const btnVolDec = document.getElementById('btn-vol-dec');
-  const btnVolInc = document.getElementById('btn-vol-inc');
-  const btnVolMax = document.getElementById('btn-vol-max');
+  const btnVolMinus = document.getElementById('sb-vol-minus');
+  const btnVolPlus = document.getElementById('sb-vol-plus');
+  const btnVolAll = document.getElementById('sb-vol-all');
 
-  const statusBtns = document.querySelectorAll('.status-btn');
+  const btnFav = document.getElementById('btn-toggle-fav');
+  const favIcon = document.getElementById('fav-icon');
+  const favLabel = document.getElementById('fav-label');
 
-  function updateTrackerUI() {
+  const statusBtns = document.querySelectorAll('.sb-status-btn');
+
+  function updateSandbox() {
     if (chValEl) chValEl.textContent = currentChapter;
     if (chRatioEl) chRatioEl.textContent = `${currentChapter} / ${totalChapters}`;
     if (volValEl) volValEl.textContent = ownedVolumes;
     if (volRatioEl) volRatioEl.textContent = `${ownedVolumes} / ${totalVolumes}`;
 
     const pct = ((currentChapter / totalChapters) * 100).toFixed(1);
-    if (progressBarEl) progressBarEl.style.width = `${pct}%`;
-    if (pctTextEl) pctTextEl.textContent = `${pct}% COMPLETATO`;
+    if (progressBarFill) progressBarFill.style.width = `${pct}%`;
+    if (pctBadge) pctBadge.textContent = `${pct}% COMPLETATO`;
 
     if (feedbackEl) {
-      if (ownedVolumes === totalVolumes) {
-        feedbackEl.textContent = `COLLEZIONE CARTACEA COMPLETA (${totalVolumes}/${totalVolumes} VOLUMI)`;
+      if (ownedVolumes === totalVolumes && currentChapter === totalChapters) {
+        feedbackEl.textContent = `COLLEZIONE & LETTURA COMPLETATE CON SUCCESSO!`;
         feedbackEl.style.color = 'var(--gold-accent)';
-      } else if (currentChapter === totalChapters) {
-        feedbackEl.textContent = `LETTURA COMPLETATA (${totalChapters}/${totalChapters} CAPITOLI)`;
+      } else if (ownedVolumes === totalVolumes) {
+        feedbackEl.textContent = `TUTTI I VOLUMI CARTACEI POSSEDUTI (${totalVolumes}/${totalVolumes})`;
         feedbackEl.style.color = 'var(--gold-accent)';
       } else {
-        feedbackEl.textContent = `INVARIANTE DI DOMINIO ATTIVA (MAX ${totalVolumes} VOLUMI)`;
+        feedbackEl.textContent = `INVARIANTE DI DOMINIO ATTIVA: Max ${totalVolumes} volumi`;
         feedbackEl.style.color = 'var(--text-muted)';
       }
     }
   }
 
-  // Chapter listeners
-  if (btnChDec) {
-    btnChDec.addEventListener('click', () => {
+  // Favorite toggle
+  if (btnFav) {
+    btnFav.addEventListener('click', () => {
+      isFavorite = !isFavorite;
+      btnFav.classList.toggle('active', isFavorite);
+      if (favIcon) favIcon.textContent = isFavorite ? '♥' : '♡';
+      if (favLabel) favLabel.textContent = isFavorite ? 'NEI PREFERITI' : 'PREFERITO';
+    });
+  }
+
+  // Chapter buttons
+  if (btnChMinus) {
+    btnChMinus.addEventListener('click', () => {
       if (currentChapter > 0) {
         currentChapter--;
-        updateTrackerUI();
+        updateSandbox();
       }
     });
   }
 
-  if (btnChInc) {
-    btnChInc.addEventListener('click', () => {
+  if (btnChPlus) {
+    btnChPlus.addEventListener('click', () => {
       if (currentChapter < totalChapters) {
         currentChapter++;
-        updateTrackerUI();
+        updateSandbox();
       }
     });
   }
 
-  if (btnChQuick) {
-    btnChQuick.addEventListener('click', () => {
+  if (btnChJump) {
+    btnChJump.addEventListener('click', () => {
       currentChapter = Math.min(totalChapters, currentChapter + 10);
-      updateTrackerUI();
+      updateSandbox();
     });
   }
 
-  // Volume listeners with Domain Invariant enforcement (ownedVolumes <= totalVolumes)
-  if (btnVolDec) {
-    btnVolDec.addEventListener('click', () => {
+  // Volume buttons with strict domain bounds (ownedVolumes <= totalVolumes)
+  if (btnVolMinus) {
+    btnVolMinus.addEventListener('click', () => {
       if (ownedVolumes > 0) {
         ownedVolumes--;
-        updateTrackerUI();
+        updateSandbox();
       }
     });
   }
 
-  if (btnVolInc) {
-    btnVolInc.addEventListener('click', () => {
+  if (btnVolPlus) {
+    btnVolPlus.addEventListener('click', () => {
       if (ownedVolumes < totalVolumes) {
         ownedVolumes++;
-        updateTrackerUI();
+        updateSandbox();
       } else {
         if (feedbackEl) {
-          feedbackEl.textContent = `BLOCCO: NON PUOI POSSEDERE PIÙ DI ${totalVolumes} VOLUMI!`;
+          feedbackEl.textContent = `BLOCCO RIGIDO: Non puoi possedere più di ${totalVolumes} volumi!`;
           feedbackEl.style.color = 'var(--vermilion)';
         }
       }
     });
   }
 
-  if (btnVolMax) {
-    btnVolMax.addEventListener('click', () => {
+  if (btnVolAll) {
+    btnVolAll.addEventListener('click', () => {
       ownedVolumes = totalVolumes;
-      updateTrackerUI();
+      updateSandbox();
     });
   }
 
-  // Reading status switcher
+  // Status buttons
   statusBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       statusBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      const status = btn.getAttribute('data-status');
+      const status = btn.getAttribute('data-sb-status');
       if (status === 'completed') {
         currentChapter = totalChapters;
         ownedVolumes = totalVolumes;
-      } else if (status === 'plan_to_read') {
+      } else if (status === 'plan') {
         currentChapter = 0;
       }
-      updateTrackerUI();
+      updateSandbox();
     });
   });
 
-  updateTrackerUI();
+  updateSandbox();
 });
