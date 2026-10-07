@@ -437,120 +437,232 @@ body {
 }
 
 /* ==========================================================================
-   HERO INTERACTIVE APP SHOWCASE MOCKUP
+   HERO INTERACTIVE SMARTPHONE SIMULATOR
    ========================================================================== */
 .hero-mockup-wrapper {
-  perspective: 1000px;
-}
-
-.mockup-frame {
-  background: var(--ink-surface);
-  border: 1px solid var(--ink-border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
+  perspective: 1200px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.smartphone-chassis {
+  width: 350px;
+  max-width: 100%;
+  background: #0d0e12;
+  border: 11px solid #1c1d24;
+  border-radius: 46px;
+  position: relative;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 24px 60px -12px rgba(0, 0, 0, 0.75),
+    0 0 45px -10px var(--vermilion-glow);
   transform: rotateY(-3deg) rotateX(2deg);
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  user-select: none;
 }
 
-.mockup-frame:hover {
-  transform: rotateY(0deg) rotateX(0deg);
+.smartphone-chassis:hover {
+  transform: rotateY(0deg) rotateX(0deg) translateY(-4px);
+  box-shadow: 
+    0 0 0 1px rgba(217, 39, 46, 0.35),
+    0 30px 70px -12px rgba(0, 0, 0, 0.85),
+    0 0 60px -5px var(--vermilion-glow);
 }
 
-.mockup-spine-bar {
+/* Smartphone Hardware Side Buttons */
+.phone-btn {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.5), transparent);
-  border-top-left-radius: var(--radius-lg);
-  border-bottom-left-radius: var(--radius-lg);
+  background: #2b2d38;
+  border-radius: 2px;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.25);
 }
 
-.mockup-screen {
-  background: var(--ink-bg);
-  border: 1px solid var(--ink-border);
-  border-radius: var(--radius-md);
-  width: 100%;
+.phone-btn-power {
+  right: -14px;
+  top: 130px;
+  width: 3px;
+  height: 52px;
+}
+
+.phone-btn-vol-up {
+  left: -14px;
+  top: 115px;
+  width: 3px;
+  height: 40px;
+}
+
+.phone-btn-vol-down {
+  left: -14px;
+  top: 168px;
+  width: 3px;
+  height: 40px;
+}
+
+.phone-btn-action {
+  left: -14px;
+  top: 68px;
+  width: 3px;
+  height: 26px;
+}
+
+.phone-inner-bezel {
+  border-radius: 35px;
   overflow: hidden;
+  background: var(--ink-bg);
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.mock-appbar {
-  padding: 14px 16px;
+/* Status Bar & Dynamic Island */
+.phone-status-bar {
+  height: 38px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--ink-bg);
+  z-index: 10;
+  border-bottom: 1px solid var(--ink-border-subtle);
+}
+
+.phone-clock {
+  letter-spacing: 0.5px;
+}
+
+.phone-dynamic-island {
+  width: 92px;
+  height: 22px;
+  background: #000000;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 10px;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.05);
+}
+
+.island-camera {
+  width: 9px;
+  height: 9px;
+  background: #0f1c30;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.island-sensor {
+  width: 5px;
+  height: 5px;
+  background: #080a10;
+  border-radius: 50%;
+}
+
+.phone-status-signals {
+  display: flex;
+  gap: 6px;
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+.signal-badge, .battery-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* Phone Screen Body */
+.phone-screen-body {
+  display: flex;
+  flex-direction: column;
+  height: 540px;
+  overflow: hidden;
+  background: var(--ink-bg);
+}
+
+.phone-app-header {
+  padding: 10px 14px;
+  background: var(--ink-surface);
   border-bottom: 1px solid var(--ink-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.mock-brand {
+.phone-app-brand {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.mock-hanko {
+.phone-brand-hanko {
   width: 24px;
   height: 24px;
   background: var(--vermilion);
   color: #fff;
   font-weight: 900;
   font-size: 10px;
-  border-radius: var(--radius-xs);
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px var(--vermilion-glow);
 }
 
-.mock-name {
-  font-size: 12px;
+.phone-brand-title {
+  font-size: 11px;
   font-weight: 900;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
 }
 
-.mock-sub {
-  font-size: 8px;
+.phone-brand-sub {
+  font-size: 7.5px;
   color: var(--text-muted);
   font-family: var(--font-mono);
 }
 
-.mock-tab-pills {
+.phone-header-badge {
   display: flex;
-  gap: 4px;
-}
-
-.mock-tab {
-  background: transparent;
-  border: 1px solid var(--ink-border);
-  color: var(--text-secondary);
+  align-items: center;
+  gap: 5px;
   font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 8px;
+  font-weight: 800;
+  color: var(--green-accent);
+  background: rgba(46, 204, 113, 0.12);
+  border: 1px solid rgba(46, 204, 113, 0.25);
+  padding: 3px 6px;
+  border-radius: 3px;
 }
 
-.mock-tab.active {
-  background: var(--vermilion);
-  border-color: var(--vermilion);
-  color: #fff;
+.phone-live-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--green-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--green-accent);
 }
 
-.mock-viewport {
-  padding: 16px;
-  min-height: 380px;
+/* Phone Viewport */
+.phone-viewport {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.phone-viewport::-webkit-scrollbar {
+  display: none;
 }
 
 .mock-screen-panel {
   display: none;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.25s ease;
 }
 
 .mock-screen-panel.active {
@@ -558,303 +670,425 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.mock-tag-header {
+.phone-section-label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 8.5px;
   font-weight: 800;
   color: var(--vermilion);
-  letter-spacing: 1.2px;
-  margin-bottom: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.mock-featured-card {
+.phone-section-label.sub {
+  margin-top: 14px;
+}
+
+.sec-idx {
+  background: var(--vermilion);
+  color: #fff;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 7.5px;
+}
+
+/* Phone Manga Card */
+.phone-manga-card {
   background: var(--ink-surface);
   border: 1px solid var(--ink-border);
-  border-radius: var(--radius-sm);
-  padding: 12px;
+  border-radius: var(--radius-xs);
+  padding: 10px;
   display: grid;
-  grid-template-columns: 85px 1fr;
-  gap: 14px;
-  margin-bottom: 16px;
+  grid-template-columns: 74px 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
 }
 
-.mock-cover-art {
-  height: 120px;
-  background: #23232A;
-  border: 1px solid var(--ink-border);
-  border-radius: var(--radius-xs);
+.phone-card-cover {
+  height: 104px;
+  border-radius: 3px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+  overflow: hidden;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.35);
 }
 
-.mock-cover-art.jujutsu { background: #1B263B; }
-.mock-cover-art.csm { background: #3D1316; }
-.mock-cover-art.berserk { background: #1F1F1F; }
-.mock-cover-art.solo { background: #162447; }
+.phone-card-cover.jujutsu { background: #1B263B; }
+.phone-card-cover.csm { background: #3D1316; }
+.phone-card-cover.berserk { background: #1F1F1F; }
+.phone-card-cover.solo { background: #162447; }
 
-.spine-edge {
+.phone-spine-strip {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 5px;
-  background: rgba(0,0,0,0.35);
+  width: 4px;
+  background: rgba(0, 0, 0, 0.4);
 }
 
-.cover-kanji {
-  font-family: var(--font-kanji);
-  font-size: 13px;
-  font-weight: 900;
-  writing-mode: vertical-rl;
-  letter-spacing: 2px;
-}
-
-.cover-vol-badge {
+.phone-vol-tag {
   font-family: var(--font-mono);
-  font-size: 8px;
-  font-weight: 700;
+  font-size: 7.5px;
+  font-weight: 800;
   color: var(--vermilion);
-  margin-top: 6px;
+  margin-top: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 
-.mock-details {
+.phone-card-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.status-chip-live {
-  display: inline-block;
+.phone-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.phone-status-tag {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 800;
+  color: var(--vermilion);
+  background: rgba(217, 39, 46, 0.12);
+  border: 1px solid rgba(217, 39, 46, 0.25);
+  padding: 2px 5px;
+  border-radius: 2px;
+}
+
+.phone-step-btn {
   font-family: var(--font-mono);
   font-size: 8px;
   font-weight: 800;
-  background: rgba(217, 39, 46, 0.15);
-  color: var(--vermilion);
-  padding: 2px 6px;
-  border-radius: 2px;
-  border: 1px solid rgba(217, 39, 46, 0.3);
-  align-self: flex-start;
+  background: var(--vermilion);
+  color: #fff;
+  border: none;
+  padding: 3px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+  box-shadow: 0 2px 6px var(--vermilion-glow);
 }
 
-.manga-title {
-  font-size: 16px;
+.phone-step-btn:hover {
+  background: var(--vermilion-dark);
+}
+
+.phone-step-btn:active {
+  transform: scale(0.92);
+}
+
+.phone-manga-title {
+  font-size: 13px;
   font-weight: 900;
   line-height: 1.2;
+  margin: 3px 0 1px;
 }
 
-.manga-author {
-  font-size: 11px;
+.phone-manga-author {
+  font-size: 9px;
   color: var(--text-muted);
+  margin-bottom: 6px;
 }
 
-.mock-track {
+.phone-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.phone-track {
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 4px;
 }
 
-.mock-fill {
+.phone-fill {
   height: 100%;
   background: var(--vermilion);
+  transition: width 0.3s ease;
 }
 
-.mock-track-labels {
+.phone-track-row {
   display: flex;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--vermilion);
+  font-size: 8px;
   font-weight: 700;
+  color: var(--vermilion);
 }
 
-.mock-grid-preview {
+/* Phone Shelf Preview */
+.phone-shelf-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 6px;
 }
 
-.mini-card {
+.phone-mini-item {
   background: var(--ink-surface);
   border: 1px solid var(--ink-border);
   border-radius: var(--radius-xs);
-  padding: 8px;
+  padding: 6px 4px;
   text-align: center;
 }
 
-.mini-cover {
-  height: 70px;
+.mini-cover-ph {
+  height: 56px;
   border-radius: 2px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
-.mini-vol {
+.mini-cover-ph.csm { background: #3D1316; }
+.mini-cover-ph.berserk { background: #1F1F1F; }
+.mini-cover-ph.solo { background: #162447; }
+
+.mini-ph-vol {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 700;
   color: #fff;
-  background: rgba(0,0,0,0.6);
-  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 1px 3px;
   border-radius: 2px;
 }
 
-.mini-name {
+.mini-ph-name {
   display: block;
-  font-size: 10px;
+  font-size: 8.5px;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mini-prog {
+.mini-ph-prog {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 7.5px;
   color: var(--vermilion);
   font-weight: 700;
 }
 
-/* Mock Library View */
-.mock-filter-row {
+/* Phone Library View */
+.phone-chips-row {
   display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 4px;
+  margin-bottom: 10px;
 }
 
-.filter-chip {
+.ph-chip {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
-  padding: 4px 8px;
-  border-radius: var(--radius-xs);
+  padding: 3px 6px;
+  border-radius: 2px;
   background: var(--ink-surface);
   border: 1px solid var(--ink-border);
+  color: var(--text-secondary);
 }
 
-.filter-chip.active {
+.ph-chip.active {
   background: var(--vermilion);
   border-color: var(--vermilion);
   color: #fff;
 }
 
-.library-list-mock {
+.phone-lib-list {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+}
+
+.phone-lib-entry {
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border);
+  border-radius: 3px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
-.lib-row {
-  background: var(--ink-surface);
-  border: 1px solid var(--ink-border);
-  border-radius: var(--radius-xs);
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.lib-dot {
-  width: 8px;
-  height: 8px;
+.entry-indicator {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.lib-dot.active { background: var(--green-accent); }
-.lib-dot.reading { background: var(--vermilion); }
+.entry-indicator.comp { background: var(--green-accent); }
+.entry-indicator.read { background: var(--vermilion); }
 
-.lib-info {
+.entry-main {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1;
 }
 
-.lib-info strong {
-  font-size: 12px;
+.entry-main strong {
+  font-size: 10.5px;
   font-weight: 800;
 }
 
-.lib-info span {
-  font-size: 9px;
+.entry-main span {
+  font-size: 8px;
   color: var(--text-muted);
 }
 
-.lib-status {
+.entry-tag {
   font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 6px;
+  font-size: 7.5px;
+  font-weight: 800;
+  padding: 2px 5px;
   border-radius: 2px;
 }
 
-.lib-status.completed {
+.entry-tag.comp {
   background: rgba(46, 204, 113, 0.15);
   color: var(--green-accent);
 }
 
-.lib-status.reading {
+.entry-tag.read {
   background: rgba(217, 39, 46, 0.15);
   color: var(--vermilion);
 }
 
-/* Mock Stats View */
-.stats-big-grid {
+/* Phone Stats View */
+.phone-stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.stat-card-unit {
+.ph-stat-box {
   background: var(--ink-surface);
   border: 1px solid var(--ink-border);
-  border-radius: var(--radius-xs);
-  padding: 16px;
+  border-radius: 3px;
+  padding: 10px 8px;
   text-align: center;
 }
 
-.stat-card-unit.highlight .stat-big-val {
+.ph-stat-box.highlight .ph-stat-num {
   color: var(--vermilion);
 }
 
-.stat-big-val {
+.ph-stat-num {
   font-family: var(--font-mono);
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 900;
   display: block;
 }
 
-.stat-big-lbl {
+.ph-stat-title {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 7px;
   color: var(--text-muted);
   font-weight: 700;
 }
 
-.mock-bottom-bar {
-  padding: 8px;
+.phone-completion-pill {
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border);
+  padding: 7px 10px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
   display: flex;
-  justify-content: center;
-  border-top: 1px solid var(--ink-border);
+  align-items: center;
+  gap: 6px;
 }
 
-.bar-indicator {
-  width: 36px;
-  height: 3px;
-  background: var(--text-muted);
+.pill-seal {
+  background: var(--gold-accent);
+  color: #000;
+  font-weight: 900;
+  padding: 1px 4px;
   border-radius: 2px;
-  opacity: 0.4;
+  font-size: 7px;
+}
+
+/* Mobile Bottom Navigation in Phone */
+.phone-bottom-nav {
+  display: flex;
+  background: var(--ink-surface);
+  border-top: 1px solid var(--ink-border);
+  padding: 4px 6px;
+  justify-content: space-around;
+}
+
+.phone-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  border-radius: 3px;
+}
+
+.phone-nav-item:hover {
+  color: var(--text-primary);
+}
+
+.phone-nav-item.active {
+  color: var(--vermilion);
+  background: rgba(217, 39, 46, 0.08);
+}
+
+.ph-tab-num {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 800;
+}
+
+.ph-tab-txt {
+  font-family: var(--font-grotesk);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* Smartphone Home Gesture Indicator */
+.phone-home-indicator-wrap {
+  padding: 6px 0 8px;
+  display: flex;
+  justify-content: center;
+  background: var(--ink-surface);
+}
+
+.phone-home-bar {
+  width: 90px;
+  height: 3.5px;
+  background: var(--text-primary);
+  opacity: 0.35;
+  border-radius: 2px;
 }
 
 /* ==========================================================================

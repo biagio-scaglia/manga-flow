@@ -187,5 +187,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 4. PHONE MOCKUP INTERACTIVE TOUCH STEPPER
+  let phoneJujutsuChap = 236;
+  const phoneJujutsuTotal = 271;
+  const phoneStepperBtn = document.getElementById('phone-quick-stepper');
+  const phoneChapLabel = document.getElementById('phone-chap-label');
+  const phonePctLabel = document.getElementById('phone-pct-label');
+  const phoneFillBar = document.getElementById('phone-fill-bar');
+
+  if (phoneStepperBtn) {
+    phoneStepperBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (phoneJujutsuChap < phoneJujutsuTotal) {
+        phoneJujutsuChap++;
+      } else {
+        phoneJujutsuChap = 236; // Loop back for continuous demo delight
+      }
+      const pct = Math.round((phoneJujutsuChap / phoneJujutsuTotal) * 100);
+      if (phoneChapLabel) phoneChapLabel.textContent = `CAP. ${phoneJujutsuChap} / ${phoneJujutsuTotal}`;
+      if (phonePctLabel) phonePctLabel.textContent = `${pct}%`;
+      if (phoneFillBar) phoneFillBar.style.width = `${pct}%`;
+
+      phoneStepperBtn.style.transform = 'scale(0.88)';
+      setTimeout(() => {
+        phoneStepperBtn.style.transform = 'scale(1)';
+      }, 120);
+    });
+  }
+
   updateSandbox();
 });
