@@ -104,13 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Favorite toggle
+  // Favorite toggle (Pure Editorial Badge)
   if (btnFav) {
     btnFav.addEventListener('click', () => {
       isFavorite = !isFavorite;
       btnFav.classList.toggle('active', isFavorite);
-      if (favIcon) favIcon.textContent = isFavorite ? '♥' : '♡';
-      if (favLabel) favLabel.textContent = isFavorite ? 'NEI PREFERITI' : 'PREFERITO';
+      if (favLabel) favLabel.textContent = isFavorite ? 'IN PREFERITI [ON]' : 'PREFERITI [OFF]';
     });
   }
 
