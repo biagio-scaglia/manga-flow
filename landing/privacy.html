@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Informativa sulla Privacy — MangaFlow | by Biagio Scaglia</title>
+  <meta name="title" content="Informativa sulla Privacy — MangaFlow | by Biagio Scaglia">
+  <meta name="description" content="Informativa sulla Privacy di MangaFlow: architettura 100% offline-first, nessun tracciamento o cookie di profilazione, memorizzazione locale dei dati.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://biagio-scaglia.github.io/manga-flow/privacy.html">
+  
+  <meta name="theme-color" content="#0E0F12">
+  <meta name="color-scheme" content="dark light">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="assets/app_logo.png">
+  <link rel="apple-touch-icon" href="assets/app_logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://biagio-scaglia.github.io/manga-flow/privacy.html">
+  <meta property="og:title" content="Informativa sulla Privacy — MangaFlow">
+  <meta property="og:description" content="Nessun tracciamento, nessun dato inviato a server esterni: i tuoi manga rimangono 100% sul tuo dispositivo.">
+  <meta property="og:image" content="https://biagio-scaglia.github.io/manga-flow/assets/og_image.png">
+  <meta property="og:site_name" content="MangaFlow">
+  <meta property="og:locale" content="it_IT">
+
+  <!-- Typography & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <div class="ambient-glow" aria-hidden="true"></div>
+  <div class="manga-halftone-overlay" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="editorial-header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="brand-group" aria-label="Torna alla Home di MangaFlow">
+        <div class="brand-hanko" aria-hidden="true">
+          <span class="spine-line"></span>
+          <span class="brand-mf">MF</span>
+        </div>
+        <div class="brand-title-wrap">
+          <span class="brand-name">MANGAFLOW</span>
+          <span class="brand-sub">EDITORIAL TRACKER • 漫画目録</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Cambia tema chiaro/scuro">
+          <span class="theme-mode-text">NIGHT INK</span>
+          <span class="theme-icon-box" aria-hidden="true">墨</span>
+        </button>
+        <a href="index.html" class="btn-nav-download" aria-label="Torna all'applicazione">
+          HOME
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="legal-main-container">
+    <div class="legal-back-bar">
+      <a href="index.html" class="legal-back-btn">&larr; TORNA ALLA HOME</a>
+    </div>
+
+    <header class="legal-header">
+      <h1 class="legal-title">Informativa sulla Privacy</h1>
+      <div class="legal-meta-bar">
+        <span class="legal-badge-pill">OFFLINE-FIRST PRIVACY</span>
+        <span>ULTIMO AGGIORNAMENTO: 8 OTTOBRE 2026</span>
+        <span>&bull; AUTORE: BIAGIO SCAGLIA</span>
+      </div>
+    </header>
+
+    <article class="legal-content-body">
+      <!-- SEZIONE 1 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">01</span>
+          <span>Titolare del Trattamento &amp; Filosofia del Progetto</span>
+        </h2>
+        <p class="legal-text">
+          La presente Informativa sulla Privacy descrive le modalità con cui l'applicazione e il sito web <strong>MangaFlow</strong>, ideati e sviluppati da <strong>Biagio Scaglia</strong> (di seguito, "il Titolare" o "noi"), gestiscono le informazioni e i dati personali degli utenti.
+        </p>
+        <p class="legal-text">
+          MangaFlow è stato progettato e costruito con una rigorosa filosofia <strong>Zero-Knowledge &amp; Offline-First</strong>: non raccogliamo, non monetizziamo e non conserviamo alcuna informazione personale su server centralizzati o database proprietari.
+        </p>
+      </section>
+
+      <!-- SEZIONE 2 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">02</span>
+          <span>Dati Personali &amp; Architettura di Memorizzazione Locale</span>
+        </h2>
+        <p class="legal-text">
+          Tutti i dati generati durante l'utilizzo dell'applicazione (inclusi l'elenco dei manga catalogati, i capitoli letti, i volumi posseduti, lo stato di avanzamento e i segnalibri) risiedono <strong>esclusivamente sul dispositivo dell'utente</strong> (tramite file JSON atomici e database locale protetto).
+        </p>
+        <ul class="legal-list">
+          <li><strong>Nessun Account Obbligatorio</strong>: Non è richiesta alcuna registrazione tramite email, password o login con social network per utilizzare l'applicazione.</li>
+          <li><strong>Salvataggio Atomico Crash-Proof</strong>: I salvataggi avvengono sul file system locale con rotazione automatica del file di backup <code>library.json.bak</code>. Nessun dato lascia il tuo dispositivo.</li>
+          <li><strong>Zero Telemetria</strong>: MangaFlow non contiene SDK di profilazione utente, crash analytics invasivi o traccianti pubblicitari di terze parti.</li>
+        </ul>
+      </section>
+
+      <!-- SEZIONE 3 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">03</span>
+          <span>Connessioni di Rete &amp; Integrazione API Esterne</span>
+        </h2>
+        <p class="legal-text">
+          L'applicazione effettua richieste di rete verso servizi esterni <strong>esclusivamente</strong> nelle seguenti circostanze:
+        </p>
+        <ul class="legal-list">
+          <li>
+            <strong>AniList GraphQL API (https://graphql.anilist.co)</strong>: Utilizzata in sola lettura per cercare informazioni pubbliche sui manga (titolo originale, autore, copertina ad alta risoluzione, numero di capitoli e volumi). Nessun dato identificativo dell'utente viene trasmesso durante queste chiamate.
+          </li>
+          <li>
+            <strong>Download Immagini Copertine</strong>: Le immagini delle copertine visualizzate vengono scaricate tramite URL pubblici forniti da AniList e memorizzate nella cache locale del dispositivo per la consultazione offline.
+          </li>
+        </ul>
+        <div class="legal-highlight-box">
+          <strong>Trasparenza Rete:</strong> Anche in totale assenza di connessione internet, l'applicazione continua a funzionare regolarmente con tutte le copertine e i metadati già archiviati nella cache offline.
+        </div>
+      </section>
+
+      <!-- SEZIONE 4 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">04</span>
+          <span>Cookie &amp; Tracciamento Web sul Sito Statico</span>
+        </h2>
+        <p class="legal-text">
+          Il sito web di presentazione e simulazione di MangaFlow:
+        </p>
+        <ul class="legal-list">
+          <li><strong>Zero Cookie di Profilazione</strong>: Non utilizza cookie di tracciamento commerciale, cookie di terze parti né pixel pubblicitari (Meta Pixel, Google Ads, etc.).</li>
+          <li><strong>Memorizzazione Locale (localStorage)</strong>: Utilizza la memoria locale del browser esclusivamente per ricordare la preferenza visiva dell'utente (tema scuro <em>Night Ink</em> o chiaro <em>Washi Paper</em>).</li>
+          <li><strong>Hosting GitHub Pages</strong>: Il sito è ospitato sull'infrastruttura statica sicura di GitHub Pages. I log di accesso HTTP di base sono gestiti da GitHub Inc. nel rispetto della propria informativa sulla privacy globale.</li>
+        </ul>
+      </section>
+
+      <!-- SEZIONE 5 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">05</span>
+          <span>Diritti dell'Utente (GDPR / Regolamento UE 2016/679)</span>
+        </h2>
+        <p class="legal-text">
+          Poiché i dati sono conservati unicamente all'interno della memoria locale del tuo smartphone:
+        </p>
+        <ul class="legal-list">
+          <li><strong>Controllo Totale &amp; Accesso</strong>: Puoi esportare, consultare e modificare il file <code>library.json</code> in qualsiasi momento.</li>
+          <li><strong>Diritto di Cancellazione Immediata</strong>: Disinstallando l'applicazione o svuotando i dati dell'app dalle impostazioni del dispositivo, tutti i dati archiviati verranno eliminati istantaneamente e in modo irreversibile.</li>
+        </ul>
+      </section>
+
+      <!-- SEZIONE 6 -->
+      <section class="legal-section">
+        <h2 class="legal-section-title">
+          <span class="legal-sec-num">06</span>
+          <span>Contatti &amp; Risorse</span>
+        </h2>
+        <p class="legal-text">
+          Per qualsiasi domanda, dubbio o segnalazione relativa alla privacy o alla sicurezza di MangaFlow, è possibile contattare l'autore e sviluppatore o aprire una issue pubblica su GitHub:
+        </p>
+        <ul class="legal-list">
+          <li><strong>Autore</strong>: Biagio Scaglia</li>
+          <li><strong>Repository GitHub Ufficiale</strong>: <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="legal-link">github.com/biagio-scaglia/manga-flow</a></li>
+          <li><strong>Termini di Servizio</strong>: <a href="terms.html" class="legal-link">Consulta i Termini di Servizio</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="editorial-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-brand-row">
+          <span class="footer-hanko-box" aria-hidden="true">MF</span>
+          <span class="footer-brand-title">MANGAFLOW</span>
+        </div>
+        <p class="footer-mission">
+          L'archivio editoriale definitivo per collezionisti e lettori di manga. Ideato, disegnato e sviluppato da <strong>Biagio Scaglia</strong>.
+        </p>
+        <div class="footer-legal-links">
+          <a href="privacy.html" class="legal-link" style="color: var(--vermilion); font-weight: 700;">Privacy Policy</a>
+          <span class="legal-sep" aria-hidden="true">&bull;</span>
+          <a href="terms.html" class="legal-link">Termini di Servizio</a>
+          <span class="legal-sep" aria-hidden="true">&bull;</span>
+          <a href="https://github.com/biagio-scaglia/manga-flow" target="_blank" rel="noopener noreferrer" class="legal-link">GitHub Source</a>
+        </div>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-stamp-container">
+          <span class="stamp-chip">TANKŌBON EDITION &bull; <time datetime="2026">2026</time></span>
+          <span class="stamp-sub">FLUTTER &bull; ANILIST GRAPHQL &bull; CLEAN ARCHITECTURE</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
