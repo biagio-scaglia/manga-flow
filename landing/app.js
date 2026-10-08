@@ -215,5 +215,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 5. FIRST-VISIT COOKIE & PRIVACY MODAL
+  const COOKIE_CONSENT_KEY = 'mangaflow_cookie_consent';
+  const hasConsent = localStorage.getItem(COOKIE_CONSENT_KEY);
+
+  if (!hasConsent) {
+    const modal = document.createElement('div');
+    modal.id = 'cookie-consent-modal';
+    modal.className = 'cookie-modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-labelledby', 'cookie-modal-title');
+    modal.setAttribute('aria-describedby', 'cookie-modal-desc');
+
+    modal.innerHTML = `
+      <div class="cookie-modal-card">
+        <div class="cookie-modal-header">
+          <div class="cookie-hanko-box" aria-hidden="true">MF</div>
+          <div>
+            <h3 id="cookie-modal-title" class="cookie-title">COOKIE &amp; MEMORIA LOCALE</h3>
+            <span class="cookie-sub">INFORMATIVA PRIVACY • 墨</span>
+          </div>
+        </div>
+        <p id="cookie-modal-desc" class="cookie-desc">
+          MangaFlow non usa cookie di profilazione o traccianti pubblicitari. Usiamo solo <strong>memoria tecnica locale (localStorage)</strong> per salvare le tue preferenze visive di tema (Night Ink / Washi Paper) e i dati offline.
+        </p>
+        <div class="cookie-actions-row">
+          <button id="btn-cookie-accept" class="btn-cookie-primary" type="button">ACCETTA TUTTO</button>
+          <button id="btn-cookie-essential" class="btn-cookie-secondary" type="button">SOLO TECNICI</button>
+          <a href="privacy.html" class="cookie-policy-link">Privacy Policy &rarr;</a>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    setTimeout(() => {
+      modal.classList.add('visible');
+    }, 450);
+
+    const closeConsent = () => {
+      localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
+      modal.classList.remove('visible');
+      setTimeout(() => {
+        if (modal.parentNode) {
+          modal.parentNode.removeChild(modal);
+        }
+      }, 350);
+    };
+
+    const btnAccept = document.getElementById('btn-cookie-accept');
+    const btnEssential = document.getElementById('btn-cookie-essential');
+
+    if (btnAccept) btnAccept.addEventListener('click', closeConsent);
+    if (btnEssential) btnEssential.addEventListener('click', closeConsent);
+  }
+
   updateSandbox();
 });
