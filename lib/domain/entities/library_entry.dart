@@ -37,6 +37,73 @@ class LibraryEntry {
     this.lastReadAt,
   });
 
+  /// Factory che garantisce il rispetto di tutte le regole di business e invarianti di dominio
+  factory LibraryEntry.validated({
+    required int mangaId,
+    required String title,
+    required String coverUrl,
+    required ReadingStatus status,
+    int currentChapter = 0,
+    int? totalChapters,
+    int ownedVolumes = 0,
+    int? totalVolumes,
+    int rating = 0,
+    String notes = '',
+    bool isFavorite = false,
+    List<String> genres = const [],
+    List<String> authors = const [],
+    DateTime? addedAt,
+    DateTime? updatedAt,
+    DateTime? lastReadAt,
+  }) {
+    final validMangaId = mangaId > 0 ? mangaId : 1;
+    final validTitle = title.trim().isNotEmpty
+        ? title.trim()
+        : 'Manga #$validMangaId';
+    final validTotalChapters = (totalChapters != null && totalChapters > 0)
+        ? totalChapters
+        : null;
+    final validTotalVolumes = (totalVolumes != null && totalVolumes > 0)
+        ? totalVolumes
+        : null;
+
+    int safeChapter = currentChapter < 0 ? 0 : currentChapter;
+    if (validTotalChapters != null && safeChapter > validTotalChapters) {
+      safeChapter = validTotalChapters;
+    }
+
+    int safeOwnedVolumes = ownedVolumes < 0 ? 0 : ownedVolumes;
+    if (validTotalVolumes != null && safeOwnedVolumes > validTotalVolumes) {
+      safeOwnedVolumes = validTotalVolumes;
+    }
+
+    final safeRating = rating.clamp(0, 10);
+    final now = DateTime.now();
+
+    return LibraryEntry(
+      mangaId: validMangaId,
+      title: validTitle,
+      coverUrl: coverUrl.trim(),
+      status: status,
+      currentChapter: safeChapter,
+      totalChapters: validTotalChapters,
+      ownedVolumes: safeOwnedVolumes,
+      totalVolumes: validTotalVolumes,
+      rating: safeRating,
+      notes: notes.trim(),
+      isFavorite: isFavorite,
+      genres: List.unmodifiable(
+        genres.where((g) => g.trim().isNotEmpty).map((g) => g.trim()),
+      ),
+      authors: List.unmodifiable(
+        authors.where((a) => a.trim().isNotEmpty).map((a) => a.trim()),
+      ),
+      addedAt: addedAt ?? now,
+      updatedAt: updatedAt ?? now,
+      lastReadAt: lastReadAt,
+    );
+  }
+
   double get progressPercentage {
     if (totalChapters == null || totalChapters! <= 0) return 0.0;
     return (currentChapter / totalChapters!).clamp(0.0, 1.0);
@@ -50,7 +117,9 @@ class LibraryEntry {
 
   bool get isCompleted =>
       status == ReadingStatus.completed ||
-      (totalChapters != null && totalChapters! > 0 && currentChapter >= totalChapters!);
+      (totalChapters != null &&
+          totalChapters! > 0 &&
+          currentChapter >= totalChapters!);
 
   LibraryEntry copyWith({
     int? mangaId,
@@ -70,7 +139,7 @@ class LibraryEntry {
     DateTime? updatedAt,
     DateTime? lastReadAt,
   }) {
-    return LibraryEntry(
+    return LibraryEntry.validated(
       mangaId: mangaId ?? this.mangaId,
       title: title ?? this.title,
       coverUrl: coverUrl ?? this.coverUrl,
@@ -105,5 +174,14 @@ class LibraryEntry {
           updatedAt == other.updatedAt;
 
   @override
-  int get hashCode => mangaId.hashCode;
+  int get hashCode => Object.hash(
+    mangaId,
+    status,
+    currentChapter,
+    ownedVolumes,
+    rating,
+    notes,
+    isFavorite,
+    updatedAt,
+  );
 }

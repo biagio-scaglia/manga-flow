@@ -4,12 +4,12 @@ import 'package:manga_library/domain/entities/reading_status.dart';
 import 'package:manga_library/presentation/widgets/status_badge.dart';
 
 void main() {
-  testWidgets('StatusBadge mostra etichetta corretta in italiano', (tester) async {
+  testWidgets('StatusBadge mostra etichetta corretta in italiano', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: StatusBadge(status: ReadingStatus.reading),
-        ),
+        home: Scaffold(body: StatusBadge(status: ReadingStatus.reading)),
       ),
     );
 

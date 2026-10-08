@@ -63,13 +63,9 @@ class _MainShellState extends State<MainShell> {
             onNavigateToSearch: () => _setTabIndex(2),
             onNavigateToLibrary: () => _setTabIndex(1),
           ),
-          LibraryScreen(
-            onNavigateToSearch: () => _setTabIndex(2),
-          ),
+          LibraryScreen(onNavigateToSearch: () => _setTabIndex(2)),
           const SearchScreen(),
-          StatisticsScreen(
-            onNavigateToSearch: () => _setTabIndex(2),
-          ),
+          StatisticsScreen(onNavigateToSearch: () => _setTabIndex(2)),
         ],
       ),
       bottomNavigationBar: Container(

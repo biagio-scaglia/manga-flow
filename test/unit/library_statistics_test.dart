@@ -62,7 +62,10 @@ void main() {
     expect(stats.favoriteCount, equals(1));
     expect(stats.totalChaptersRead, equals(80));
     expect(stats.totalOwnedVolumes, equals(8));
-    expect(stats.totalVolumesToBuy, equals(10)); // Manga A (5) + Manga B (0) + Manga C (5)
+    expect(
+      stats.totalVolumesToBuy,
+      equals(10),
+    ); // Manga A (5) + Manga B (0) + Manga C (5)
     expect(stats.averageRating, equals(9.0));
     expect(stats.ratedCount, equals(2));
     expect(stats.topGenres.first.key, equals('Action'));

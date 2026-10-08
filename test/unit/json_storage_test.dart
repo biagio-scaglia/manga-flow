@@ -39,8 +39,8 @@ void main() {
           'authors': ['Eiichiro Oda'],
           'addedAt': '2026-01-01T00:00:00.000',
           'updatedAt': '2026-01-02T00:00:00.000',
-        }
-      ]
+        },
+      ],
     };
 
     await storage.writeData(testData);
@@ -53,25 +53,24 @@ void main() {
     expect(entries.first['currentChapter'], equals(1050));
   });
 
-  test('Migrazione automatica schema da versione 0 grezza a versione 1', () async {
-    final migrationManager = SchemaMigrationManager();
-    final v0Raw = {
-      'version': 0,
-      'entries': [
-        {
-          'id': 42,
-          'title': 'Berserk',
-          'status': 'reading',
-        }
-      ]
-    };
+  test(
+    'Migrazione automatica schema da versione 0 grezza a versione 1',
+    () async {
+      final migrationManager = SchemaMigrationManager();
+      final v0Raw = {
+        'version': 0,
+        'entries': [
+          {'id': 42, 'title': 'Berserk', 'status': 'reading'},
+        ],
+      };
 
-    final migrated = migrationManager.applyMigrations(v0Raw, 1);
-    expect(migrated['version'], equals(1));
-    final entries = migrated['entries'] as List<dynamic>;
-    expect(entries.first['mangaId'], equals(42));
-    expect(entries.first['currentChapter'], equals(0));
-    expect(entries.first['isFavorite'], isFalse);
-    expect(entries.first['rating'], equals(0));
-  });
+      final migrated = migrationManager.applyMigrations(v0Raw, 1);
+      expect(migrated['version'], equals(1));
+      final entries = migrated['entries'] as List<dynamic>;
+      expect(entries.first['mangaId'], equals(42));
+      expect(entries.first['currentChapter'], equals(0));
+      expect(entries.first['isFavorite'], isFalse);
+      expect(entries.first['rating'], equals(0));
+    },
+  );
 }

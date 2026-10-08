@@ -50,6 +50,7 @@ class MangaHeroEditorial extends StatelessWidget {
                 width: 95,
                 child: MangaCover(
                   coverUrl: entry.coverUrl,
+                  title: entry.title,
                   heroTag: 'hero-continue-${entry.mangaId}',
                   showSpineEffect: true,
                 ),
@@ -67,11 +68,19 @@ class MangaHeroEditorial extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: AppColors.editorialRed.withValues(alpha: isDark ? 0.2 : 0.1),
+                            color: AppColors.editorialRed.withValues(
+                              alpha: isDark ? 0.2 : 0.1,
+                            ),
                             borderRadius: AppRadii.brXs,
-                            border: Border.all(color: AppColors.editorialRed, width: 0.8),
+                            border: Border.all(
+                              color: AppColors.editorialRed,
+                              width: 0.8,
+                            ),
                           ),
                           child: Text(
                             'IN LETTURA',
@@ -86,7 +95,9 @@ class MangaHeroEditorial extends StatelessWidget {
                         if (entry.lastReadAt != null)
                           Text(
                             DateFormatter.formatRelativeDate(entry.lastReadAt),
-                            style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                            ),
                           ),
                       ],
                     ),
@@ -110,7 +121,8 @@ class MangaHeroEditorial extends StatelessWidget {
                     // Indicatore Volume / Capitolo
                     Row(
                       children: [
-                        if (entry.ownedVolumes > 0 || entry.totalVolumes != null) ...[
+                        if (entry.ownedVolumes > 0 ||
+                            entry.totalVolumes != null) ...[
                           Text(
                             'VOL. ${entry.ownedVolumes > 0 ? entry.ownedVolumes : 1}',
                             style: AppTypography.volumeMono(
@@ -136,7 +148,8 @@ class MangaHeroEditorial extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     // Barra editoriale di avanzamento sottile
-                    if (entry.totalChapters != null && entry.totalChapters! > 0) ...[
+                    if (entry.totalChapters != null &&
+                        entry.totalChapters! > 0) ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -149,7 +162,9 @@ class MangaHeroEditorial extends StatelessWidget {
                                 backgroundColor: isDark
                                     ? AppColors.nightSurfaceVariant
                                     : AppColors.paperSurfaceVariant,
-                                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.editorialRed),
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppColors.editorialRed,
+                                ),
                               ),
                             ),
                           ),
@@ -176,14 +191,28 @@ class MangaHeroEditorial extends StatelessWidget {
                         OutlinedButton.icon(
                           onPressed: onIncrement,
                           icon: const Icon(Icons.add_rounded, size: 14),
-                          label: const Text('+1 CAPITOLO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+                          label: const Text(
+                            '+1 CAPITOLO',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             foregroundColor: AppColors.editorialRed,
-                            side: const BorderSide(color: AppColors.editorialRed, width: 1),
-                            shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
+                            side: const BorderSide(
+                              color: AppColors.editorialRed,
+                              width: 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: AppRadii.brXs,
+                            ),
                           ),
                         ),
                       ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_constants.dart';
 import 'core/network/rate_limiter.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/date_formatter.dart';
 import 'data/api/jikan_api_client.dart';
 import 'data/cache/http_cache_manager.dart';
 import 'data/repositories/library_repository_impl.dart';
@@ -18,7 +20,9 @@ import 'presentation/screens/main_shell.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inizializzazione Core Data & Storage
+  // Inizializzazione Formattazione Locale & Core Data
+  await DateFormatter.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
   final jsonStorage = JsonStorage();
   final cacheManager = HttpCacheManager();
   await cacheManager.init();
@@ -35,7 +39,9 @@ void main() async {
   );
 
   // Repositories
-  final LibraryRepository libraryRepository = LibraryRepositoryImpl(storage: jsonStorage);
+  final LibraryRepository libraryRepository = LibraryRepositoryImpl(
+    storage: jsonStorage,
+  );
   final MangaRepository mangaRepository = MangaRepositoryImpl(
     apiClient: apiClient,
     cacheManager: cacheManager,
@@ -53,6 +59,7 @@ void main() async {
           create: (_) => SettingsController(
             libraryRepository: libraryRepository,
             mangaRepository: mangaRepository,
+            preferences: prefs,
           ),
         ),
         ChangeNotifierProvider<LibraryController>(

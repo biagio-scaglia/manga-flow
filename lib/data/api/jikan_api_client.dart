@@ -31,9 +31,9 @@ class JikanApiClient {
     RateLimiter? rateLimiter,
     HttpCacheManager? cacheManager,
     this.baseUrl = AppConstants.apiBaseUrl,
-  })  : _client = client ?? http.Client(),
-        _rateLimiter = rateLimiter ?? RateLimiter(),
-        _cacheManager = cacheManager ?? HttpCacheManager();
+  }) : _client = client ?? http.Client(),
+       _rateLimiter = rateLimiter ?? RateLimiter(),
+       _cacheManager = cacheManager ?? HttpCacheManager();
 
   Future<ApiResponse<Map<String, dynamic>>> postGraphQL({
     required String query,
@@ -41,10 +41,7 @@ class JikanApiClient {
     Duration? cacheTtl,
     bool forceRefresh = false,
   }) async {
-    final payload = {
-      'query': query,
-      'variables': variables ?? {},
-    };
+    final payload = {'query': query, 'variables': variables ?? {}};
     final cacheKey = '$baseUrl:${jsonEncode(payload)}';
 
     // 1. Controlla la cache
@@ -72,29 +69,40 @@ class JikanApiClient {
         await _rateLimiter.acquire();
 
         if (kDebugMode) {
-          debugPrint('[ApiClient] Richiesta API (tentativo $attempt): $variables');
+          debugPrint(
+            '[ApiClient] Richiesta API (tentativo $attempt): $variables',
+          );
         }
 
-        final response = await _client.post(
-          Uri.parse(baseUrl),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(payload),
-        ).timeout(AppConstants.apiTimeout);
+        final response = await _client
+            .post(
+              Uri.parse(baseUrl),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+              body: jsonEncode(payload),
+            )
+            .timeout(AppConstants.apiTimeout);
 
         if (response.statusCode == 200) {
-          final Map<String, dynamic> body = jsonDecode(response.body) as Map<String, dynamic>;
+          final Map<String, dynamic> body =
+              jsonDecode(response.body) as Map<String, dynamic>;
           await _cacheManager.put(cacheKey, body, ttl: cacheTtl);
 
-          return ApiResponse(
-            data: body,
-            isFromCache: false,
-            isStale: false,
-          );
+          return ApiResponse(data: body, isFromCache: false, isStale: false);
         } else if (response.statusCode == 429) {
-          _rateLimiter.blockFor(const Duration(seconds: 2));
+          int retrySeconds = 2;
+          final retryHeader = response.headers['retry-after'];
+          if (retryHeader != null) {
+            final parsed = int.tryParse(retryHeader.trim());
+            if (parsed != null && parsed > 0) {
+              retrySeconds = parsed;
+            }
+          }
+          final retryDuration = Duration(seconds: retrySeconds);
+          _rateLimiter.blockFor(retryDuration);
+
           if (attempt >= AppConstants.maxRetries) {
             final fallback = await _cacheManager.get(cacheKey);
             if (fallback != null) {
@@ -104,9 +112,12 @@ class JikanApiClient {
                 isStale: true,
               );
             }
-            throw RateLimitException('Hai effettuato troppe richieste. Attendi qualche istante.');
+            throw RateLimitException(
+              'Hai effettuato troppe richieste. Attendi qualche istante.',
+              retrySeconds,
+            );
           }
-          await Future.delayed(const Duration(seconds: 2));
+          await Future.delayed(retryDuration);
           continue;
         } else if (response.statusCode >= 500) {
           if (attempt < AppConstants.maxRetries) {
@@ -114,9 +125,15 @@ class JikanApiClient {
             delay *= 2;
             continue;
           }
-          throw ServerException('Il server dei manga è temporaneamente non disponibile.', response.statusCode);
+          throw ServerException(
+            'Il server dei manga è temporaneamente non disponibile.',
+            response.statusCode,
+          );
         } else {
-          throw ServerException('Errore nella richiesta (${response.statusCode}).', response.statusCode);
+          throw ServerException(
+            'Errore nella richiesta (${response.statusCode}).',
+            response.statusCode,
+          );
         }
       } on SocketException catch (_) {
         final fallback = await _cacheManager.get(cacheKey);
@@ -144,7 +161,9 @@ class JikanApiClient {
         }
         throw NetworkException('La richiesta ha impiegato troppo tempo.');
       } catch (e) {
-        if (e is ServerException || e is RateLimitException || e is NetworkException) {
+        if (e is ServerException ||
+            e is RateLimitException ||
+            e is NetworkException) {
           rethrow;
         }
         final fallback = await _cacheManager.get(cacheKey);
@@ -159,7 +178,9 @@ class JikanApiClient {
       }
     }
 
-    throw ServerException('Impossibile completare la richiesta dopo diversi tentativi.');
+    throw ServerException(
+      'Impossibile completare la richiesta dopo diversi tentativi.',
+    );
   }
 
   void dispose() {

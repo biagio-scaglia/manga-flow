@@ -24,7 +24,7 @@ class MigrationV0ToV1 extends Migration {
     for (final item in entriesRaw) {
       if (item is Map<String, dynamic>) {
         final Map<String, dynamic> entry = Map<String, dynamic>.from(item);
-        
+
         // Normalizzazione campi
         if (!entry.containsKey('mangaId') && entry.containsKey('id')) {
           entry['mangaId'] = entry['id'];
@@ -66,14 +66,16 @@ class MigrationV0ToV1 extends Migration {
 }
 
 class SchemaMigrationManager {
-  final List<Migration> _migrations = [
-    const MigrationV0ToV1(),
-  ];
+  final List<Migration> _migrations = [const MigrationV0ToV1()];
 
-  Map<String, dynamic> applyMigrations(Map<String, dynamic> rawData, int targetVersion) {
+  Map<String, dynamic> applyMigrations(
+    Map<String, dynamic> rawData,
+    int targetVersion,
+  ) {
     int currentVersion = rawData['version'] as int? ?? 0;
 
-    if (currentVersion == targetVersion) {
+    // Se la versione è già pari o superiore al target, non eseguire migrazioni o downgrade
+    if (currentVersion >= targetVersion) {
       return rawData;
     }
 
@@ -82,7 +84,9 @@ class SchemaMigrationManager {
     while (currentVersion < targetVersion) {
       final migration = _migrations.firstWhere(
         (m) => m.fromVersion == currentVersion,
-        orElse: () => throw Exception('Nessuna migrazione disponibile dalla versione $currentVersion'),
+        orElse: () => throw Exception(
+          'Nessuna migrazione disponibile dalla versione $currentVersion',
+        ),
       );
 
       migratedData = migration.migrate(migratedData);

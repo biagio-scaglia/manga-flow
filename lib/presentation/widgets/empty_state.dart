@@ -47,7 +47,9 @@ class EmptyState extends StatelessWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: AppColors.editorialRed.withValues(alpha: isDark ? 0.15 : 0.08),
+                  color: AppColors.editorialRed.withValues(
+                    alpha: isDark ? 0.15 : 0.08,
+                  ),
                   borderRadius: AppRadii.brXs,
                   border: Border.all(
                     color: AppColors.editorialRed.withValues(alpha: 0.3),
@@ -68,7 +70,10 @@ class EmptyState extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   japaneseSub!,
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, letterSpacing: 1.0),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 10,
+                    letterSpacing: 1.0,
+                  ),
                 ),
               ],
               const SizedBox(height: 8),
@@ -76,7 +81,9 @@ class EmptyState extends StatelessWidget {
                 message,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+                  color: isDark
+                      ? AppColors.nightInkSecondary
+                      : AppColors.inkSecondary,
                   height: 1.4,
                 ),
               ),

@@ -59,6 +59,7 @@ class MangaListTile extends StatelessWidget {
                   width: 52,
                   child: MangaCover(
                     coverUrl: coverUrl,
+                    title: title,
                     heroTag: 'list-cover-$id',
                     showSpineEffect: true,
                   ),
@@ -120,8 +121,12 @@ class MangaListTile extends StatelessWidget {
                             ),
                             if (entry.lastReadAt != null)
                               Text(
-                                DateFormatter.formatRelativeDate(entry.lastReadAt),
-                                style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
+                                DateFormatter.formatRelativeDate(
+                                  entry.lastReadAt,
+                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontSize: 10,
+                                ),
                               ),
                           ],
                         ),
@@ -130,18 +135,27 @@ class MangaListTile extends StatelessWidget {
                           manga!.authorDisplay,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontSize: 11,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 1.5,
+                              ),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                                color: isDark
+                                    ? AppColors.nightSurfaceVariant
+                                    : AppColors.paperSurfaceVariant,
                                 borderRadius: AppRadii.brXs,
                                 border: Border.all(
-                                  color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                                  color: isDark
+                                      ? AppColors.nightBorder
+                                      : AppColors.paperBorder,
                                 ),
                               ),
                               child: Text(
@@ -150,13 +164,19 @@ class MangaListTile extends StatelessWidget {
                                   isDark: isDark,
                                   fontSize: 8,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+                                  color: isDark
+                                      ? AppColors.nightInkSecondary
+                                      : AppColors.inkSecondary,
                                 ),
                               ),
                             ),
                             if (manga!.score != null) ...[
                               const SizedBox(width: 8),
-                              const Icon(Icons.star_rounded, size: 12, color: AppColors.paperGold),
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 12,
+                                color: AppColors.paperGold,
+                              ),
                               const SizedBox(width: 2),
                               Text(
                                 manga!.score!.toStringAsFixed(2),
@@ -186,9 +206,13 @@ class MangaListTile extends StatelessWidget {
                       padding: const EdgeInsets.all(6),
                       minimumSize: const Size(32, 32),
                       side: BorderSide(
-                        color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                        color: isDark
+                            ? AppColors.nightBorder
+                            : AppColors.paperBorder,
                       ),
-                      shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: AppRadii.brXs,
+                      ),
                     ),
                   ),
                 ],

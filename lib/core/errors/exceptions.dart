@@ -24,7 +24,8 @@ class RateLimitException implements Exception {
   ]);
 
   @override
-  String toString() => 'RateLimitException: $message (retryAfter: $retryAfterSeconds)';
+  String toString() =>
+      'RateLimitException: $message (retryAfter: $retryAfterSeconds)';
 }
 
 class CacheException implements Exception {

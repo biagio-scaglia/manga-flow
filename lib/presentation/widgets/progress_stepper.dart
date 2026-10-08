@@ -34,7 +34,9 @@ class ProgressStepper extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Numero capitolo',
               hintText: 'Inserisci il capitolo corrente',
-              suffixText: totalChapters != null && totalChapters! > 0 ? '/ $totalChapters' : null,
+              suffixText: totalChapters != null && totalChapters! > 0
+                  ? '/ $totalChapters'
+                  : null,
             ),
           ),
           actions: [
@@ -47,7 +49,9 @@ class ProgressStepper extends StatelessWidget {
                 final parsed = int.tryParse(controller.text.trim());
                 if (parsed != null && parsed >= 0) {
                   int target = parsed;
-                  if (totalChapters != null && totalChapters! > 0 && target > totalChapters!) {
+                  if (totalChapters != null &&
+                      totalChapters! > 0 &&
+                      target > totalChapters!) {
                     target = totalChapters!;
                   }
                   onProgressChanged(target);
@@ -67,7 +71,8 @@ class ProgressStepper extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasTotal = totalChapters != null && totalChapters! > 0;
     final isAtMax = hasTotal && currentChapter >= totalChapters!;
-    final showCompletionPrompt = hasTotal && isAtMax && !isCompleted && onMarkCompleted != null;
+    final showCompletionPrompt =
+        hasTotal && isAtMax && !isCompleted && onMarkCompleted != null;
 
     final progressFraction = hasTotal
         ? (currentChapter / totalChapters!).clamp(0.0, 1.0)
@@ -92,12 +97,16 @@ class ProgressStepper extends StatelessWidget {
             children: [
               // Pulsante decremento
               IconButton(
-                onPressed: currentChapter > 0 ? () => onProgressChanged(currentChapter - 1) : null,
+                onPressed: currentChapter > 0
+                    ? () => onProgressChanged(currentChapter - 1)
+                    : null,
                 icon: const Icon(Icons.remove_rounded),
                 tooltip: 'Capitolo precedente',
                 style: IconButton.styleFrom(
                   side: BorderSide(
-                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    color: isDark
+                        ? AppColors.nightBorder
+                        : AppColors.paperBorder,
                   ),
                   shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
                   padding: const EdgeInsets.all(8),
@@ -109,7 +118,10 @@ class ProgressStepper extends StatelessWidget {
                 onTap: () => _showDirectInputDialog(context),
                 borderRadius: AppRadii.brXs,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
                   child: Column(
                     children: [
                       Text(
@@ -123,8 +135,12 @@ class ProgressStepper extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        hasTotal ? 'su $totalChapters totali' : 'Totale in corso / N/D',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
+                        hasTotal
+                            ? 'su $totalChapters totali'
+                            : 'Totale in corso / N/D',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(fontSize: 10),
                       ),
                     ],
                   ),
@@ -133,13 +149,17 @@ class ProgressStepper extends StatelessWidget {
 
               // Pulsante incremento
               IconButton(
-                onPressed: (!isAtMax) ? () => onProgressChanged(currentChapter + 1) : null,
+                onPressed: (!isAtMax)
+                    ? () => onProgressChanged(currentChapter + 1)
+                    : null,
                 icon: const Icon(Icons.add_rounded),
                 tooltip: 'Capitolo successivo',
                 color: AppColors.editorialRed,
                 style: IconButton.styleFrom(
                   side: BorderSide(
-                    color: isDark ? AppColors.nightBorder : AppColors.paperBorder,
+                    color: isDark
+                        ? AppColors.nightBorder
+                        : AppColors.paperBorder,
                   ),
                   shape: RoundedRectangleBorder(borderRadius: AppRadii.brXs),
                   padding: const EdgeInsets.all(8),
@@ -157,7 +177,9 @@ class ProgressStepper extends StatelessWidget {
               Expanded(
                 child: Container(
                   height: 3,
-                  color: isDark ? AppColors.nightSurfaceVariant : AppColors.paperSurfaceVariant,
+                  color: isDark
+                      ? AppColors.nightSurfaceVariant
+                      : AppColors.paperSurfaceVariant,
                   alignment: Alignment.centerLeft,
                   child: FractionallySizedBox(
                     widthFactor: progressFraction,
@@ -184,10 +206,18 @@ class ProgressStepper extends StatelessWidget {
           const SizedBox(height: 10),
           OutlinedButton.icon(
             onPressed: onMarkCompleted,
-            icon: const Icon(Icons.check_circle_outline_rounded, size: 16, color: AppColors.forestGreen),
+            icon: const Icon(
+              Icons.check_circle_outline_rounded,
+              size: 16,
+              color: AppColors.forestGreen,
+            ),
             label: const Text(
               'OPERA CONCLUSA: SEGNA COME COMPLETATO',
-              style: TextStyle(color: AppColors.forestGreen, fontSize: 11, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                color: AppColors.forestGreen,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColors.forestGreen, width: 1),

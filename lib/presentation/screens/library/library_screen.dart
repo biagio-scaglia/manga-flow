@@ -56,16 +56,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'ORDINA CATALOGO PER',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.8,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.8,
+                            ),
                       ),
                       const Text(
                         '並び替え',
@@ -88,12 +92,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       style: AppTypography.volumeMono(
                         isDark: isDark,
                         fontSize: 12,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected ? AppColors.editorialRed : null,
                       ),
                     ),
                     trailing: isSelected
-                        ? const Icon(Icons.check_rounded, color: AppColors.editorialRed, size: 18)
+                        ? const Icon(
+                            Icons.check_rounded,
+                            color: AppColors.editorialRed,
+                            size: 18,
+                          )
                         : null,
                     onTap: () {
                       controller.setSortOption(option);
@@ -127,7 +137,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     final statusCounts = <ReadingStatus, int>{};
     for (final s in ReadingStatus.values) {
-      statusCounts[s] = libraryCtrl.allEntries.where((e) => e.status == s).length;
+      statusCounts[s] = libraryCtrl.allEntries
+          .where((e) => e.status == s)
+          .length;
     }
 
     return Scaffold(
@@ -143,7 +155,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 decoration: InputDecoration(
                   hintText: 'Cerca per titolo nella libreria...',
                   hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                    color: isDark
+                        ? AppColors.nightInkMuted
+                        : AppColors.inkMuted,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -169,15 +183,24 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       isDark: isDark,
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.nightInkMuted : AppColors.inkMuted,
+                      color: isDark
+                          ? AppColors.nightInkMuted
+                          : AppColors.inkMuted,
                     ),
                   ),
                 ],
               ),
         actions: [
           IconButton(
-            icon: Icon(_isSearchingInLibrary ? Icons.close_rounded : Icons.search_rounded, size: 20),
-            tooltip: _isSearchingInLibrary ? 'Chiudi ricerca' : 'Cerca nella libreria',
+            icon: Icon(
+              _isSearchingInLibrary
+                  ? Icons.close_rounded
+                  : Icons.search_rounded,
+              size: 20,
+            ),
+            tooltip: _isSearchingInLibrary
+                ? 'Chiudi ricerca'
+                : 'Cerca nella libreria',
             onPressed: () {
               setState(() {
                 _isSearchingInLibrary = !_isSearchingInLibrary;
@@ -189,7 +212,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
             },
           ),
           IconButton(
-            icon: Icon(libraryCtrl.isGridView ? Icons.view_list_rounded : Icons.grid_view_rounded, size: 20),
+            icon: Icon(
+              libraryCtrl.isGridView
+                  ? Icons.view_list_rounded
+                  : Icons.grid_view_rounded,
+              size: 20,
+            ),
             tooltip: libraryCtrl.isGridView ? 'Vista elenco' : 'Vista griglia',
             onPressed: libraryCtrl.toggleViewMode,
           ),
@@ -223,54 +251,66 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     icon: Icons.auto_stories_outlined,
                     title: 'La libreria è vuota',
                     japaneseSub: '目録は空です',
-                    message: 'Il primo volume deve ancora arrivare. Aggiungi i manga che stai leggendo o vuoi collezionare.',
+                    message:
+                        'Il primo volume deve ancora arrivare. Aggiungi i manga che stai leggendo o vuoi collezionare.',
                     actionLabel: 'Cerca Manga',
                     onAction: widget.onNavigateToSearch,
                   )
                 : entries.isEmpty
-                    ? const EmptyState(
-                        icon: Icons.filter_alt_off_rounded,
-                        title: 'Nessun volume trovato',
-                        japaneseSub: '該当なし',
-                        message: 'Nessun manga corrisponde al filtro o al criterio di ricerca selezionato.',
-                      )
-                    : AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        child: libraryCtrl.isGridView
-                            ? GridView.builder(
-                                key: const ValueKey('library_grid'),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                ? const EmptyState(
+                    icon: Icons.filter_alt_off_rounded,
+                    title: 'Nessun volume trovato',
+                    japaneseSub: '該当なし',
+                    message:
+                        'Nessun manga corrisponde al filtro o al criterio di ricerca selezionato.',
+                  )
+                : AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: libraryCtrl.isGridView
+                        ? GridView.builder(
+                            key: const ValueKey('library_grid'),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: columns,
                                   childAspectRatio: 0.62,
                                   crossAxisSpacing: 14,
                                   mainAxisSpacing: 18,
                                 ),
-                                itemCount: entries.length,
-                                itemBuilder: (context, index) {
-                                  final entry = entries[index];
-                                  return MangaCard(
-                                    libraryEntry: entry,
-                                    onTap: () => _navigateToDetail(entry),
-                                  );
-                                },
-                              )
-                            : ListView.builder(
-                                key: const ValueKey('library_list'),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                itemCount: entries.length,
-                                itemBuilder: (context, index) {
-                                  final entry = entries[index];
-                                  return MangaListTile(
-                                    libraryEntry: entry,
-                                    onTap: () => _navigateToDetail(entry),
-                                    onQuickIncrement: entry.status == ReadingStatus.reading
-                                        ? () => libraryCtrl.incrementChapter(entry.mangaId)
-                                        : null,
-                                  );
-                                },
-                              ),
-                      ),
+                            itemCount: entries.length,
+                            itemBuilder: (context, index) {
+                              final entry = entries[index];
+                              return MangaCard(
+                                libraryEntry: entry,
+                                onTap: () => _navigateToDetail(entry),
+                              );
+                            },
+                          )
+                        : ListView.builder(
+                            key: const ValueKey('library_list'),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            itemCount: entries.length,
+                            itemBuilder: (context, index) {
+                              final entry = entries[index];
+                              return MangaListTile(
+                                libraryEntry: entry,
+                                onTap: () => _navigateToDetail(entry),
+                                onQuickIncrement:
+                                    entry.status == ReadingStatus.reading
+                                    ? () => libraryCtrl.incrementChapter(
+                                        entry.mangaId,
+                                      )
+                                    : null,
+                              );
+                            },
+                          ),
+                  ),
           ),
         ],
       ),

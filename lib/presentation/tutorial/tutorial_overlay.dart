@@ -28,25 +28,29 @@ class TutorialDialog extends StatefulWidget {
     TutorialStep(
       index: '01',
       title: 'Benvenuto in MangaFlow',
-      description: 'Il tuo catalogo editoriale personale di manga per tracciare letture, volumi fisici posseduti, voti e note in locale offline-first.',
+      description:
+          'Il tuo catalogo editoriale personale di manga per tracciare letture, volumi fisici posseduti, voti e note in locale offline-first.',
       icon: Icons.menu_book_rounded,
     ),
     TutorialStep(
       index: '02',
       title: 'Esplora il Catalogo',
-      description: 'Cerca tra migliaia di serie reali con dati ufficiali su autori, volumi totali, capitoli e trame complete.',
+      description:
+          'Cerca tra migliaia di serie reali con dati ufficiali su autori, volumi totali, capitoli e trame complete.',
       icon: Icons.search_rounded,
     ),
     TutorialStep(
       index: '03',
       title: 'Organizza la Libreria',
-      description: 'Segna i volumi che possiedi fisicamente, quelli da acquistare e tieni traccia del capitolo a cui sei arrivato.',
+      description:
+          'Segna i volumi che possiedi fisicamente, quelli da acquistare e tieni traccia del capitolo a cui sei arrivato.',
       icon: Icons.collections_bookmark_rounded,
     ),
     TutorialStep(
       index: '04',
       title: 'Statistiche Reali',
-      description: 'Monitora l\'avanzamento della tua collezione, la media voto e la distribuzione dei tuoi generi preferiti.',
+      description:
+          'Monitora l\'avanzamento della tua collezione, la media voto e la distribuzione dei tuoi generi preferiti.',
       icon: Icons.insights_rounded,
     ),
   ];
@@ -103,11 +107,17 @@ class _TutorialDialogState extends State<TutorialDialog> {
                   style: AppTypography.sectionIndex(isDark: isDark),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.editorialRed.withValues(alpha: 0.12),
                     borderRadius: AppRadii.brXs,
-                    border: Border.all(color: AppColors.editorialRed, width: 0.8),
+                    border: Border.all(
+                      color: AppColors.editorialRed,
+                      width: 0.8,
+                    ),
                   ),
                   child: Text(
                     '${_currentStepIndex + 1} / ${TutorialDialog.steps.length}',
@@ -133,9 +143,13 @@ class _TutorialDialogState extends State<TutorialDialog> {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: AppColors.editorialRed.withValues(alpha: isDark ? 0.18 : 0.08),
+                color: AppColors.editorialRed.withValues(
+                  alpha: isDark ? 0.18 : 0.08,
+                ),
                 borderRadius: AppRadii.brXs,
-                border: Border.all(color: AppColors.editorialRed.withValues(alpha: 0.4)),
+                border: Border.all(
+                  color: AppColors.editorialRed.withValues(alpha: 0.4),
+                ),
               ),
               child: Icon(step.icon, size: 26, color: AppColors.editorialRed),
             ),
@@ -158,7 +172,9 @@ class _TutorialDialogState extends State<TutorialDialog> {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 height: 1.45,
-                color: isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary,
+                color: isDark
+                    ? AppColors.nightInkSecondary
+                    : AppColors.inkSecondary,
               ),
             ),
             const SizedBox(height: 20),
@@ -173,7 +189,11 @@ class _TutorialDialogState extends State<TutorialDialog> {
                   height: 3,
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
-                    color: isActive ? AppColors.editorialRed : (isDark ? AppColors.nightBorder : AppColors.paperBorder),
+                    color: isActive
+                        ? AppColors.editorialRed
+                        : (isDark
+                              ? AppColors.nightBorder
+                              : AppColors.paperBorder),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 );

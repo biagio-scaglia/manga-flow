@@ -5,7 +5,9 @@ import 'app_colors.dart';
 class AppTypography {
   static TextTheme textTheme(bool isDark) {
     final textColor = isDark ? AppColors.nightInk : AppColors.inkBlack;
-    final textSecondary = isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary;
+    final textSecondary = isDark
+        ? AppColors.nightInkSecondary
+        : AppColors.inkSecondary;
     final textMuted = isDark ? AppColors.nightInkMuted : AppColors.inkMuted;
 
     return TextTheme(
@@ -106,19 +108,18 @@ class AppTypography {
     FontWeight fontWeight = FontWeight.w700,
     Color? color,
   }) {
-    return GoogleFonts.spaceGrotesk(
+    return GoogleFonts.spaceMono(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      letterSpacing: 0.8,
-      color: color ?? (isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary),
+      letterSpacing: 0.6,
+      color:
+          color ??
+          (isDark ? AppColors.nightInkSecondary : AppColors.inkSecondary),
     );
   }
 
   // Stile per l'indice delle sezioni editoriali (es. "01 / CONTINUA LA LETTURA")
-  static TextStyle sectionIndex({
-    required bool isDark,
-    Color? color,
-  }) {
+  static TextStyle sectionIndex({required bool isDark, Color? color}) {
     return GoogleFonts.spaceGrotesk(
       fontSize: 11,
       fontWeight: FontWeight.w800,

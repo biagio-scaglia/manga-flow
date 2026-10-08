@@ -6,6 +6,7 @@ import 'package:manga_library/domain/repositories/manga_repository.dart';
 class SettingsController extends ChangeNotifier {
   final LibraryRepository _libraryRepository;
   final MangaRepository _mangaRepository;
+  final SharedPreferences? _prefs;
 
   ThemeMode _themeMode = ThemeMode.dark;
   bool _reduceAnimations = false;
@@ -16,9 +17,11 @@ class SettingsController extends ChangeNotifier {
   SettingsController({
     required LibraryRepository libraryRepository,
     required MangaRepository mangaRepository,
-  })  : _libraryRepository = libraryRepository,
-        _mangaRepository = mangaRepository {
-    _loadPreferences();
+    SharedPreferences? preferences,
+  }) : _libraryRepository = libraryRepository,
+       _mangaRepository = mangaRepository,
+       _prefs = preferences {
+    _initPreferences();
     refreshSizes();
   }
 
@@ -38,13 +41,31 @@ class SettingsController extends ChangeNotifier {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
 
-  Future<void> _loadPreferences() async {
+  void _initPreferences() {
+    final prefs = _prefs;
+    if (prefs != null) {
+      _tutorialCompleted = prefs.getBool('tutorial_completed') ?? false;
+      _reduceAnimations = prefs.getBool('reduce_animations') ?? false;
+      final themeIndex = prefs.getInt('theme_mode');
+      if (themeIndex != null &&
+          themeIndex >= 0 &&
+          themeIndex < ThemeMode.values.length) {
+        _themeMode = ThemeMode.values[themeIndex];
+      }
+    } else {
+      _loadPreferencesAsync();
+    }
+  }
+
+  Future<void> _loadPreferencesAsync() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       _tutorialCompleted = prefs.getBool('tutorial_completed') ?? false;
       _reduceAnimations = prefs.getBool('reduce_animations') ?? false;
       final themeIndex = prefs.getInt('theme_mode');
-      if (themeIndex != null && themeIndex >= 0 && themeIndex < ThemeMode.values.length) {
+      if (themeIndex != null &&
+          themeIndex >= 0 &&
+          themeIndex < ThemeMode.values.length) {
         _themeMode = ThemeMode.values[themeIndex];
       }
       notifyListeners();
@@ -55,7 +76,7 @@ class SettingsController extends ChangeNotifier {
     _themeMode = mode;
     notifyListeners();
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs ?? await SharedPreferences.getInstance();
       await prefs.setInt('theme_mode', mode.index);
     } catch (_) {}
   }
@@ -64,7 +85,7 @@ class SettingsController extends ChangeNotifier {
     _reduceAnimations = value;
     notifyListeners();
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs ?? await SharedPreferences.getInstance();
       await prefs.setBool('reduce_animations', value);
     } catch (_) {}
   }
@@ -73,7 +94,7 @@ class SettingsController extends ChangeNotifier {
     _tutorialCompleted = completed;
     notifyListeners();
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs ?? await SharedPreferences.getInstance();
       await prefs.setBool('tutorial_completed', completed);
     } catch (_) {}
   }
@@ -82,7 +103,7 @@ class SettingsController extends ChangeNotifier {
     _tutorialCompleted = false;
     notifyListeners();
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs ?? await SharedPreferences.getInstance();
       await prefs.setBool('tutorial_completed', false);
     } catch (_) {}
   }

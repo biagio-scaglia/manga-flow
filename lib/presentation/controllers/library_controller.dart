@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/library_entry.dart';
+import '../../domain/entities/library_entry_merger.dart';
 import '../../domain/entities/library_statistics.dart';
 import '../../domain/entities/reading_status.dart';
 import '../../domain/repositories/library_repository.dart';
+
+enum AddEntryResult { added, alreadyInLibrary, updated }
 
 enum LibrarySortOption {
   lastUpdated,
@@ -41,7 +44,7 @@ class LibraryController extends ChangeNotifier {
   bool _isGridView = true;
 
   LibraryController({required LibraryRepository repository})
-      : _repository = repository {
+    : _repository = repository {
     loadLibrary();
   }
 
@@ -91,7 +94,9 @@ class LibraryController extends ChangeNotifier {
         });
         break;
       case LibrarySortOption.title:
-        result.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        result.sort(
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+        );
         break;
       case LibrarySortOption.rating:
         result.sort((a, b) => b.rating.compareTo(a.rating));
@@ -149,7 +154,7 @@ class LibraryController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _entries = await _repository.getLibrary();
+      _entries = List<LibraryEntry>.from(await _repository.getLibrary());
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -186,15 +191,25 @@ class LibraryController extends ChangeNotifier {
   }
 
   // Modifiche alle voci
-  Future<void> addOrUpdateEntry(LibraryEntry entry) async {
+  Future<AddEntryResult> addOrUpdateEntry(LibraryEntry entry) async {
     final index = _entries.indexWhere((e) => e.mangaId == entry.mangaId);
     if (index >= 0) {
-      _entries[index] = entry;
+      final existing = _entries[index];
+      final merged = LibraryEntryMerger.merge(existing, entry);
+      _entries[index] = merged;
+      notifyListeners();
+      await _repository.saveEntry(merged);
+      return AddEntryResult.alreadyInLibrary;
     } else {
-      _entries.add(entry);
+      final newEntry = entry.copyWith(
+        addedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      _entries.add(newEntry);
+      notifyListeners();
+      await _repository.saveEntry(newEntry);
+      return AddEntryResult.added;
     }
-    notifyListeners();
-    await _repository.saveEntry(entry);
   }
 
   Future<void> removeEntry(int mangaId) async {
@@ -207,7 +222,9 @@ class LibraryController extends ChangeNotifier {
     final entry = getEntry(mangaId);
     if (entry != null) {
       final nextChapter = entry.currentChapter + 1;
-      if (entry.totalChapters != null && entry.totalChapters! > 0 && nextChapter > entry.totalChapters!) {
+      if (entry.totalChapters != null &&
+          entry.totalChapters! > 0 &&
+          nextChapter > entry.totalChapters!) {
         return;
       }
       await updateProgress(mangaId, nextChapter);
@@ -239,7 +256,9 @@ class LibraryController extends ChangeNotifier {
     final entry = getEntry(mangaId);
     if (entry != null) {
       final next = entry.ownedVolumes + 1;
-      if (entry.totalVolumes != null && entry.totalVolumes! > 0 && next > entry.totalVolumes!) {
+      if (entry.totalVolumes != null &&
+          entry.totalVolumes! > 0 &&
+          next > entry.totalVolumes!) {
         return;
       }
       await updateVolumes(mangaId, next);
@@ -253,17 +272,31 @@ class LibraryController extends ChangeNotifier {
     }
   }
 
-  Future<void> updateVolumes(int mangaId, int ownedVolumes, {int? totalVolumes}) async {
+  Future<void> updateVolumes(
+    int mangaId,
+    int ownedVolumes, {
+    int? totalVolumes,
+  }) async {
     final index = _entries.indexWhere((e) => e.mangaId == mangaId);
     if (index >= 0) {
-      final updated = _entries[index].copyWith(
-        ownedVolumes: ownedVolumes < 0 ? 0 : ownedVolumes,
-        totalVolumes: totalVolumes ?? _entries[index].totalVolumes,
+      final current = _entries[index];
+      final targetTotal = totalVolumes ?? current.totalVolumes;
+      int safeOwned = ownedVolumes < 0 ? 0 : ownedVolumes;
+      if (targetTotal != null && targetTotal > 0 && safeOwned > targetTotal) {
+        safeOwned = targetTotal;
+      }
+      final updated = current.copyWith(
+        ownedVolumes: safeOwned,
+        totalVolumes: targetTotal,
         updatedAt: DateTime.now(),
       );
       _entries[index] = updated;
       notifyListeners();
-      await _repository.updateVolumes(mangaId, ownedVolumes, totalVolumes: totalVolumes);
+      await _repository.updateVolumes(
+        mangaId,
+        safeOwned,
+        totalVolumes: targetTotal,
+      );
     }
   }
 
